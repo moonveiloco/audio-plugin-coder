@@ -23,14 +23,14 @@ Slash commands are the primary way to interact with APC through AI agents.
 **Trigger:** Natural language equivalent: "Create a new delay plugin called EchoReverb"
 
 **Actions:**
-1. Creates plugin directory: `plugins/[Name]/`
+1. Creates plugin directory: `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/`
 2. Generates `creative-brief.md` (concept document)
 3. Generates `parameter-spec.md` (parameter definitions)
 4. Initializes `status.json` (project state)
 
 **Output Files:**
 ```
-plugins/[Name]/
+~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/
 ├── .ideas/
 │   ├── creative-brief.md
 │   └── parameter-spec.md
@@ -57,7 +57,7 @@ plugins/[Name]/
 
 **Output Files:**
 ```
-plugins/[Name]/.ideas/
+~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/
 ├── architecture.md
 └── plan.md
 ```
@@ -84,7 +84,7 @@ plugins/[Name]/.ideas/
 
 **Output Files:**
 ```
-plugins/[Name]/
+~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/
 ├── Design/
 │   ├── v1-ui-spec.md
 │   ├── v1-style-guide.md
@@ -115,7 +115,7 @@ plugins/[Name]/
 
 **Output Files:**
 ```
-plugins/[Name]/Source/
+~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Source/
 ├── PluginProcessor.h
 ├── PluginProcessor.cpp
 ├── PluginEditor.h

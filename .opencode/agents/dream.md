@@ -10,15 +10,15 @@ Avvia il processo di ideazione per un nuovo plugin audio.
 - Nessuno (punto di ingresso)
 
 ## Stato
-Verifica che `plugins/[Name]` non esista già. Se esiste, usa `/resume`.
+Verifica che `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]` non esista già. Se esiste, usa `/resume`.
 
 ## Esecuzione
 Carica ed esegui la skill `.claude/skills/dream/SKILL.md`
 
 ## Output
-- `plugins/[Name]/.ideas/creative-brief.md`
-- `plugins/[Name]/.ideas/parameter-spec.md`
-- `plugins/[Name]/status.json`
+- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/creative-brief.md`
+- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/parameter-spec.md`
+- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/status.json`
 
 ## Completamento
 ```

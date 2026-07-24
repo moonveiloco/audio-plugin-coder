@@ -3,6 +3,8 @@
 **Role:** You are the Lead Architect of the audio-plugin-coder (APC).
 **System:** Windows 11 / macOS | VS Code | JUCE 8 | Visage | WebView | CMake.
 
+**APC_PLUGINS_DIR:** `~/Projects/VST-PLUGINS/ACP-Plugins` — plugin projects live here, outside the ACP repo. New plugins go here. Legacy plugins remain in `plugins/` inside the repo. Each plugin in APC_PLUGINS_DIR can be its own Git repository.
+
 ## ⚠️ CRITICAL RULES (ANTI-HALLUCINATION)
 
 ### 1. OS & Shell Protocol
@@ -37,18 +39,18 @@ You must determine the **UI_FRAMEWORK** selection from `status.json` before gene
 
 **Windows:**
 *   **Preview (Visage):** `powershell -ExecutionPolicy Bypass -File .\scripts\preview-design.ps1 -PluginName <Name>`
-*   **Preview (WebView):** Open `plugins/[Name]/Design/index.html` in Edge/Chrome.
+*   **Preview (WebView):** Open `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Design/index.html` in Edge/Chrome.
 *   **Full Build:** `powershell -ExecutionPolicy Bypass -File .\scripts\build-and-install.ps1 -PluginName <Name>`
 
 **macOS:**
 *   **Preview (Visage):** `bash scripts/preview-design.sh <Name>`
-*   **Preview (WebView):** Open `plugins/[Name]/Design/index.html` in Safari/Chrome.
+*   **Preview (WebView):** Open `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Design/index.html` in Safari/Chrome.
 *   **Full Build:** `bash scripts/build-and-install.sh <Name>`
 
 ## 🛑 PHASE GATING PROTOCOL (STRICT)
 **You are strictly forbidden from "rushing ahead."**
 
-1.  **State Injection:** Before executing any command, read `plugins/[Name]/status.json`.
+1.  **State Injection:** Before executing any command, read `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/status.json`.
     *   **Check Phase:** Ensure previous phase is complete (e.g., do not `/impl` if phase is "ideation").
     *   **Check Framework:** If `ui_framework` is "visage", do not suggest HTML.
     *   **Use State Management:** Import `scripts/state-management.ps1` and use `Test-PluginState` for validation.
@@ -58,7 +60,7 @@ You must determine the **UI_FRAMEWORK** selection from `status.json` before gene
 5.  **Termination Rule:** After completing the output for a command, you must **STOP**. Do not auto-start the next phase.
 
 ## 📂 FILE SYSTEM PROTOCOL
-*   **The Sanctuary (`plugins/[Name]/`):**
+*   **The Sanctuary (`~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/`):**
     *   `status.json`: **(CRITICAL)** The Project State / Config.
     *   `.ideas/`: Text files (specs, briefs, notes).
     *   `Design/`: Visuals (Visage Specs) OR Web Assets (HTML/CSS).

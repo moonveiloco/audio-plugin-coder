@@ -2,7 +2,7 @@
 
 **Goal:** Define the plugin concept and initialize the project state.
 **Trigger:** `/dream [Name]`
-**Output Location:** `plugins/[Name]/`
+**Output Location:** `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/`
 
 ## ⛔ OUTPUT RESTRICTIONS (MANDATORY)
 *   **NO C++ Code.**
@@ -21,18 +21,18 @@ If the user prompt is vague, ask 3 clarifying questions:
 ## STEP 2: CONCEPT GENERATION
 *Only after the user answers, generate these files:*
 
-### 1. `plugins/[Name]/.ideas/creative-brief.md`
+### 1. `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/creative-brief.md`
 The vision statement.
 *   **Hook:** Marketing pitch.
 *   **Description:** Detailed behavior.
 
-### 2. `plugins/[Name]/.ideas/parameter-spec.md`
+### 2. `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/parameter-spec.md`
 The definitive list of controls.
 | ID | Name | Type | Range | Default | Unit |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | `gain` | Gain | Float | 0.0 - 1.0 | 0.5 | dB |
 
-### 3. `plugins/[Name]/status.json` (ROOT)
+### 3. `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/status.json` (ROOT)
 Initialize the project tracking file in the plugin root using the standardized schema.
 
 **Use the state management system:**

@@ -122,7 +122,7 @@ plugins/
 
 **The Three Zones:**
 
-1. **The Sanctuary** (`plugins/[Name]/`)
+1. **The Sanctuary** (`~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/`)
    - Contains all source code and design files
    - Version controlled
    - Clean, organized structure
@@ -321,7 +321,7 @@ build/
 ### WebView Framework
 
 ```
-plugins/[Name]/
+~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/
 ├── Design/
 │   └── index.html          # Production UI
 └── Source/
@@ -338,7 +338,7 @@ plugins/[Name]/
 ### Visage Framework
 
 ```
-plugins/[Name]/
+~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/
 ├── Design/
 │   └── [Visage design specs]
 └── Source/

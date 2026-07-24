@@ -6,7 +6,13 @@ description: "Resume plugin development from current state"
 ```powershell
 . "$PSScriptRoot\..\scripts\state-management.ps1"
 
-$state = Get-PluginState -PluginPath "plugins\$PluginName"
+$apcPluginsDir = "$env:USERPROFILE\Projects\VST-PLUGINS\ACP-Plugins"
+if (Test-Path "$apcPluginsDir\$PluginName") {
+    $pluginPath = "$apcPluginsDir\$PluginName"
+} else {
+    $pluginPath = "plugins\$PluginName"
+}
+$state = Get-PluginState -PluginPath $pluginPath
 
 Write-Host "Resuming plugin: $($state.plugin_name)" -ForegroundColor Cyan
 Write-Host "Current phase: $($state.current_phase)"

@@ -97,7 +97,13 @@ function Test-WithPluginVal {
         $testResults.Categories = $testCategories
 
         # Update status.json
-        Update-PluginState -PluginPath "plugins/$PluginName" -Updates @{
+        $apcPluginsDir = "$env:USERPROFILE\Projects\VST-PLUGINS\ACP-Plugins"
+        if (Test-Path "$apcPluginsDir\$PluginName") {
+            $pluginDir = "$apcPluginsDir\$PluginName"
+        } else {
+            $pluginDir = "plugins/$PluginName"
+        }
+        Update-PluginState -PluginPath $pluginDir -Updates @{
             "validation.tests_passed" = $passed
             "validation.pluginval_results" = @{
                 passed = $passed
@@ -144,7 +150,13 @@ function Test-WithPluginVal {
 function Get-PluginValReport {
     param([string]$PluginName)
 
-    $state = Get-PluginState -PluginPath "plugins/$PluginName"
+    $apcPluginsDir = "$env:USERPROFILE\Projects\VST-PLUGINS\ACP-Plugins"
+    if (Test-Path "$apcPluginsDir\$PluginName") {
+        $pluginDir = "$apcPluginsDir\$PluginName"
+    } else {
+        $pluginDir = "plugins/$PluginName"
+    }
+    $state = Get-PluginState -PluginPath $pluginDir
 
     if ($state.validation.pluginval_results) {
         $results = $state.validation.pluginval_results

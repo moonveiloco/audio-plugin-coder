@@ -20,7 +20,13 @@ $ErrorActionPreference = "Stop"
 
 $RootPath = (Get-Item "$PSScriptRoot\..").FullName
 $BuildDir = "$RootPath\build"
-$StatusJson = Join-Path $RootPath "plugins\$PluginName\status.json"
+$ApcPluginsDir = "$env:USERPROFILE\Projects\VST-PLUGINS\ACP-Plugins"
+if (Test-Path "$ApcPluginsDir\$PluginName") {
+    $PluginDir = "$ApcPluginsDir\$PluginName"
+} else {
+    $PluginDir = "$RootPath\plugins\$PluginName"
+}
+$StatusJson = "$PluginDir\status.json"
 $UseVisage = $false
 
 if (Test-Path $StatusJson) {
@@ -40,7 +46,7 @@ if ($UseVisage) {
 }
 
 # Validate prerequisites
-$state = Get-PluginState -PluginPath "plugins/$PluginName"
+$state = Get-PluginState -PluginPath $PluginDir
 if ($state.current_phase -ne "code_complete" -and -not $SkipTests) {
     Write-Warning "Plugin implementation not marked as complete. Use -SkipTests to override."
 }
@@ -153,7 +159,7 @@ if (-not $NoInstall) {
         Write-Host "STANDALONE built at: $($Exe.FullName)" -ForegroundColor Green
 
         # Add icon to standalone executable
-        $IconPath = "$RootPath\plugins\$PluginName\Assets\icon.ico"
+        $IconPath = "$PluginDir\Assets\icon.ico"
         if (Test-Path $IconPath) {
             Write-Host "Adding icon to standalone executable..." -ForegroundColor Yellow
             try {
@@ -171,7 +177,7 @@ if (-not $NoInstall) {
 }
 
 # 6. Update build status
-Update-PluginState -PluginPath "plugins/$PluginName" -Updates @{
+Update-PluginState -PluginPath $PluginDir -Updates @{
     "validation.build_completed" = $true
     "validation.build_timestamp" = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
     "validation.build_errors" = ($vst3Result.Errors + $standaloneResult.Errors).Count

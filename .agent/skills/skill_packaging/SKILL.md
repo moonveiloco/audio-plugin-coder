@@ -466,6 +466,9 @@ function New-DistributionPackage {
     $DistDir = "dist/$PluginName-v$Version"
     New-Item -ItemType Directory -Path $DistDir -Force | Out-Null
 
+    $apcPluginsDir = "$env:USERPROFILE\Projects\VST-PLUGINS\ACP-Plugins"
+    if (Test-Path "$apcPluginsDir\$PluginName") { $pluginDir = "$apcPluginsDir\$PluginName" } else { $pluginDir = "plugins/$PluginName" }
+
     # Copy all installers
     if ($Artifacts.Windows) {
         Copy-Item $Artifacts.Windows $DistDir/
@@ -478,7 +481,7 @@ function New-DistributionPackage {
     }
 
     # Copy documentation
-    Copy-Item "plugins/$PluginName/README.md" $DistDir/ -ErrorAction SilentlyContinue
+    Copy-Item "$pluginDir/README.md" $DistDir/ -ErrorAction SilentlyContinue
     Copy-Item "CHANGELOG.md" $DistDir/ -ErrorAction SilentlyContinue
     New-LicenseFile -PluginName $PluginName -OutputPath "$DistDir/LICENSE.txt"
 
@@ -522,7 +525,9 @@ See LICENSE.txt for full license terms.
 ### 7.2 Update State
 
 ```powershell
-Update-PluginState -PluginPath "plugins/$PluginName" -Phase "ship_complete" -Updates @{
+$apcPluginsDir = "$env:USERPROFILE\Projects\VST-PLUGINS\ACP-Plugins"
+if (Test-Path "$apcPluginsDir\$PluginName") { $pluginDir = "$apcPluginsDir\$PluginName" } else { $pluginDir = "plugins/$PluginName" }
+Update-PluginState -PluginPath $pluginDir -Phase "ship_complete" -Updates @{
     "version" = $Version
     "validation.ship_ready" = $true
     "distribution.platforms" = $SelectedPlatforms

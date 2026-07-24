@@ -100,7 +100,7 @@ get_plugin_state() {
 get_state_field() {
     # Get a specific field from state using jq query
     # Usage: get_state_field <PluginPath> <jq_query>
-    # Example: get_state_field "plugins/MyPlugin" ".ui_framework"
+    # Example: get_state_field "~/Projects/VST-PLUGINS/ACP-Plugins/MyPlugin" ".ui_framework"
     _check_jq || return 1
     local plugin_path="$1"
     local query="$2"

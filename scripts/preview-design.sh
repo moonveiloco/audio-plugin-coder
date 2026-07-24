@@ -17,7 +17,12 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_PATH="$(cd "$SCRIPT_DIR/.." && pwd)"
 BUILD_DIR="$ROOT_PATH/build"
-PLUGIN_DIR="$ROOT_PATH/plugins/$PLUGIN_NAME"
+APC_PLUGINS_DIR="$HOME/Projects/VST-PLUGINS/ACP-Plugins"
+if [ -d "$APC_PLUGINS_DIR/$PLUGIN_NAME" ]; then
+    PLUGIN_DIR="$APC_PLUGINS_DIR/$PLUGIN_NAME"
+else
+    PLUGIN_DIR="$ROOT_PATH/plugins/$PLUGIN_NAME"
+fi
 STATUS_JSON="$PLUGIN_DIR/status.json"
 
 # --- DETECT FRAMEWORK ---

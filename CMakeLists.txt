@@ -71,9 +71,22 @@ endif()
 # ============================================
 # PLUGIN DISCOVERY
 # ============================================
-message(STATUS "Scanning for plugins in: ${CMAKE_CURRENT_SOURCE_DIR}/plugins")
 
-file(GLOB PLUGIN_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/plugins/*")
+# Legacy plugins inside the ACP repo
+message(STATUS "Scanning for plugins (legacy): ${CMAKE_CURRENT_SOURCE_DIR}/plugins")
+file(GLOB LEGACY_PLUGIN_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/plugins/*")
+
+# External plugins in APC_PLUGINS_DIR
+set(APC_PLUGINS_DIR "$ENV{HOME}/Projects/VST-PLUGINS/ACP-Plugins")
+if(EXISTS "${APC_PLUGINS_DIR}")
+    message(STATUS "Scanning for plugins (external): ${APC_PLUGINS_DIR}")
+    file(GLOB EXTERNAL_PLUGIN_DIRS "${APC_PLUGINS_DIR}/*")
+else()
+    set(EXTERNAL_PLUGIN_DIRS "")
+endif()
+
+# Combine both lists
+set(PLUGIN_DIRS ${LEGACY_PLUGIN_DIRS} ${EXTERNAL_PLUGIN_DIRS})
 
 set(APC_PLUGIN_COUNT 0)
 

@@ -170,7 +170,7 @@
 
 **Step 3:** Copy CloudWash template
 ```powershell
-cp plugins/CloudWash/Source/ui/public/index.html plugins/YourPlugin/Source/ui/public/
+cp plugins/CloudWash/Source/ui/public/index.html ~/Projects/VST-PLUGINS/ACP-Plugins/YourPlugin/Source/ui/public/
 ```
 
 **Step 4:** Modify for your plugin

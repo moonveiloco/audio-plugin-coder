@@ -13,7 +13,7 @@ The APC documentation system ensures every shipped plugin includes professional 
 ### 1. Documentation Folder Structure
 
 ```
-plugins/[PluginName]/Documentation/
+~/Projects/VST-PLUGINS/ACP-Plugins/[PluginName]/Documentation/
 ├── USER_MANUAL.md       (automatically included)
 ├── QUICKSTART.md        (optional)
 ├── TROUBLESHOOTING.md   (optional)

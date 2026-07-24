@@ -1,4 +1,5 @@
 {
+  "apc_plugins_dir": "~/Projects/VST-PLUGINS/ACP-Plugins",
   "permissions": {
     "allow": [
       "Bash(powershell -Command:*)",

@@ -10,8 +10,12 @@ description: "PHASE 1: Ideation - Create creative brief and parameter spec"
 **State Check:**
 ```powershell
 # Check if plugin already exists
-if (Test-Path "plugins\$PluginName") {
+if (Test-Path "$env:USERPROFILE\Projects\VST-PLUGINS\ACP-Plugins\$PluginName") {
     Write-Warning "Plugin already exists. Use /resume to continue existing plugin."
+    exit 1
+}
+if (Test-Path "plugins\$PluginName") {
+    Write-Warning "Legacy plugin exists. Use /resume to continue existing plugin."
     exit 1
 }
 ```
@@ -20,7 +24,7 @@ if (Test-Path "plugins\$PluginName") {
 Load and execute `..claude\skills\dream\SKILL.md`
 
 **Validation:**
-- Verify `plugins\[Name]\status.json` exists
+- Verify `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/status.json` exists
 - Verify `current_phase` = "ideation"
 - Verify creative brief and parameter spec exist
 
@@ -30,9 +34,9 @@ Stop and inform user:
 ✅ Dream phase complete!
 
 Files created:
-- plugins/[Name]/.ideas/creative-brief.md
-- plugins/[Name]/.ideas/parameter-spec.md
-- plugins/[Name]/status.json
+- ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/creative-brief.md
+- ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/parameter-spec.md
+- ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/status.json
 
 Next step: /plan [Name]
 ```
@@ -47,7 +51,10 @@ description: "PHASE 2: Architecture - Define structure and select UI framework"
 ```powershell
 . "$PSScriptRoot\..\scripts\state-management.ps1"
 
-if (-not (Test-PluginState -PluginPath "plugins\$PluginName" -RequiredPhase "ideation" -RequiredFiles @(".ideas/creative-brief.md", ".ideas/parameter-spec.md"))) {
+$apcPluginsDir = "$env:USERPROFILE\Projects\VST-PLUGINS\ACP-Plugins"
+if (Test-Path "$apcPluginsDir\$PluginName") { $pluginDir = "$apcPluginsDir\$PluginName" } else { $pluginDir = "plugins/$PluginName" }
+
+if (-not (Test-PluginState -PluginPath $pluginDir -RequiredPhase "ideation" -RequiredFiles @(".ideas/creative-brief.md", ".ideas/parameter-spec.md"))) {
     Write-Error "Prerequisites not met. Complete /dream first."
     exit 1
 }
@@ -74,8 +81,8 @@ Framework selected: [Visage/WebView]
 Complexity score: [N]/5
 
 Files created:
-- plugins/[Name]/.ideas/architecture.md
-- plugins/[Name]/.ideas/plan.md
+- ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/architecture.md
+- ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/plan.md
 
 Next step: /design [Name]
 ```
