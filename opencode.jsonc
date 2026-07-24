@@ -1,0 +1,12 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "skills": {
+    "paths": [".claude/skills"]
+  },
+  "instructions": [
+    "JUCE_DIR = ~/JUCE (JUCE 9, non _tools/JUCE che è JUCE 8)",
+    "JUCE 8→9 breaking: Drawable non eredita Component (usa DrawableComponent wrapper), SVG createFromSVG(XmlElement&) rimosso (usa createFromSVGFile/String), multi-touch Windows richiede usesWindowsMultiTouch(), Linux EGL non GLX (installa libegl-dev)",
+    "Usa scripts/build-and-install.sh per build, mai cmake manuale",
+    "Plugin CMakeLists NON devono chiamare juce_add_modules (duplicate target error)"
+  ]
+}
