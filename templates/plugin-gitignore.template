@@ -1,0 +1,31 @@
+# --- Build artifacts (staged by build-and-install.sh) ---
+build/
+dist/
+
+# --- IDE / Editor ---
+.vscode/
+.idea/
+*.user
+*.suo
+*.swp
+*~
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Logs ---
+*.log
+*_log.txt
+crash_log.txt
+
+# --- Backups ---
+_backups/
+*.bak
+*.orig
+
+# --- JUCE generated (if any leak here) ---
+JuceLibraryCode/
+*.o
+*.obj

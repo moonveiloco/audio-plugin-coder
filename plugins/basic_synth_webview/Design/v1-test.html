@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>basic_synth_webview</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-primary: #0B0B12;
+      --bg-panel: rgba(18, 20, 30, 0.75);
+      --bg-knob: rgba(30, 35, 50, 0.6);
+      --ice-blue: #7EC8E3;
+      --azure: #0080FF;
+      --azure-glow: rgba(0, 128, 255, 0.3);
+      --white: #FFFFFF;
+      --text-primary: #FFFFFF;
+      --text-secondary: rgba(255, 255, 255, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --knob-track-clr: rgba(255, 255, 255, 0.08);
+      --panel-radius: 8px;
+      --knob-size: 40px;
+      --topbar-height: 44px;
+    }
+
+    html, body {
+      width: 800px; height: 500px;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* ─── Top Bar ─── */
+    .topbar {
+      height: var(--topbar-height);
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--glass-border);
+      background: rgba(11, 11, 18, 0.9);
+    }
+    .topbar-left { display: flex; align-items: center; gap: 8px; }
+    .topbar-brand { font-size: 13px; font-weight: 600; letter-spacing: 0.5px; }
+    .topbar-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--ice-blue); opacity: 0.5; flex-shrink: 0;
+    }
+    .topbar-right {
+      font-size: 10px; color: var(--text-secondary);
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+
+    /* ─── Content ─── */
+    .content {
+      height: calc(500px - var(--topbar-height));
+      display: flex;
+      align-items: stretch;
+      gap: 4px;
+      padding: 4px;
+    }
+
+    /* ─── Panel ─── */
+    .panel {
+      flex: 1;
+      min-width: 0;
+      background: var(--bg-panel);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--panel-radius);
+      padding: 1px 3px 1px;
+      display: flex; flex-direction: column;
+      position: relative; overflow: hidden;
+    }
+    .panel::before {
+      content: "";
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+    }
+    .panel-header {
+      text-align: center;
+      font-size: 8px; font-weight: 700;
+      letter-spacing: 1.6px; text-transform: uppercase;
+      color: var(--ice-blue);
+      padding-bottom: 1px;
+      margin-bottom: 1px;
+      border-bottom: 1px solid var(--glass-border);
+      flex-shrink: 0;
+    }
+    .panel-controls {
+      flex: 1;
+      display: flex; flex-direction: column;
+      justify-content: center;
+      gap: 0;
+      padding: 0;
+    }
+
+    .control-row {
+      display: flex;
+      justify-content: center;
+      gap: 1px;
+      flex-shrink: 0;
+    }
+
+    /* ─── Knob ─── */
+    .knob {
+      display: flex; flex-direction: column;
+      align-items: center;
+      width: 48px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .knob-visual {
+      position: relative;
+      width: var(--knob-size); height: var(--knob-size);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .knob-track-base {
+      position: absolute;
+      width: var(--knob-size); height: var(--knob-size);
+      border-radius: 50%;
+      background: var(--bg-knob);
+      border: 1px solid var(--glass-border);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .knob:hover .knob-track-base {
+      border-color: rgba(126, 200, 227, 0.3);
+      box-shadow: 0 0 10px var(--azure-glow);
+    }
+    .knob svg {
+      position: absolute;
+      width: var(--knob-size); height: var(--knob-size);
+      transform: rotate(-225deg);
+    }
+    .knob svg .arc-track { stroke: var(--knob-track-clr); fill: none; stroke-width: 2.5; }
+    .knob svg .arc-fill {
+      stroke: url(#knobGrad);
+      fill: none; stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-dasharray: 106.81;
+      stroke-dashoffset: 106.81;
+      transition: stroke-dashoffset 0.06s ease-out;
+    }
+    /* Big volume knob SVG (48×48, r=21) */
+    .panel-master .knob svg .arc-fill {
+      stroke-dasharray: 131.95;
+      stroke-dashoffset: 131.95;
+    }
+    .knob input[type=range] {
+      position: absolute;
+      width: var(--knob-size); height: var(--knob-size);
+      opacity: 0; cursor: grab; z-index: 2;
+    }
+    .knob input[type=range]:active { cursor: grabbing; }
+    .knob-value {
+      font-size: 9px; font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1; margin-top: 1px;
+    }
+    .knob-label {
+      font-size: 7.5px;
+      color: var(--text-secondary);
+      letter-spacing: 0.2px;
+      line-height: 1; margin-top: 0.5px;
+      max-width: 48px; overflow: hidden;
+      text-overflow: ellipsis; white-space: nowrap;
+      text-align: center;
+    }
+
+    /* ─── Dropdown ─── */
+    .dropdown { position: relative; width: 72px; flex-shrink: 0; }
+    .dropdown-select {
+      background: var(--bg-knob);
+      border: 1px solid var(--glass-border);
+      border-radius: 4px;
+      padding: 2px 5px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: border-color 0.15s;
+    }
+    .dropdown-select:hover { border-color: rgba(126,200,227,0.3); }
+    .dropdown-display { font-size: 8px; color: var(--text-primary); letter-spacing: 0.3px; }
+    .dropdown-arrow { font-size: 6px; color: var(--ice-blue); }
+    .dropdown-options {
+      display: none;
+      position: absolute; top: 100%; left: 0; right: 0; z-index: 20;
+      background: rgba(25, 28, 42, 0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 4px;
+      margin-top: 1px; overflow: hidden;
+    }
+    .dropdown-options.open { display: block; }
+    .dropdown-option {
+      font-size: 8px; padding: 3px 5px;
+      color: var(--text-secondary); cursor: pointer;
+      transition: background 0.12s, color 0.12s;
+    }
+    .dropdown-option:hover { background: rgba(0,128,255,0.14); color: var(--text-primary); }
+    .dropdown-option.active { color: var(--ice-blue); background: rgba(0,128,255,0.1); }
+    .dropdown-label {
+      font-size: 7px; color: var(--text-secondary);
+      text-align: center; letter-spacing: 0.2px;
+      margin-top: 0px;
+    }
+
+    /* ─── Master panel (larger volume knob) ─── */
+    .panel-master .knob { width: inherit; }
+    .panel-master .knob-visual { width: 48px; height: 48px; }
+    .panel-master .knob input { width: 48px; height: 48px; }
+    .panel-master .knob-track-base { width: 48px; height: 48px; }
+    .panel-master .knob svg { width: 48px; height: 48px; }
+    .panel-master .knob-label { max-width: 60px; }
+  </style>
+</head>
+<body>
+
+  <!-- SVG gradient defs -->
+  <svg style="position:absolute;width:0;height:0" aria-hidden="true">
+    <defs>
+      <linearGradient id="knobGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#7EC8E3"/>
+        <stop offset="100%" stop-color="#0080FF"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- ─── Top Bar ─── -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-dot"></span>
+      <span class="topbar-brand">basic_synth_webview</span>
+    </div>
+    <span class="topbar-right">ambient pad machine</span>
+  </header>
+
+  <!-- ─── Content ─── -->
+  <main class="content">
+
+    <!-- ═══ OSCILLATOR ═══ -->
+    <section class="panel">
+      <div class="panel-header">Osc</div>
+      <div class="panel-controls">
+        <div class="control-row" style="gap:0;flex-direction:column;align-items:center">
+          <div class="dropdown" data-param="osc1_waveform" style="width:100%">
+            <div class="dropdown-select">
+              <span class="dropdown-display">Sine</span>
+              <span class="dropdown-arrow">▼</span>
+            </div>
+            <div class="dropdown-options">
+              <div class="dropdown-option active" data-value="Sine">Sine</div>
+              <div class="dropdown-option" data-value="Triangle">Tri</div>
+              <div class="dropdown-option" data-value="Saw">Saw</div>
+              <div class="dropdown-option" data-value="Square">Sqr</div>
+              <div class="dropdown-option" data-value="PWM">PWM</div>
+            </div>
+            <div class="dropdown-label">Wave 1</div>
+          </div>
+          <div class="dropdown" data-param="osc2_waveform" style="width:100%">
+            <div class="dropdown-select">
+              <span class="dropdown-display">Tri</span>
+              <span class="dropdown-arrow">▼</span>
+            </div>
+            <div class="dropdown-options">
+              <div class="dropdown-option" data-value="Sine">Sine</div>
+              <div class="dropdown-option active" data-value="Triangle">Tri</div>
+              <div class="dropdown-option" data-value="Saw">Saw</div>
+              <div class="dropdown-option" data-value="Square">Sqr</div>
+              <div class="dropdown-option" data-value="PWM">PWM</div>
+            </div>
+            <div class="dropdown-label">Wave 2</div>
+          </div>
+        </div>
+        <div class="control-row">
+          <div class="knob" data-param="osc1_detune">
+            <div class="knob-visual">
+              <div class="knob-track-base"></div>
+              <svg viewBox="0 0 40 40">
+                <circle class="arc-track" cx="20" cy="20" r="17"/>
+                <circle class="arc-fill" cx="20" cy="20" r="17" id="arc-osc1_detune"/>
+                <line class="knob-ind" x1="20" y1="3" x2="20" y2="9" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+              </svg>
+              <input type="range" min="-50" max="50" value="0" step="1">
+            </div>
+            <div class="knob-value" id="val-osc1_detune">0</div>
+            <div class="knob-label">Detune 1</div>
+          </div>
+          <div class="knob" data-param="osc2_detune">
+            <div class="knob-visual">
+              <div class="knob-track-base"></div>
+              <svg viewBox="0 0 40 40">
+                <circle class="arc-track" cx="20" cy="20" r="17"/>
+                <circle class="arc-fill" cx="20" cy="20" r="17" id="arc-osc2_detune"/>
+                <line class="knob-ind" x1="20" y1="3" x2="20" y2="9" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+              </svg>
+              <input type="range" min="-50" max="50" value="5" step="1">
+            </div>
+            <div class="knob-value" id="val-osc2_detune">5</div>
+            <div class="knob-label">Detune 2</div>
+          </div>
+        </div>
+        <div class="control-row">
+          <div class="knob" data-param="osc_mix">
+            <div class="knob-visual">
+              <div class="knob-track-base"></div>
+              <svg viewBox="0 0 40 40">
+                <circle class="arc-track" cx="20" cy="20" r="17"/>
+                <circle class="arc-fill" cx="20" cy="20" r="17" id="arc-osc_mix"/>
+                <line class="knob-ind" x1="20" y1="3" x2="20" y2="9" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+              </svg>
+              <input type="range" min="0" max="1" value="0.5" step="0.01">
+            </div>
+            <div class="knob-value" id="val-osc_mix">0.50</div>
+            <div class="knob-label">Mix</div>
+          </div>
+          <div class="knob" data-param="noise_level">
+            <div class="knob-visual">
+              <div class="knob-track-base"></div>
+              <svg viewBox="0 0 40 40">
+                <circle class="arc-track" cx="20" cy="20" r="17"/>
+                <circle class="arc-fill" cx="20" cy="20" r="17" id="arc-noise_level"/>
+                <line class="knob-ind" x1="20" y1="3" x2="20" y2="9" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+              </svg>
+              <input type="range" min="0" max="1" value="0" step="0.01">
+            </div>
+            <div class="knob-value" id="val-noise_level">0.00</div>
+            <div class="knob-label">Noise</div>
+          </div>
+        </div>
+        <div class="control-row">
+          <div class="dropdown" data-param="voice_mode" style="width:100%">
+            <div class="dropdown-select">
+              <span class="dropdown-display">Poly</span>
+              <span class="dropdown-arrow">▼</span>
+            </div>
+            <div class="dropdown-options">
+              <div class="dropdown-option active" data-value="Poly">Poly</div>
+              <div class="dropdown-option" data-value="Mono">Mono</div>
+              <div class="dropdown-option" data-value="Unison">Unison</div>
+            </div>
+            <div class="dropdown-label">Mode</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ FILTER ═══ -->
+    <section class="panel">
+      <div class="panel-header">Filter</div>
+      <div class="panel-controls">
+        <div class="control-row" style="gap:6px">
+          <div class="knob" data-param="filter_cutoff">
+            <div class="knob-visual">
+              <div class="knob-track-base"></div>
+              <svg viewBox="0 0 40 40">
+                <circle class="arc-track" cx="20" cy="20" r="17"/>
+                <circle class="arc-fill" cx="20" cy="20" r="17" id="arc-filter_cutoff"/>
+                <line class="knob-ind" x1="20" y1="3" x2="20" y2="9" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+              </svg>
+              <input type="range" min="20" max="20000" value="18000" step="1">
+            </div>
+            <div class="knob-value" id="val-filter_cutoff">18.0k</div>
+            <div class="knob-label">Cutoff</div>
+          </div>
+          <div class="knob" data-param="filter_resonance">
+            <div class="knob-visual">
+              <div class="knob-track-base"></div>
+              <svg viewBox="0 0 40 40">
+                <circle class="arc-track" cx="20" cy="20" r="17"/>
+                <circle class="arc-fill" cx="20" cy="20" r="17" id="arc-filter_resonance"/>
+                <line class="knob-ind" x1="20" y1="3" x2="20" y2="9" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+              </svg>
+              <input type="range" min="0" max="1" value="0.2" step="0.01">
+            </div>
+            <div class="knob-value" id="val-filter_resonance">0.20</div>
+            <div class="knob-label">Resonance</div>
+          </div>
+        </div>
+        <div class="control-row" style="gap:6px">
+          <div class="knob" data-param="filter_env_amount">
+            <div class="knob-visual">
+              <div class="knob-track-base"></div>
+              <svg viewBox="0 0 40 40">
+                <circle class="arc-track" cx="20" cy="20" r="17"/>
+                <circle class="arc-fill" cx="20" cy="20" r="17" id="arc-filter_env_amount"/>
+                <line class="knob-ind" x1="20" y1="3" x2="20" y2="9" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+              </svg>
+              <input type="range" min="-1" max="1" value="0.5" step="0.01">
+            </div>
+            <div class="knob-value" id="val-filter_env_amount">0.50</div>
+            <div class="knob-label">Env Amt</div>
+          </div>
+          <div class="knob" data-param="filter_keytrack">
+            <div class="knob-visual">
+              <div class="knob-track-base"></div>
+              <svg viewBox="0 0 40 40">
+                <circle class="arc-track" cx="20" cy="20" r="17"/>
+                <circle class="arc-fill" cx="20" cy="20" r="17" id="arc-filter_keytrack"/>
+                <line class="knob-ind" x1="20" y1="3" x2="20" y2="9" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+              </svg>
+              <input type="range" min="0" max="1" value="0.5" step="0.01">
+            </div>
+            <div class="knob-value" id="val-filter_keytrack">0.50</div>
+            <div class="knob-label">Key Trk</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ ENVELOPE ═══ -->
+    <section class="panel">
+      <div class="panel-header">Env</div>
+      <div class="panel-controls">
+        <div class="control-row" style="gap:6px">
+          <div class="knob" data-param="attack">
+            <div class="knob-visual">
+              <div class="knob-track-base"></div>
+              <svg viewBox="0 0 40 40">
+                <circle class="arc-track" cx="20" cy="20" r="17"/>
+                <circle class="arc-fill" cx="20" cy="20" r="17" id="arc-attack"/>
+                <line class="knob-ind" x1="20" y1="3" x2="20" y2="9" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+              </svg>
+              <input type="range" min="0.001" max="10" value="1" step="0.001">
+            </div>
+            <div class="knob-value" id="val-attack">1.00</div>
+            <div class="knob-label">Attack</div>
+          </div>
+          <div class="knob" data-param="decay">
+            <div class="knob-visual">
+              <div class="knob-track-base"></div>
+              <svg viewBox="0 0 40 40">
+                <circle class="arc-track" cx="20" cy="20" r="17"/>
+                <circle class="arc-fill" cx="20" cy="20" r="17" id="arc-decay"/>
+                <line class="knob-ind" x1="20" y1="3" x2="20" y2="9" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+              </svg>
+              <input type="range" min="0.001" max="10" value="0.8" step="0.001">
+            </div>
+            <div class="knob-value" id="val-decay">0.80</div>
+            <div class="knob-label">Decay</div>
+          </div>
+        </div>
+        <div class="control-row" style="gap:6px">
+          <div class="knob" data-param="sustain">
+            <div class="knob-visual">
+              <div class="knob-track-base"></div>
+              <svg viewBox="0 0 40 40">
+                <circle class="arc-track" cx="20" cy="20" r="17"/>
+                <circle class="arc-fill" cx="20" cy="20" r="17" id="arc-sustain"/>
+                <line class="knob-ind" x1="20" y1="3" x2="20" y2="9" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+              </svg>
+              <input type="range" min="0" max="1" value="0.7" step="0.01">
+            </div>
+            <div class="knob-value" id="val-sustain">0.70</div>
+            <div class="knob-label">Sustain</div>
+          </div>
+          <div class="knob" data-param="release">
+            <div class="knob-visual">
+              <div class="knob-track-base"></div>
+              <svg viewBox="0 0 40 40">
+                <circle class="arc-track" cx="20" cy="20" r="17"/>
+                <circle class="arc-fill" cx="20" cy="20" r="17" id="arc-release"/>
+                <line class="knob-ind" x1="20" y1="3" x2="20" y2="9" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+              </svg>
+              <input type="range" min="0.001" max="15" value="3" step="0.001">
+            </div>
+            <div class="knob-value" id="val-release">3.00</div>
+            <div class="knob-label">Release</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ REVERB ═══ -->
+    <section class="panel">
+      <div class="panel-header">Reverb</div>
+      <div class="panel-controls">
+        <div class="control-row" style="gap:6px">
+          <div class="knob" data-param="reverb_mix">
+            <div class="knob-visual">
+              <div class="knob-track-base"></div>
+              <svg viewBox="0 0 40 40">
+                <circle class="arc-track" cx="20" cy="20" r="17"/>
+                <circle class="arc-fill" cx="20" cy="20" r="17" id="arc-reverb_mix"/>
+                <line class="knob-ind" x1="20" y1="3" x2="20" y2="9" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+              </svg>
+              <input type="range" min="0" max="1" value="0.35" step="0.01">
+            </div>
+            <div class="knob-value" id="val-reverb_mix">0.35</div>
+            <div class="knob-label">Mix</div>
+          </div>
+          <div class="knob" data-param="reverb_size">
+            <div class="knob-visual">
+              <div class="knob-track-base"></div>
+              <svg viewBox="0 0 40 40">
+                <circle class="arc-track" cx="20" cy="20" r="17"/>
+                <circle class="arc-fill" cx="20" cy="20" r="17" id="arc-reverb_size"/>
+                <line class="knob-ind" x1="20" y1="3" x2="20" y2="9" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+              </svg>
+              <input type="range" min="0" max="1" value="0.65" step="0.01">
+            </div>
+            <div class="knob-value" id="val-reverb_size">0.65</div>
+            <div class="knob-label">Size</div>
+          </div>
+        </div>
+        <div class="control-row" style="gap:6px">
+          <div class="knob" data-param="reverb_decay">
+            <div class="knob-visual">
+              <div class="knob-track-base"></div>
+              <svg viewBox="0 0 40 40">
+                <circle class="arc-track" cx="20" cy="20" r="17"/>
+                <circle class="arc-fill" cx="20" cy="20" r="17" id="arc-reverb_decay"/>
+                <line class="knob-ind" x1="20" y1="3" x2="20" y2="9" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+              </svg>
+              <input type="range" min="0" max="1" value="0.6" step="0.01">
+            </div>
+            <div class="knob-value" id="val-reverb_decay">0.60</div>
+            <div class="knob-label">Decay</div>
+          </div>
+          <div class="knob" data-param="reverb_damping">
+            <div class="knob-visual">
+              <div class="knob-track-base"></div>
+              <svg viewBox="0 0 40 40">
+                <circle class="arc-track" cx="20" cy="20" r="17"/>
+                <circle class="arc-fill" cx="20" cy="20" r="17" id="arc-reverb_damping"/>
+                <line class="knob-ind" x1="20" y1="3" x2="20" y2="9" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+              </svg>
+              <input type="range" min="0" max="1" value="0.5" step="0.01">
+            </div>
+            <div class="knob-value" id="val-reverb_damping">0.50</div>
+            <div class="knob-label">Damping</div>
+          </div>
+        </div>
+        <div class="control-row">
+          <div class="knob" data-param="reverb_shimmer" style="width:56px">
+            <div class="knob-visual">
+              <div class="knob-track-base"></div>
+              <svg viewBox="0 0 40 40">
+                <circle class="arc-track" cx="20" cy="20" r="17"/>
+                <circle class="arc-fill" cx="20" cy="20" r="17" id="arc-reverb_shimmer"/>
+                <line class="knob-ind" x1="20" y1="3" x2="20" y2="9" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+              </svg>
+              <input type="range" min="0" max="1" value="0.2" step="0.01">
+            </div>
+            <div class="knob-value" id="val-reverb_shimmer">0.20</div>
+            <div class="knob-label">Shimmer</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ MASTER ═══ -->
+    <section class="panel panel-master">
+      <div class="panel-header">Master</div>
+      <div class="panel-controls">
+        <div class="control-row">
+          <div class="knob" data-param="volume">
+            <div class="knob-visual">
+              <div class="knob-track-base"></div>
+              <svg viewBox="0 0 48 48">
+                <circle class="arc-track" cx="24" cy="24" r="21"/>
+                <circle class="arc-fill" cx="24" cy="24" r="21" id="arc-volume"/>
+                <line class="knob-ind" x1="24" y1="3" x2="24" y2="9" stroke="#fff" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+              </svg>
+              <input type="range" min="0" max="1" value="0.75" step="0.01">
+            </div>
+            <div class="knob-value" id="val-volume">0.75</div>
+            <div class="knob-label">Volume</div>
+          </div>
+        </div>
+        <div class="control-row">
+          <div class="dropdown" data-param="polyphony" style="width:56px">
+            <div class="dropdown-select">
+              <span class="dropdown-display">8</span>
+              <span class="dropdown-arrow">▼</span>
+            </div>
+            <div class="dropdown-options">
+              <div class="dropdown-option" data-value="1">1</div>
+              <div class="dropdown-option" data-value="2">2</div>
+              <div class="dropdown-option" data-value="4">4</div>
+              <div class="dropdown-option active" data-value="8">8</div>
+              <div class="dropdown-option" data-value="12">12</div>
+              <div class="dropdown-option" data-value="16">16</div>
+            </div>
+            <div class="dropdown-label">Voices</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    "use strict";
+
+    // ─── KNOB SETUP ───
+    document.querySelectorAll(".knob").forEach(knob => {
+      const input = knob.querySelector("input[type=range]");
+      const paramId = knob.dataset.param;
+      const valueEl = document.getElementById("val-" + paramId);
+      const arcEl = document.getElementById("arc-" + paramId);
+      const svg = knob.querySelector("svg");
+      const ind = svg ? svg.querySelector(".knob-ind") : null;
+      if (!input || !valueEl || !arcEl) return;
+
+      // Get SVG center from viewBox
+      let cx = 20, cy = 20;
+      if (svg) {
+        const vb = svg.getAttribute("viewBox").split(/\s+/).map(Number);
+        if (vb.length === 4) { cx = vb[0] + vb[2] / 2; cy = vb[1] + vb[3] / 2; }
+      }
+      // Circumference based on arc radius
+      const r = parseFloat(arcEl.getAttribute("r"));
+      const circ = 2 * Math.PI * r;
+
+      function update() {
+        const v = parseFloat(input.value);
+        const min = parseFloat(input.min);
+        const max = parseFloat(input.max);
+        const pct = Math.max(0, Math.min(1, (v - min) / (max - min)));
+
+        // Arc fill (270° sweep: 0% = full offset, 100% = 25% offset)
+        arcEl.style.strokeDashoffset = circ * (1 - pct * 0.75);
+
+        // Indicator rotation: arc starts at 3 o'clock (0°), indicator default is 12 o'clock (270°)
+        // At 0%: indicator at 3 o'clock = rotate -270°; at 100%: indicator at 12 o'clock = rotate 0°
+        if (ind) {
+          const angle = (pct - 1) * 270;  // -270° → 0° as pct goes 0 → 1
+          ind.setAttribute("transform", `rotate(${angle}, ${cx}, ${cy})`);
+        }
+
+        // Format display
+        if (paramId === "filter_cutoff") {
+          if (v >= 1000) valueEl.textContent = (v / 1000).toFixed(1) + "k";
+          else if (v >= 100) valueEl.textContent = Math.round(v) + "";
+          else valueEl.textContent = Math.round(v) + "";
+        } else if (input.step === "1") {
+          valueEl.textContent = Math.round(v) + "";
+        } else {
+          valueEl.textContent = v.toFixed(2);
+        }
+      }
+
+      input.addEventListener("input", update);
+      input.addEventListener("mousedown", () => {
+        if (window.__JUCE__) window.__JUCE__.sliderDragStarted(paramId);
+      });
+      input.addEventListener("mouseup", () => {
+        if (window.__JUCE__) window.__JUCE__.sliderDragEnded(paramId);
+      });
+      update();
+    });
+
+    // ─── DROPDOWN SETUP ───
+    document.querySelectorAll(".dropdown").forEach(drop => {
+      const select = drop.querySelector(".dropdown-select");
+      const options = drop.querySelectorAll(".dropdown-option");
+      const display = drop.querySelector(".dropdown-display");
+      const optsEl = drop.querySelector(".dropdown-options");
+
+      select.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isOpen = optsEl.classList.contains("open");
+        document.querySelectorAll(".dropdown-options.open").forEach(el => el.classList.remove("open"));
+        optsEl.classList.toggle("open");
+      });
+
+      options.forEach(opt => {
+        opt.addEventListener("click", (e) => {
+          e.stopPropagation();
+          options.forEach(o => o.classList.remove("active"));
+          opt.classList.add("active");
+          if (display) display.textContent = opt.textContent;
+          const paramId = drop.dataset.param;
+          const valueEl = document.getElementById("val-" + paramId);
+          if (valueEl) valueEl.textContent = opt.dataset.value || opt.textContent;
+          optsEl.classList.remove("open");
+        });
+      });
+    });
+
+    // ─── CLOSE DROPDOWNS ───
+    document.addEventListener("click", () => {
+      document.querySelectorAll(".dropdown-options.open").forEach(el => el.classList.remove("open"));
+    });
+  </script>
+</body>
+</html>
