@@ -19,6 +19,8 @@ Carica ed esegui la skill `.claude/skills/dream/SKILL.md`
 - `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/creative-brief.md`
 - `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/parameter-spec.md`
 - `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/status.json`
+- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.gitignore`
+- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.gitattributes`
 
 ## Completamento
 ```

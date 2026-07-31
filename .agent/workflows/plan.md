@@ -5,11 +5,20 @@ description: "PHASE 2: Architecture - Define structure and UI framework"
 # Plan Phase (Architecture)
 
 **Prerequisites:**
-1. Validate: `Test-PluginState -PluginPath "plugins\$PluginName" -RequiredPhase "ideation"`
-2. Check required files exist from ideation phase
+```powershell
+. "$PSScriptRoot\..\scripts\state-management.ps1"
+
+$apcPluginsDir = "$env:USERPROFILE\Projects\VST-PLUGINS\ACP-Plugins"
+if (Test-Path "$apcPluginsDir\$PluginName") { $pluginDir = "$apcPluginsDir\$PluginName" } else { $pluginDir = "plugins/$PluginName" }
+
+if (-not (Test-PluginState -PluginPath $pluginDir -RequiredPhase "ideation" -RequiredFiles @(".ideas/creative-brief.md", ".ideas/parameter-spec.md"))) {
+    Write-Error "Prerequisites not met. Complete /dream first."
+    exit 1
+}
+```
 
 **Execute Skill:**
-Load and follow `...agent/skills/skill_planning.md` exactly.
+Load and follow `.agent/skills/skill_planning/SKILL.md` exactly.
 
 **CRITICAL UI Framework Decision:**
 - Read user requirements

@@ -27,6 +27,7 @@ Load and execute `...kilocode\skills\skill_ideation\SKILL.md`
 - Verify `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/status.json` exists
 - Verify `current_phase` = "ideation"
 - Verify creative brief and parameter spec exist
+- Verify `.gitignore` and `.gitattributes` exist in plugin root
 
 **Completion:**
 Stop and inform user:
@@ -37,6 +38,8 @@ Files created:
 - ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/creative-brief.md
 - ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/parameter-spec.md
 - ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/status.json
+- ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.gitignore
+- ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.gitattributes
 
 Next step: /plan [Name]
 ```

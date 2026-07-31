@@ -53,3 +53,5 @@ cloudwash_crash_log.txt
 # Backups
 _backups/
 dist/
+
+CONTRIBUTING_2.md

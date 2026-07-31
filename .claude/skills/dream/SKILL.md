@@ -78,6 +78,14 @@ New-PluginState -PluginName "[Name]" -PluginPath "plugins\[Name]"
 }
 ```
 
+### 4. Copy Git Templates
+Copy the git templates into the new plugin directory so it is ready for `git init`:
+```bash
+cp templates/plugin-gitignore.template      ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.gitignore
+cp templates/plugin-gitattributes.template  ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.gitattributes
+```
+These provide line-ending normalization (LF for source, CRLF for `.ps1`/`.bat`), binary handling for VST3/AU/artifacts, and standard ignores for `build/`, `dist/`, IDE, and OS files.
+
 **Update state after completion:**
 ```powershell
 # Use standardized phase completion function
