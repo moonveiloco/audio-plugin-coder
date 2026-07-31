@@ -41,5 +41,14 @@
     "last_backup": null,
     "rollback_available": false,
     "error_log": []
+  },
+  "build_info": {
+    "last_build_at": null,
+    "last_build_status": "never",
+    "last_build_duration_sec": null,
+    "last_build_type": null,
+    "artifacts": [],
+    "juce_version": null,
+    "compiler": null
   }
 }
