@@ -28,6 +28,7 @@ if (Test-Path "$ApcPluginsDir\$PluginName") {
 }
 $StatusJson = "$PluginDir\status.json"
 $UseVisage = $false
+$BuildStart = Get-Date
 
 if (Test-Path $StatusJson) {
     try {
@@ -176,11 +177,130 @@ if (-not $NoInstall) {
     }
 }
 
-# 6. Update build status
-Update-PluginState -PluginPath $PluginDir -Updates @{
-    "validation.build_completed" = $true
-    "validation.build_timestamp" = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
-    "validation.build_errors" = ($vst3Result.Errors + $standaloneResult.Errors).Count
+# 5.5. Stage artifacts to plugin dir (external plugins only)
+$StagedCount = 0
+if ($PluginDir -like "$ApcPluginsDir\*") {
+    Write-Host "Staging artifacts to plugin directory..." -ForegroundColor Yellow
+    $StageDir = Join-Path $PluginDir "build"
+    if (Test-Path $StageDir) { Remove-Item $StageDir -Recurse -Force }
+    New-Item -ItemType Directory -Path $StageDir -Force | Out-Null
+
+    # VST3
+    $vst3Src = Get-ChildItem -Path $BuildDir -Recurse -Directory -Filter "$PluginName.vst3" -ErrorAction SilentlyContinue |
+        Where-Object { $_.FullName -like "*external\${PluginName}*artefacts\Release\VST3\*" } |
+        Select-Object -First 1
+    if ($vst3Src) {
+        $vst3Dest = Join-Path $StageDir "VST3"
+        New-Item -ItemType Directory -Path $vst3Dest -Force | Out-Null
+        Copy-Item -Path $vst3Src.FullName -Destination $vst3Dest -Recurse -Force
+        $StagedCount++
+        Write-Host "STAGED VST3 → $vst3Dest" -ForegroundColor Green
+    }
+
+    # AU (not applicable on Windows, but kept for cross-platform consistency)
+    # Standalone
+    $saSrc = Get-ChildItem -Path $BuildDir -Recurse -Filter "$PluginName.exe" -ErrorAction SilentlyContinue |
+        Where-Object { $_.FullName -like "*external\${PluginName}*artefacts\Release\Standalone\*" } |
+        Select-Object -First 1
+    if ($saSrc) {
+        $saDest = Join-Path $StageDir "Standalone"
+        New-Item -ItemType Directory -Path $saDest -Force | Out-Null
+        Copy-Item -Path $saSrc.FullName -Destination $saDest -Recurse -Force
+        $StagedCount++
+        Write-Host "STAGED Standalone → $saDest" -ForegroundColor Green
+    }
+
+    if ($StagedCount -eq 0) {
+        Write-Warning "no artifacts staged (no matching bundles found in build cache)"
+    }
+}
+
+# 6. Update build status (build_info block)
+$BuildEnd = Get-Date
+$BuildDuration = [int]([math]::Round(($BuildEnd - $BuildStart).TotalSeconds))
+
+if (Test-Path $StatusJson) {
+    try {
+        $state = Get-Content $StatusJson -Raw | ConvertFrom-Json
+    } catch {
+        $state = $null
+    }
+
+    # Detect JUCE version + compiler
+    $juceVersion = "unknown"
+    $cacheFile = Join-Path $BuildDir "CMakeCache.txt"
+    if (Test-Path $cacheFile) {
+        $line = Select-String -Path $cacheFile -Pattern "JUCE_VERSION|juce_version" -ErrorAction SilentlyContinue | Select-Object -First 1
+        if ($line) { $juceVersion = ($line.Line -replace '.*=\s*','').Trim() }
+    }
+    $compiler = "unknown"
+    try {
+        $clOut = (& cl 2>&1 | Select-Object -First 2) -join ' '
+        if ($clOut) { $compiler = $clOut.Trim() }
+    } catch {}
+
+    # Build artifacts array (only for staged external plugins)
+    $artifacts = @()
+    if ($PluginDir -like "$ApcPluginsDir\*" -and (Test-Path $StageDir)) {
+        foreach ($fmtDir in (Get-ChildItem -Path $StageDir -Directory -ErrorAction SilentlyContinue)) {
+            $bundle = Get-ChildItem -Path $fmtDir.FullName -Recurse -Directory -ErrorAction SilentlyContinue |
+                Where-Object { $_.Name -match '\.(vst3|component|app|lv2)$' } |
+                Select-Object -First 1
+            if ($bundle) {
+                $size = (Get-ChildItem -Path $bundle.FullName -Recurse -File -ErrorAction SilentlyContinue |
+                         Measure-Object -Property Length -Sum).Sum
+                if (-not $size) { $size = 0 }
+                $rel = "build/$($fmtDir.Name)/$($bundle.Name)"
+                $artifacts += [PSCustomObject]@{
+                    format = $fmtDir.Name
+                    path   = $rel
+                    size_bytes = $size
+                }
+            }
+        }
+    }
+
+    # Build type string
+    $buildType = "VST3"
+    if ($PluginDir -like "$ApcPluginsDir\*" -and (Test-Path $StageDir) -and $artifacts.Count -gt 0) {
+        $buildType = ($artifacts | ForEach-Object { $_.format }) -join '+'
+    }
+
+    $buildStatus = "success"
+    $timestamp = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
+
+    if ($state) {
+        $buildInfo = [PSCustomObject]@{
+            last_build_at = $timestamp
+            last_build_status = $buildStatus
+            last_build_duration_sec = $BuildDuration
+            last_build_type = $buildType
+            artifacts = $artifacts
+            juce_version = $juceVersion
+            compiler = $compiler
+        }
+        # Attach/replace build_info
+        $state | Add-Member -NotePropertyName build_info -NotePropertyValue $buildInfo -Force
+        $state.last_modified = $timestamp
+        if (-not $state.validation) { $state.validation = [PSCustomObject]@{} }
+        $state.validation | Add-Member -NotePropertyName build_completed -NotePropertyValue $true -Force
+
+        $state | ConvertTo-Json -Depth 10 | Set-Content -Path $StatusJson -Encoding UTF8
+        Write-Host "Build status updated in $StatusJson" -ForegroundColor Green
+    } else {
+        # Fallback: legacy 2-field update
+        Update-PluginState -PluginPath $PluginDir -Updates @{
+            "validation.build_completed" = $true
+            "validation.build_timestamp" = $timestamp
+        }
+    }
+} else {
+    # Fallback: legacy 2-field update
+    Update-PluginState -PluginPath $PluginDir -Updates @{
+        "validation.build_completed" = $true
+        "validation.build_timestamp" = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
+        "validation.build_errors" = ($vst3Result.Errors + $standaloneResult.Errors).Count
+    }
 }
 
 Write-Host "Build process complete!" -ForegroundColor Green

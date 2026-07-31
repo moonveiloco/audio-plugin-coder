@@ -36,6 +36,7 @@ else
     PLUGIN_DIR="$ROOT_PATH/plugins/$PLUGIN_NAME"
 fi
 STATUS_JSON="$PLUGIN_DIR/status.json"
+BUILD_START_TIME="$(date +%s)"
 
 # --- IMPORT MODULES ---
 # shellcheck source=state-management.sh
@@ -171,8 +172,110 @@ if ! $NO_INSTALL; then
     fi
 fi
 
+# --- 5.5. STAGE ARTIFACTS TO PLUGIN DIR (external plugins only) ---
+STAGED_COUNT=0
+if [[ "$PLUGIN_DIR" == "$APC_PLUGINS_DIR/"* ]]; then
+    echo "Staging artifacts to plugin directory..."
+    STAGE_DIR="$PLUGIN_DIR/build"
+    rm -rf "$STAGE_DIR"
+    mkdir -p "$STAGE_DIR/VST3" "$STAGE_DIR/AU" "$STAGE_DIR/Standalone"
+
+    # VST3
+    VST3_SRC="$(find "$BUILD_DIR" -path "*external/${PLUGIN_NAME}*artefacts/Release/VST3/${PLUGIN_NAME}.vst3" -type d 2>/dev/null | head -1 || true)"
+    if [[ -n "$VST3_SRC" ]]; then
+        cp -R "$VST3_SRC" "$STAGE_DIR/VST3/"
+        STAGED_COUNT=$((STAGED_COUNT + 1))
+        echo "STAGED VST3 → $STAGE_DIR/VST3/"
+    fi
+
+    # AU (macOS only)
+    AU_SRC="$(find "$BUILD_DIR" -path "*external/${PLUGIN_NAME}*artefacts/Release/AU/${PLUGIN_NAME}.component" -type d 2>/dev/null | head -1 || true)"
+    if [[ -n "$AU_SRC" ]]; then
+        cp -R "$AU_SRC" "$STAGE_DIR/AU/"
+        STAGED_COUNT=$((STAGED_COUNT + 1))
+        echo "STAGED AU → $STAGE_DIR/AU/"
+    fi
+
+    # Standalone
+    SA_SRC="$(find "$BUILD_DIR" -path "*external/${PLUGIN_NAME}*artefacts/Release/Standalone/${PLUGIN_NAME}.app" -type d 2>/dev/null | head -1 || true)"
+    if [[ -n "$SA_SRC" ]]; then
+        cp -R "$SA_SRC" "$STAGE_DIR/Standalone/"
+        STAGED_COUNT=$((STAGED_COUNT + 1))
+        echo "STAGED Standalone → $STAGE_DIR/Standalone/"
+    fi
+
+    # LV2 (Linux)
+    LV2_SRC="$(find "$BUILD_DIR" -path "*external/${PLUGIN_NAME}*artefacts/Release/LV2/${PLUGIN_NAME}.lv2" -type d 2>/dev/null | head -1 || true)"
+    if [[ -n "$LV2_SRC" ]]; then
+        mkdir -p "$STAGE_DIR/LV2"
+        cp -R "$LV2_SRC" "$STAGE_DIR/LV2/"
+        STAGED_COUNT=$((STAGED_COUNT + 1))
+        echo "STAGED LV2 → $STAGE_DIR/LV2/"
+    fi
+
+    # Remove empty format dirs to keep things tidy
+    for d in "$STAGE_DIR"/*/; do
+        rmdir "$d" 2>/dev/null || true
+    done
+
+    if [[ $STAGED_COUNT -eq 0 ]]; then
+        echo "WARNING: no artifacts staged (no matching bundles found in build cache)"
+    fi
+fi
+
 # --- 6. UPDATE BUILD STATUS ---
+BUILD_END="$(date +%s)"
+BUILD_DURATION=$((BUILD_END - BUILD_START_TIME))
+
 if command -v jq &>/dev/null && [[ -f "$STATUS_JSON" ]]; then
+    timestamp="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+
+    # Detect JUCE version + compiler (best-effort)
+    JUCE_VER="$(detect_juce_version "$BUILD_DIR" 2>/dev/null || echo unknown)"
+    COMPILER_VER="$(${CXX:-c++} --version 2>/dev/null | head -1 || echo unknown)"
+
+    # Build artifacts array (only for staged external plugins)
+    ARTIFACTS_JSON="[]"
+    if [[ "$PLUGIN_DIR" == "$APC_PLUGINS_DIR/"* ]] && [[ -d "$PLUGIN_DIR/build" ]]; then
+        ARTIFACTS_JSON="$(build_artifacts_json "$PLUGIN_DIR/build")"
+    fi
+
+    # Determine build type string from staged formats (or fallback to "VST3")
+    BUILD_TYPE="VST3"
+    if [[ "$PLUGIN_DIR" == "$APC_PLUGINS_DIR/"* ]] && [[ -d "$PLUGIN_DIR/build" ]]; then
+        BUILD_TYPE=""
+        for fmt_dir in "$PLUGIN_DIR/build"/*/; do
+            fmt="$(basename "$fmt_dir")"
+            [[ -z "$BUILD_TYPE" ]] && BUILD_TYPE="$fmt" || BUILD_TYPE="${BUILD_TYPE}+${fmt}"
+        done
+        [[ -z "$BUILD_TYPE" ]] && BUILD_TYPE="VST3"
+    fi
+
+    # Determine overall status: we got here → VST3 succeeded. AU/Standalone warnings are non-fatal → "success" still.
+    BUILD_STATUS="success"
+
+    jq --arg ts "$timestamp" \
+       --arg status "$BUILD_STATUS" \
+       --arg dur "$BUILD_DURATION" \
+       --arg btype "$BUILD_TYPE" \
+       --arg juce "$JUCE_VER" \
+       --arg comp "$COMPILER_VER" \
+       --argjson arts "$ARTIFACTS_JSON" \
+       '.build_info = {
+           last_build_at: $ts,
+           last_build_status: $status,
+           last_build_duration_sec: ($dur|tonumber),
+           last_build_type: $btype,
+           artifacts: $arts,
+           juce_version: $juce,
+           compiler: $comp
+       } | .last_modified = $ts
+       | .validation.build_completed = true' \
+       "$STATUS_JSON" > "$STATUS_JSON.tmp" && mv "$STATUS_JSON.tmp" "$STATUS_JSON"
+
+    echo "Build status updated in $STATUS_JSON"
+elif [[ -f "$STATUS_JSON" ]]; then
+    # jq not available: fall back to legacy 2-field update
     timestamp="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
     update_plugin_state "$PLUGIN_DIR" \
         "validation.build_completed=true" \

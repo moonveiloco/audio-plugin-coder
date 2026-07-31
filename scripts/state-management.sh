@@ -411,3 +411,67 @@ set_plugin_framework() {
         "framework_selection.rationale=$rationale" \
         "framework_selection.implementation_strategy=single-pass"
 }
+
+build_artifacts_json() {
+    # Emit a JSON array describing artifacts in a staged build directory
+    # Usage: build_artifacts_json <build_dir>
+    # Output: [{"format":"VST3","path":"build/VST3/MyPlugin.vst3","size_bytes":8400000}, ...]
+    local build_dir="$1"
+    local entries=()
+    local fmt bundle size rel
+
+    if [[ ! -d "$build_dir" ]]; then
+        echo "[]"
+        return 0
+    fi
+
+    for fmt_dir in "$build_dir"/*/; do
+        [[ -d "$fmt_dir" ]] || continue
+        fmt="$(basename "$fmt_dir")"
+        # Find the artifact bundle (.vst3 / .component / .app / .lv2)
+        bundle="$(find "$fmt_dir" -maxdepth 2 -type d \( -name "*.vst3" -o -name "*.component" -o -name "*.app" -o -name "*.lv2" \) 2>/dev/null | head -1)"
+        if [[ -n "$bundle" ]]; then
+            size="$(du -sk "$bundle" 2>/dev/null | cut -f1)"
+            size=$((size * 1024))
+            rel="build/$fmt/$(basename "$bundle")"
+            # Escape paths for JSON (replace backslashes on Windows)
+            rel="${rel//\\/\\\\}"
+            entries+=("{\"format\":\"$fmt\",\"path\":\"$rel\",\"size_bytes\":$size}")
+        fi
+    done
+
+    if [[ ${#entries[@]} -eq 0 ]]; then
+        echo "[]"
+    else
+        local joined
+        joined="$(IFS=,; echo "${entries[*]}")"
+        echo "[$joined]"
+    fi
+}
+
+detect_juce_version() {
+    # Best-effort detection of JUCE version from CMakeCache.txt or JUCE header
+    # Usage: detect_juce_version <build_dir>
+    local build_dir="$1"
+    local ver=""
+
+    # Try CMakeCache.txt first
+    if [[ -f "$build_dir/CMakeCache.txt" ]]; then
+        ver="$(grep -iE 'JUCE_VERSION|juce_version' "$build_dir/CMakeCache.txt" 2>/dev/null | head -1 | sed -E 's/.*= *//' || true)"
+    fi
+
+    # Fallback: read JUCE-001.h or AppConfig.h
+    if [[ -z "$ver" ]] && [[ -d "$build_dir" ]]; then
+        local juce_header
+        juce_header="$(find "$build_dir" -maxdepth 5 -name 'JUCE-001.h' 2>/dev/null | head -1)"
+        if [[ -n "$juce_header" ]]; then
+            ver="$(grep -E '#define JUCE_MAJOR_VERSION|#define JUCE_MINOR_VERSION|#define JUCE_BUILDNUMBER' "$juce_header" 2>/dev/null | sed -E 's/.*VERSION[[:space:]]+//' | tr '\n' '.' | sed 's/\.$//')"
+        fi
+    fi
+
+    if [[ -z "$ver" ]]; then
+        echo "unknown"
+    else
+        echo "$ver"
+    fi
+}
