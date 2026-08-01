@@ -7,8 +7,8 @@
 #   .\scripts\acp-config.ps1 get <key>
 #   .\scripts\acp-config.ps1 set <key> <value>
 #   .\scripts\acp-config.ps1 is-setup
-#   .\scripts\acp-config.ps1 plugins-dir
-#   .\scripts\acp-config.ps1 juce-dir
+#   .\scripts\acp-config.ps1 plugins-dir    # exit 1 if unset
+#   .\scripts\acp-config.ps1 juce-dir       # exit 1 if unset
 #   .\scripts\acp-config.ps1 init
 
 param(
@@ -98,8 +98,22 @@ switch ($Command) {
     "is-setup"     {
         if (Test-AcpSetup) { exit 0 } else { exit 1 }
     }
-    "plugins-dir"  { Get-AcpConfigValue -k "plugins_dir" }
-    "juce-dir"     { Get-AcpConfigValue -k "juce_dir" }
+    "plugins-dir"  {
+        $v = Get-AcpConfigValue -k "plugins_dir"
+        if ([string]::IsNullOrWhiteSpace($v)) {
+            Write-Error "ACP not configured: plugins_dir is null. Run /setup first."
+            exit 1
+        }
+        $v
+    }
+    "juce-dir"     {
+        $v = Get-AcpConfigValue -k "juce_dir"
+        if ([string]::IsNullOrWhiteSpace($v)) {
+            Write-Error "ACP not configured: juce_dir is null. Run /setup first."
+            exit 1
+        }
+        $v
+    }
     "init"         { Initialize-AcpConfig }
     default        {
         Write-Host @"
@@ -110,8 +124,8 @@ Commands:
   get <key>      Get a config value
   set <key> <v>  Set a config value
   is-setup       Exit 0 if setup_complete=true, else exit 1
-  plugins-dir    Print plugins_dir (empty if not set)
-  juce-dir       Print juce_dir (empty if not set)
+  plugins-dir    Print plugins_dir (exit 1 + stderr if unset)
+  juce-dir       Print juce_dir (exit 1 + stderr if unset)
   init           Create default config if missing
 "@
     }

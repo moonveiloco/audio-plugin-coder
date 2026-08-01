@@ -98,6 +98,7 @@ function Test-WithPluginVal {
 
         # Update status.json
         $apcPluginsDir = & "$PSScriptRoot\acp-config.ps1" plugins-dir
+if ($LASTEXITCODE -ne 0) { Write-Error "Run /setup first."; exit 1 }
         if (Test-Path "$apcPluginsDir\$PluginName") {
             $pluginDir = "$apcPluginsDir\$PluginName"
         } else {
@@ -151,6 +152,7 @@ function Get-PluginValReport {
     param([string]$PluginName)
 
     $apcPluginsDir = & "$PSScriptRoot\acp-config.ps1" plugins-dir
+    if ($LASTEXITCODE -ne 0) { Write-Error "Run /setup first."; exit 1 }
     if (Test-Path "$apcPluginsDir\$PluginName") {
         $pluginDir = "$apcPluginsDir\$PluginName"
     } else {

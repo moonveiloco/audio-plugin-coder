@@ -90,7 +90,13 @@ else()
     if(_ACP_CONFIG_RESULT EQUAL 0 AND _ACP_PLUGINS_DIR_OUT)
         set(APC_PLUGINS_DIR "${_ACP_PLUGINS_DIR_OUT}")
     else()
-        message(WARNING "ACP_PLUGINS_DIR not configured. Run /setup first or set ACP_PLUGINS_DIR env var.")
+        message(WARNING
+            "ACP_PLUGINS_DIR not configured (acp-config.sh exited with "
+            "${_ACP_CONFIG_RESULT}). External plugins will NOT be scanned.\n"
+            "  - Run `/setup` to configure ACP, OR\n"
+            "  - Set the ACP_PLUGINS_DIR env var, OR\n"
+            "  - Continue with legacy plugins in `plugins/` only.\n"
+            "Falling back to $ENV{HOME}/AudioPlugins (likely empty/nonexistent).")
         set(APC_PLUGINS_DIR "$ENV{HOME}/AudioPlugins")
     endif()
 endif()

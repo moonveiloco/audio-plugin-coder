@@ -18,7 +18,7 @@ fi
 # --- PATH RESOLUTION ---
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_PATH="$(cd "$SCRIPT_DIR/.." && pwd)"
-APC_PLUGINS_DIR="$(bash "$SCRIPT_DIR/acp-config.sh" plugins-dir)"
+APC_PLUGINS_DIR="$(bash "$SCRIPT_DIR/acp-config.sh" plugins-dir)" || { echo "Run /setup first." >&2; exit 1; }
 if [ -d "$APC_PLUGINS_DIR/$PLUGIN_NAME" ]; then
     PLUGIN_DIR="$APC_PLUGINS_DIR/$PLUGIN_NAME"
 else

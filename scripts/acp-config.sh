@@ -8,8 +8,8 @@
 #   bash scripts/acp-config.sh get <key>     # get a value (empty if missing)
 #   bash scripts/acp-config.sh set <key> <v> # set a value
 #   bash scripts/acp-config.sh is-setup      # exit 0 if setup_complete=true, 1 otherwise
-#   bash scripts/acp-config.sh plugins-dir   # print plugins_dir or empty
-#   bash scripts/acp-config.sh juce-dir      # print juce_dir or empty
+#   bash scripts/acp-config.sh plugins-dir   # print plugins_dir (exit 1 if unset)
+#   bash scripts/acp-config.sh juce-dir      # print juce_dir (exit 1 if unset)
 #   bash scripts/acp-config.sh init          # create default config if missing
 
 set -euo pipefail
@@ -52,7 +52,7 @@ _acp_config_get() {
         return 0
     fi
     if command -v jq &>/dev/null; then
-        jq -r --arg k "$key" '.[$k] // empty' "$cfg" 2>/dev/null || echo ""
+        jq -r --arg k "$key" 'if has($k) and (.[$k] != null) then .[$k] else empty end' "$cfg" 2>/dev/null || echo ""
     else
         # Fallback: simple grep-based extraction (for systems without jq)
         python3 -c "
@@ -112,10 +112,20 @@ case "${1:-help}" in
         if _acp_config_is_setup; then exit 0; else exit 1; fi
         ;;
     plugins-dir)
-        _acp_config_get plugins_dir
+        v="$(_acp_config_get plugins_dir)"
+        if [[ -z "$v" ]]; then
+            echo "ACP not configured: plugins_dir is null. Run /setup first." >&2
+            exit 1
+        fi
+        echo "$v"
         ;;
     juce-dir)
-        _acp_config_get juce_dir
+        v="$(_acp_config_get juce_dir)"
+        if [[ -z "$v" ]]; then
+            echo "ACP not configured: juce_dir is null. Run /setup first." >&2
+            exit 1
+        fi
+        echo "$v"
         ;;
     init)
         _acp_config_init
@@ -129,8 +139,8 @@ Commands:
   get <key>      Get a config value
   set <key> <v>  Set a config value
   is-setup       Exit 0 if setup_complete=true, else exit 1
-  plugins-dir    Print plugins_dir (empty if not set)
-  juce-dir       Print juce_dir (empty if not set)
+  plugins-dir    Print plugins_dir (exit 1 + stderr if unset)
+  juce-dir       Print juce_dir (exit 1 + stderr if unset)
   init           Create default config if missing
 USAGE
         ;;

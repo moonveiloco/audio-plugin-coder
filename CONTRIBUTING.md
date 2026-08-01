@@ -48,6 +48,12 @@ bash scripts/acp-config.sh plugins-dir
 bash scripts/acp-config.sh is-setup
 ```
 
+**Regression tests:** After modifying `scripts/acp-config.sh` or `scripts/acp-config.ps1`, run the contract tests to verify the behavior is unchanged:
+```bash
+bash scripts/test-acp-config.sh   # 14 tests, exit 0 = pass
+```
+The tests are isolated (use a throwaway `XDG_CONFIG_HOME`) and never touch your real `~/.config/acp/config.json`.
+
 ## Guidelines
 
 ### Code Style
