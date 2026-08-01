@@ -31,6 +31,23 @@ We welcome contributions from the community! Whether you're fixing bugs, adding 
 
 3. Follow the [README](README.md) for usage instructions.
 
+### First Run Configuration
+
+APC uses a global config file (`~/.config/acp/config.json` on Linux/macOS, `%APPDATA%/acp/config.json` on Windows) to store the plugins output directory and JUCE path. This is machine-agnostic — each developer configures their own setup.
+
+When you first start the AI agent, it will detect the missing config and guide you through `/setup`. You can also run `/setup` manually at any time to reconfigure.
+
+**Config is read via:** `scripts/acp-config.sh` (macOS/Linux) or `scripts/acp-config.ps1` (Windows). All skills, workflows, and scripts reference `${APC_PLUGINS_DIR}` which is resolved from this config at runtime.
+
+**Never hardcode plugin paths.** Always use the config helper:
+```bash
+# Get the plugins directory
+bash scripts/acp-config.sh plugins-dir
+
+# Check if setup is complete
+bash scripts/acp-config.sh is-setup
+```
+
 ## Guidelines
 
 ### Code Style

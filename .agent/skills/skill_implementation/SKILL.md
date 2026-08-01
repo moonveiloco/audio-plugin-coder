@@ -1,14 +1,14 @@
 # SKILL: DSP IMPLEMENTATION
 **Goal:** Implement audio processing where parameters control DSP
 **Focus:** PluginProcessor.h, PluginProcessor.cpp
-**Output Location:** `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Source/`
+**Output Location:** `${APC_PLUGINS_DIR}/[Name]/Source/`
 
 ---
 
 ## 📊 PHASE 4: CODE (DSP Implementation)
 
 **Trigger:** `/impl [Name]` (after DESIGN phase complete)
-**Input:** Reads `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/status.json` and `.ideas/parameter-spec.md`
+**Input:** Reads `${APC_PLUGINS_DIR}/[Name]/status.json` and `.ideas/parameter-spec.md`
 **Prerequisites:** Architecture plan complete, UI framework selected
 
 **State Validation:**
@@ -53,7 +53,7 @@ Convert the approved design specs into production JUCE WebView code.
 
 **Create the required directory structure:**
 ```
-~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Source/ui/
+${APC_PLUGINS_DIR}/[Name]/Source/ui/
 └───public/
     │   index.html          # Production UI based on approved design
     │
@@ -66,7 +66,7 @@ Convert the approved design specs into production JUCE WebView code.
 ```
 
 **Implementation Steps:**
-1. **Create directories:** `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Source/ui/public/` and subdirectories
+1. **Create directories:** `${APC_PLUGINS_DIR}/[Name]/Source/ui/public/` and subdirectories
 2. **Copy JUCE frontend library:** Copy `modules/juce_gui_extra/native/javascript/index.js` to `js/juce/index.js`
 3. **Create interop checker:** Generate `js/juce/check_native_interop.js` for development
 4. **Convert design to HTML:** Transform approved design specs into `index.html` with embedded CSS
@@ -135,14 +135,14 @@ function initializeUI() {
 ✅ Design converted to WebView code
 
 Files created:
-- ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Source/ui/public/index.html
-- ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Source/ui/public/js/index.js
-- ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Source/ui/public/js/juce/index.js
+- ${APC_PLUGINS_DIR}/[Name]/Source/ui/public/index.html
+- ${APC_PLUGINS_DIR}/[Name]/Source/ui/public/js/index.js
+- ${APC_PLUGINS_DIR}/[Name]/Source/ui/public/js/juce/index.js
 
 ⚠️ **MANDATORY STOP** - You MUST test the WebView setup before proceeding to DSP implementation!
 
 What would you like to do?
-1. Test WebView - Open ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Source/ui/public/index.html in browser and verify appearance
+1. Test WebView - Open ${APC_PLUGINS_DIR}/[Name]/Source/ui/public/index.html in browser and verify appearance
 2. Approve - Proceed with DSP implementation (confirms WebView GUI is acceptable)
 3. Revise - Make changes to the conversion
 
@@ -319,7 +319,7 @@ See: `..agent/troubleshooting/resolutions/webview-member-order-crash.md`
 
 ## 🔧 PHASE 4.1: DSP IMPLEMENTATION
 
-Read `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/plan.md` to determine implementation approach:
+Read `${APC_PLUGINS_DIR}/[Name]/.ideas/plan.md` to determine implementation approach:
 ```
 Complexity Score: [N]
 
@@ -849,8 +849,8 @@ void setStateInformation(const void* data, int sizeInBytes) override
 # Backup state before commit
 Backup-PluginState -PluginPath "plugins\[Name]"
 
-git add ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Source/
-git add ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/plan.md
+git add ${APC_PLUGINS_DIR}/[Name]/Source/
+git add ${APC_PLUGINS_DIR}/[Name]/.ideas/plan.md
 git commit -m "feat([Name]): Phase 4.1 DSP - [Phase description]
 
 Implemented: [list components]
@@ -939,7 +939,7 @@ for (int sample = 0; sample < numSamples; ++sample)
 - `Source/PluginProcessor.h` - DSP member variables
 - `Source/PluginProcessor.cpp` - Audio processing logic
 - `PLUGINS.md` - Phase status
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/status.json` - Project state
+- `${APC_PLUGINS_DIR}/[Name]/status.json` - Project state
 
 **Next phase:**
 - Phase 5: SHIP (if headless chosen or custom UI complete)

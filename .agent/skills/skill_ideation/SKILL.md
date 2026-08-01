@@ -2,7 +2,19 @@
 
 **Goal:** Define the plugin concept and initialize the project state.
 **Trigger:** `/dream [Name]`
-**Output Location:** `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/`
+**Output Location:** `${APC_PLUGINS_DIR}/[Name]/`
+
+## 🚪 PREREQUISITE: FIRST RUN CHECK
+Prima di iniziare, verifica che ACP sia configurato:
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\acp-config.ps1 is-setup
+```
+Se il check fallisce (exit 1), STOP ed esegui `/setup`. Non procedere fino al completamento del setup.
+
+Se il check passa, risolvi la directory:
+```powershell
+$ApcPluginsDir = & .\scripts\acp-config.ps1 plugins-dir
+```
 
 ## ⛔ OUTPUT RESTRICTIONS (MANDATORY)
 *   **NO C++ Code.**
@@ -21,18 +33,18 @@ If the user prompt is vague, ask 3 clarifying questions:
 ## STEP 2: CONCEPT GENERATION
 *Only after the user answers, generate these files:*
 
-### 1. `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/creative-brief.md`
+### 1. `${APC_PLUGINS_DIR}/[Name]/.ideas/creative-brief.md`
 The vision statement.
 *   **Hook:** Marketing pitch.
 *   **Description:** Detailed behavior.
 
-### 2. `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/parameter-spec.md`
+### 2. `${APC_PLUGINS_DIR}/[Name]/.ideas/parameter-spec.md`
 The definitive list of controls.
 | ID | Name | Type | Range | Default | Unit |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | `gain` | Gain | Float | 0.0 - 1.0 | 0.5 | dB |
 
-### 3. `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/status.json` (ROOT)
+### 3. `${APC_PLUGINS_DIR}/[Name]/status.json` (ROOT)
 Initialize the project tracking file in the plugin root using the standardized schema.
 
 **Use the state management system:**
@@ -81,8 +93,8 @@ New-PluginState -PluginName "[Name]" -PluginPath "plugins\[Name]"
 ### 4. Copy Git Templates
 Copy the git templates into the new plugin directory so it is ready for `git init`:
 ```bash
-cp templates/plugin-gitignore.template      ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.gitignore
-cp templates/plugin-gitattributes.template  ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.gitattributes
+cp templates/plugin-gitignore.template      ${APC_PLUGINS_DIR}/[Name]/.gitignore
+cp templates/plugin-gitattributes.template  ${APC_PLUGINS_DIR}/[Name]/.gitattributes
 ```
 These provide line-ending normalization (LF for source, CRLF for `.ps1`/`.bat`), binary handling for VST3/AU/artifacts, and standard ignores for `build/`, `dist/`, IDE, and OS files.
 

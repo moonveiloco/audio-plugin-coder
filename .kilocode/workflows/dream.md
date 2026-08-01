@@ -10,7 +10,7 @@ description: "PHASE 1: Ideation - Create creative brief and parameter spec"
 **State Check:**
 ```powershell
 # Check if plugin already exists
-if (Test-Path "$env:USERPROFILE\Projects\VST-PLUGINS\ACP-Plugins\$PluginName") {
+if (Test-Path "${APC_PLUGINS_DIR}\$PluginName") {
     Write-Warning "Plugin already exists. Use /resume to continue existing plugin."
     exit 1
 }
@@ -24,7 +24,7 @@ if (Test-Path "plugins\$PluginName") {
 Load and execute `...kilocode\skills\skill_ideation\SKILL.md`
 
 **Validation:**
-- Verify `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/status.json` exists
+- Verify `${APC_PLUGINS_DIR}/[Name]/status.json` exists
 - Verify `current_phase` = "ideation"
 - Verify creative brief and parameter spec exist
 - Verify `.gitignore` and `.gitattributes` exist in plugin root
@@ -35,11 +35,11 @@ Stop and inform user:
 ✅ Dream phase complete!
 
 Files created:
-- ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/creative-brief.md
-- ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/parameter-spec.md
-- ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/status.json
-- ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.gitignore
-- ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.gitattributes
+- ${APC_PLUGINS_DIR}/[Name]/.ideas/creative-brief.md
+- ${APC_PLUGINS_DIR}/[Name]/.ideas/parameter-spec.md
+- ${APC_PLUGINS_DIR}/[Name]/status.json
+- ${APC_PLUGINS_DIR}/[Name]/.gitignore
+- ${APC_PLUGINS_DIR}/[Name]/.gitattributes
 
 Next step: /plan [Name]
 ```
@@ -54,7 +54,7 @@ description: "PHASE 2: Architecture - Define structure and select UI framework"
 ```powershell
 . "$PSScriptRoot\..\scripts\state-management.ps1"
 
-$apcPluginsDir = "$env:USERPROFILE\Projects\VST-PLUGINS\ACP-Plugins"
+$apcPluginsDir = "${APC_PLUGINS_DIR}"
 if (Test-Path "$apcPluginsDir\$PluginName") { $pluginDir = "$apcPluginsDir\$PluginName" } else { $pluginDir = "plugins/$PluginName" }
 
 if (-not (Test-PluginState -PluginPath $pluginDir -RequiredPhase "ideation" -RequiredFiles @(".ideas/creative-brief.md", ".ideas/parameter-spec.md"))) {
@@ -84,8 +84,8 @@ Framework selected: [Visage/WebView]
 Complexity score: [N]/5
 
 Files created:
-- ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/architecture.md
-- ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/plan.md
+- ${APC_PLUGINS_DIR}/[Name]/.ideas/architecture.md
+- ${APC_PLUGINS_DIR}/[Name]/.ideas/plan.md
 
 Next step: /design [Name]
 ```

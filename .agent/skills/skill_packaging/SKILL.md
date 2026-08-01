@@ -466,7 +466,7 @@ function New-DistributionPackage {
     $DistDir = "dist/$PluginName-v$Version"
     New-Item -ItemType Directory -Path $DistDir -Force | Out-Null
 
-    $apcPluginsDir = "$env:USERPROFILE\Projects\VST-PLUGINS\ACP-Plugins"
+    $apcPluginsDir = "${APC_PLUGINS_DIR}"
     if (Test-Path "$apcPluginsDir\$PluginName") { $pluginDir = "$apcPluginsDir\$PluginName" } else { $pluginDir = "plugins/$PluginName" }
 
     # Copy all installers
@@ -525,7 +525,7 @@ See LICENSE.txt for full license terms.
 ### 7.2 Update State
 
 ```powershell
-$apcPluginsDir = "$env:USERPROFILE\Projects\VST-PLUGINS\ACP-Plugins"
+$apcPluginsDir = "${APC_PLUGINS_DIR}"
 if (Test-Path "$apcPluginsDir\$PluginName") { $pluginDir = "$apcPluginsDir\$PluginName" } else { $pluginDir = "plugins/$PluginName" }
 Update-PluginState -PluginPath $pluginDir -Phase "ship_complete" -Updates @{
     "version" = $Version

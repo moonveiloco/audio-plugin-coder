@@ -29,7 +29,7 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_PATH="$(cd "$SCRIPT_DIR/.." && pwd)"
 BUILD_DIR="$ROOT_PATH/build"
-APC_PLUGINS_DIR="$HOME/Projects/VST-PLUGINS/ACP-Plugins"
+APC_PLUGINS_DIR="$(bash "$SCRIPT_DIR/acp-config.sh" plugins-dir)"
 if [ -d "$APC_PLUGINS_DIR/$PLUGIN_NAME" ]; then
     PLUGIN_DIR="$APC_PLUGINS_DIR/$PLUGIN_NAME"
 else

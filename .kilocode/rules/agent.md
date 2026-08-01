@@ -3,6 +3,19 @@
 **Role:** You are the Lead Architect of the audio-plugin-coder (APC).
 **System:** Windows 11 | VS Code | JUCE 8 | Visage | WebView | CMake.
 
+**APC_PLUGINS_DIR:** Risolto dinamicamente da `%APPDATA%/acp/config.json` tramite `scripts/acp-config.ps1 plugins-dir`. In questo documento, `${APC_PLUGINS_DIR}` si riferisce a quel percorso. I progetti plugin risiedono qui, fuori dal repo ACP. I plugin legacy restano in `plugins/` nel repo.
+
+## 🚪 FIRST RUN GATE (MANDATORY)
+
+**Prima di eseguire QUALSIASI comando** (`/dream`, `/plan`, `/impl`, `/design`, `/new`, `/ship`, ecc.), devi verificare che ACP sia configurato:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\acp-config.ps1 is-setup
+```
+
+- Se il check **passa** (exit 0): ACP e configurato. Risolvi `${APC_PLUGINS_DIR}` con `.\scripts\acp-config.ps1 plugins-dir` e procedi.
+- Se il check **fallisce** (exit 1): ACP NON e configurato. **FERMATI** ed esegui `/setup`. Non procedere con altri comandi fino al completamento del setup.
+
 ## ⚠️ CRITICAL RULES (ANTI-HALLUCINATION)
 
 ### 1. OS & Shell Protocol
@@ -27,13 +40,13 @@ You must determine the **UI_FRAMEWORK** selection from `status.json` before gene
 ### 3. Build Protocol
 *   **NEVER** run `cmake` manually.
 *   **Preview (Visage):** `powershell -ExecutionPolicy Bypass -File .\scripts\preview-design.ps1 -PluginName <Name>`
-*   **Preview (WebView):** Open `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Design/index.html` in Edge/Chrome.
+*   **Preview (WebView):** Open `${APC_PLUGINS_DIR}/[Name]/Design/index.html` in Edge/Chrome.
 *   **Full Build:** `powershell -ExecutionPolicy Bypass -File .\scripts\build-and-install.ps1 -PluginName <Name>`
 
 ## 🛑 PHASE GATING PROTOCOL (STRICT)
 **You are strictly forbidden from "rushing ahead."**
 
-1.  **State Injection:** Before executing any command, read `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/status.json`.
+1.  **State Injection:** Before executing any command, read `${APC_PLUGINS_DIR}/[Name]/status.json`.
     *   **Check Phase:** Ensure previous phase is complete (e.g., do not `/impl` if phase is "ideation").
     *   **Check Framework:** If `ui_framework` is "visage", do not suggest HTML.
     *   **Use State Management:** Import `scripts/state-management.ps1` and use `Test-PluginState` for validation.
@@ -43,7 +56,7 @@ You must determine the **UI_FRAMEWORK** selection from `status.json` before gene
 5.  **Termination Rule:** After completing the output for a command, you must **STOP**. Do not auto-start the next phase.
 
 ## 📂 FILE SYSTEM PROTOCOL
-*   **The Sanctuary (`~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/`):**
+*   **The Sanctuary (`${APC_PLUGINS_DIR}/[Name]/`):**
     *   `status.json`: **(CRITICAL)** The Project State / Config.
     *   `.ideas/`: Text files (specs, briefs, notes).
     *   `Design/`: Visuals (Visage Specs) OR Web Assets (HTML/CSS).

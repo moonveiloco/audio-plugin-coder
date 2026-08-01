@@ -8,7 +8,7 @@ Definisce l'architettura DSP e seleziona il framework UI.
 
 ## Prerequisiti
 - Dream phase completata
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/creative-brief.md` e `parameter-spec.md` esistenti
+- `${APC_PLUGINS_DIR}/[Name]/.ideas/creative-brief.md` e `parameter-spec.md` esistenti
 
 ## Esecuzione
 Carica la skill `.claude/skills/plan/SKILL.md`
@@ -21,8 +21,8 @@ Determina e imposta `ui_framework` in status.json:
 Chiedi all'utente se non ha già scelto.
 
 ## Output
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/architecture.md`
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/plan.md`
+- `${APC_PLUGINS_DIR}/[Name]/.ideas/architecture.md`
+- `${APC_PLUGINS_DIR}/[Name]/.ideas/plan.md`
 - `status.json` aggiornato con framework e complexity_score
 
 ## Completamento

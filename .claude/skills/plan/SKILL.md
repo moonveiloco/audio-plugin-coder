@@ -1,21 +1,21 @@
 # SKILL: ARCHITECTURE & PLANNING
 **Goal:** Define DSP architecture, complexity assessment, and implementation strategy
 **Trigger:** `/plan [Name]`
-**Input:** Reads `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/creative-brief.md` and `parameter-spec.md`
-**Output Location:** `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/`
+**Input:** Reads `${APC_PLUGINS_DIR}/[Name]/.ideas/creative-brief.md` and `parameter-spec.md`
+**Output Location:** `${APC_PLUGINS_DIR}/[Name]/.ideas/`
 
 ---
 
 ## 🎯 PHASE 2: PLAN (Architecture & Strategy)
 
 **Prerequisites:**
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/creative-brief.md` exists
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/parameter-spec.md` exists
+- `${APC_PLUGINS_DIR}/[Name]/.ideas/creative-brief.md` exists
+- `${APC_PLUGINS_DIR}/[Name]/.ideas/parameter-spec.md` exists
 - Phase 1 (DREAM) complete
 
 **Output Files:**
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/architecture.md` - DSP component design
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/plan.md` - Implementation strategy and complexity assessment
+- `${APC_PLUGINS_DIR}/[Name]/.ideas/architecture.md` - DSP component design
+- `${APC_PLUGINS_DIR}/[Name]/.ideas/plan.md` - Implementation strategy and complexity assessment
 
 ---
 
@@ -23,11 +23,11 @@
 
 ### 1.1 Read Input Contracts
 Read these files in parallel:
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/creative-brief.md` - Plugin concept and behavior
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/parameter-spec.md` - Parameter definitions and ranges
+- `${APC_PLUGINS_DIR}/[Name]/.ideas/creative-brief.md` - Plugin concept and behavior
+- `${APC_PLUGINS_DIR}/[Name]/.ideas/parameter-spec.md` - Parameter definitions and ranges
 
 ### 1.2 Define DSP Architecture
-Create `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/architecture.md` with this structure:
+Create `${APC_PLUGINS_DIR}/[Name]/.ideas/architecture.md` with this structure:
 
 ```markdown
 # DSP Architecture Specification
@@ -88,7 +88,7 @@ Rate the plugin complexity (1-5):
 ## 📊 STEP 2: IMPLEMENTATION PLANNING
 
 ### 2.1 Create Implementation Plan
-Create `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/plan.md` with this structure:
+Create `${APC_PLUGINS_DIR}/[Name]/.ideas/plan.md` with this structure:
 
 ```markdown
 # Implementation Plan
@@ -259,9 +259,9 @@ Complete-Phase -PluginPath "plugins\[Name]" -Phase "plan" -Updates @{
 
 ### 4.1 Validation Checklist
 Verify all required files exist:
-- [ ] `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/architecture.md` created
-- [ ] `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/plan.md` created
-- [ ] `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/status.json` updated with framework selection
+- [ ] `${APC_PLUGINS_DIR}/[Name]/.ideas/architecture.md` created
+- [ ] `${APC_PLUGINS_DIR}/[Name]/.ideas/plan.md` created
+- [ ] `${APC_PLUGINS_DIR}/[Name]/status.json` updated with framework selection
 - [ ] Complexity score assigned and justified
 
 ### 4.2 Decision Menu
@@ -299,9 +299,9 @@ Choose (1-4): _
 - Manual trigger via `/plan [Name]`
 
 **Creates:**
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/architecture.md` - DSP component design
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/plan.md` - Implementation strategy
-- Updates `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/status.json` - Framework selection
+- `${APC_PLUGINS_DIR}/[Name]/.ideas/architecture.md` - DSP component design
+- `${APC_PLUGINS_DIR}/[Name]/.ideas/plan.md` - Implementation strategy
+- Updates `${APC_PLUGINS_DIR}/[Name]/status.json` - Framework selection
 
 **Next phase:**
 - Phase 3: DESIGN (if user chooses to continue)

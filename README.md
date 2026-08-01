@@ -114,7 +114,20 @@ For **Claude Code**:
 # The agent will discover workflows from .agent/workflows/
 ```
 
-3. **Create your first plugin:**
+3. **First Run Configuration:**
+
+When you start the AI agent for the first time (e.g., type `/dream MyReverb`), the agent will detect that ACP is not yet configured and will guide you through a short setup:
+
+1. Choose a folder name for your plugins (e.g., `AudioPlugins` — will be created in your home directory)
+2. Specify where JUCE is installed (e.g., `~/JUCE`)
+3. The configuration is saved to `~/.config/acp/config.json` (Linux/macOS) or `%APPDATA%/acp/config.json` (Windows)
+
+You can also manually trigger setup at any time:
+```
+/setup
+```
+
+4. **Create your first plugin:**
 ```
 /dream MyReverb
 ```

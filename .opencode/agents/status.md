@@ -7,7 +7,7 @@ description: "Check current plugin state and progress"
 Mostra lo stato corrente del plugin e suggerisce il prossimo passo.
 
 ## Esecuzione
-Leggi `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/status.json` e mostra:
+Leggi `${APC_PLUGINS_DIR}/[Name]/status.json` e mostra:
 - Nome e versione
 - Fase corrente
 - UI framework

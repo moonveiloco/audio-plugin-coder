@@ -7,7 +7,7 @@ description: "Resume plugin development from current state"
 Riprende lo sviluppo del plugin dalla fase corrente.
 
 ## Esecuzione
-Leggi `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/status.json` e determina il prossimo comando:
+Leggi `${APC_PLUGINS_DIR}/[Name]/status.json` e determina il prossimo comando:
 
 | Fase | Comando |
 |------|---------|

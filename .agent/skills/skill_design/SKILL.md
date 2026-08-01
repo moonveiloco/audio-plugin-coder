@@ -6,7 +6,7 @@ description: Create the Visual Interface for audio plugins. Use when user mentio
 
 # SKILL: GUI DESIGN
 **Goal:** Create the Visual Interface for audio plugins.
-**Output Location:** `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Design/` and `Source/`
+**Output Location:** `${APC_PLUGINS_DIR}/[Name]/Design/` and `Source/`
 
 ---
 
@@ -167,7 +167,7 @@ function Apply-DesignFromLibrary {
         $designPath = "design_library/$($design.path)"
 
         # Copy preview.html as v1-test.html (WebView only)
-        $apcPluginsDir = "$env:USERPROFILE\Projects\VST-PLUGINS\ACP-Plugins"
+        $apcPluginsDir = "${APC_PLUGINS_DIR}"
         if (Test-Path "$apcPluginsDir\$PluginName") { $pluginDir = "$apcPluginsDir\$PluginName" } else { $pluginDir = "plugins/$PluginName" }
         $state = Get-PluginState -PluginPath $pluginDir
         if ($state.ui_framework -eq "webview") {
@@ -235,7 +235,7 @@ function Apply-DesignFromLibrary {
 
 **Create design specification files (all frameworks):**
 
-1. **`~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Design/v1-ui-spec.md`** - Structured design plan:
+1. **`${APC_PLUGINS_DIR}/[Name]/Design/v1-ui-spec.md`** - Structured design plan:
 ```markdown
    # UI Specification v1
    
@@ -259,7 +259,7 @@ function Apply-DesignFromLibrary {
    [Key visual decisions, inspirations, constraints]
 ```
 
-2. **`~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Design/v1-style-guide.md`** - Visual reference:
+2. **`${APC_PLUGINS_DIR}/[Name]/Design/v1-style-guide.md`** - Visual reference:
    - Hex codes for all colors
    - Font choices and sizes
    - Spacing/padding rules
@@ -269,7 +269,7 @@ function Apply-DesignFromLibrary {
 3. **Framework-specific preview artifacts:**
 
 ### If `ui_framework == webview`
-Generate **`~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Design/v1-test.html`** - **WORKING HTML PREVIEW**:
+Generate **`${APC_PLUGINS_DIR}/[Name]/Design/v1-test.html`** - **WORKING HTML PREVIEW**:
    
    **CRITICAL:** For WebView framework, this HTML MUST be production-ready with proper JUCE integration.
 
@@ -348,8 +348,8 @@ Generate a Visage preview scaffold now? (Y/n)
 Default: **Yes** (generate unless user explicitly says no).
 
 If yes, generate:
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Source/VisageControls.h` using `templates/visage/VisageControls.h.template`
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Source/PluginEditor.h` and `PluginEditor.cpp` using `templates/visage/`
+- `${APC_PLUGINS_DIR}/[Name]/Source/VisageControls.h` using `templates/visage/VisageControls.h.template`
+- `${APC_PLUGINS_DIR}/[Name]/Source/PluginEditor.h` and `PluginEditor.cpp` using `templates/visage/`
 
 These files are **preview-only** and will be refined during `/impl`.
 
@@ -357,9 +357,9 @@ These files are **preview-only** and will be refined during `/impl`.
 ```
 🎨 Design specification v1 created
 Files:
-   - ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Design/v1-ui-spec.md
-   - ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Design/v1-style-guide.md
-   - WebView: ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Design/v1-test.html (preview in browser)
+   - ${APC_PLUGINS_DIR}/[Name]/Design/v1-ui-spec.md
+   - ${APC_PLUGINS_DIR}/[Name]/Design/v1-style-guide.md
+   - WebView: ${APC_PLUGINS_DIR}/[Name]/Design/v1-test.html (preview in browser)
    - Visage: Source/VisageControls.h + PluginEditor.* (preview via preview-design.ps1)
 
 ⚠️ STOP HERE - Do NOT create Source/ files yet!
@@ -393,7 +393,7 @@ Write-Host "Run /impl [Name] to start building the plugin."
 ## ✅ PHASE 4: COMPLETION
 
 1. **Commit files to git**
-2. **Update `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/todo.md`** - Check off GUI tasks
+2. **Update `${APC_PLUGINS_DIR}/[Name]/.ideas/todo.md`** - Check off GUI tasks
 3. **Update `PLUGINS.md`** - Mark design stage complete
 
 **Present instructions:**
@@ -402,7 +402,7 @@ GUI files generated and committed!
 
 Next steps:
 - Preview Visage: powershell -ExecutionPolicy Bypass -File .\scripts\preview-design.ps1 -PluginName [Name]
-- Preview WebView: Open ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Design/index.html in browser
+- Preview WebView: Open ${APC_PLUGINS_DIR}/[Name]/Design/index.html in browser
 - Build: Follow standard build process
 
 Files created:
@@ -430,13 +430,13 @@ Files created:
 - During plugin redesign
 
 **Creates:**
-- Design specs: `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Design/v[N]-*.md`
+- Design specs: `${APC_PLUGINS_DIR}/[Name]/Design/v[N]-*.md`
 - Source code: `Source/PluginEditor.{h,cpp}`
 - Optional: `Source/VisageControls.h`, `v[N]-ui.html`
 
 **Updates:**
 - `PLUGINS.md` - Design status
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/todo.md` - Task completion
+- `${APC_PLUGINS_DIR}/[Name]/.ideas/todo.md` - Task completion
 
 ---
 

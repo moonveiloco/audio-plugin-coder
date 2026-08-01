@@ -97,7 +97,7 @@ function Test-WithPluginVal {
         $testResults.Categories = $testCategories
 
         # Update status.json
-        $apcPluginsDir = "$env:USERPROFILE\Projects\VST-PLUGINS\ACP-Plugins"
+        $apcPluginsDir = & "$PSScriptRoot\acp-config.ps1" plugins-dir
         if (Test-Path "$apcPluginsDir\$PluginName") {
             $pluginDir = "$apcPluginsDir\$PluginName"
         } else {
@@ -150,7 +150,7 @@ function Test-WithPluginVal {
 function Get-PluginValReport {
     param([string]$PluginName)
 
-    $apcPluginsDir = "$env:USERPROFILE\Projects\VST-PLUGINS\ACP-Plugins"
+    $apcPluginsDir = & "$PSScriptRoot\acp-config.ps1" plugins-dir
     if (Test-Path "$apcPluginsDir\$PluginName") {
         $pluginDir = "$apcPluginsDir\$PluginName"
     } else {

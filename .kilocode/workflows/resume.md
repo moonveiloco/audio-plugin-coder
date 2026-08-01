@@ -6,7 +6,7 @@ description: "Resume plugin development from current state"
 ```powershell
 . "$PSScriptRoot\..\scripts\state-management.ps1"
 
-$apcPluginsDir = "$env:USERPROFILE\Projects\VST-PLUGINS\ACP-Plugins"
+$apcPluginsDir = "${APC_PLUGINS_DIR}"
 if (Test-Path "$apcPluginsDir\$PluginName") {
     $pluginPath = "$apcPluginsDir\$PluginName"
 } else {

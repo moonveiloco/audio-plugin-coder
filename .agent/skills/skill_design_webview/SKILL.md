@@ -69,7 +69,7 @@ See: [`..agent/troubleshooting/resolutions/webview-member-order-crash.md`](../..
 ### Step 1: Create Web UI Files
 
 ```
-~/Projects/VST-PLUGINS/ACP-Plugins/YourPlugin/
+${APC_PLUGINS_DIR}/YourPlugin/
 └── Source/
     └── ui/
         └── public/
@@ -456,7 +456,7 @@ For detailed technical information, see the reference documents:
 
 - **Troubleshooting:** `..agent/troubleshooting/resolutions/webview-member-order-crash.md`
 - **Templates:** `templates/webview/`
-- **Working Examples:** `~/Projects/VST-PLUGINS/ACP-Plugins/AngelGrain/`, `~/Projects/VST-PLUGINS/ACP-Plugins/TestWebView/`
+- **Working Examples:** `${APC_PLUGINS_DIR}/AngelGrain/`, `${APC_PLUGINS_DIR}/TestWebView/`
 - **Known Issues:** `..agent/troubleshooting/known-issues.yaml` (webview-001, webview-002)
 
 ---

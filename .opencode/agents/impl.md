@@ -8,7 +8,7 @@ Implementa DSP e UI basandoti sui design approvati.
 
 ## Prerequisiti
 - Design phase completata
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Source/` con template iniziali
+- `${APC_PLUGINS_DIR}/[Name]/Source/` con template iniziali
 
 ## Esecuzione
 Carica `.claude/skills/impl/SKILL.md`

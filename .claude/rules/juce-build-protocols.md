@@ -9,7 +9,7 @@
 - **macOS:** `bash scripts/build-and-install.sh TailSync`
 ### B. Monorepo & Path Logic
 - **Root Context:** All build operations must happen from the Repository Root.
-- **Subdirectories:** NEVER run commands inside ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.
+- **Subdirectories:** NEVER run commands inside ${APC_PLUGINS_DIR}/[Name]/.
 - **Environment (Windows):**
   - OS: **Windows 11**
   - Shell: **PowerShell**
@@ -22,7 +22,7 @@
 ---
 ## 2. 📂 FILE STRUCTURE & WEBVIEW
 ### A. WebView/GUI Architecture
-- **Location:** HTML/JS/CSS files MUST reside in ~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/WebUI/.
+- **Location:** HTML/JS/CSS files MUST reside in ${APC_PLUGINS_DIR}/[Name]/WebUI/.
 - **Forbidden:** Do NOT use Source/ui/public or Resources/web.
 - **C++ Pathing:** In PluginEditor.cpp, load files dynamically or via hardcoded dev path during testing.
 - **JS Interop:** Do NOT create a juce subfolder. Access native backend via window.__JUCE__.

@@ -77,7 +77,23 @@ message(STATUS "Scanning for plugins (legacy): ${CMAKE_CURRENT_SOURCE_DIR}/plugi
 file(GLOB LEGACY_PLUGIN_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/plugins/*")
 
 # External plugins in APC_PLUGINS_DIR
-set(APC_PLUGINS_DIR "$ENV{HOME}/Projects/VST-PLUGINS/ACP-Plugins")
+# APC_PLUGINS_DIR: Read from ACP config, fallback to env var
+if(DEFINED ENV{ACP_PLUGINS_DIR})
+    set(APC_PLUGINS_DIR "$ENV{ACP_PLUGINS_DIR}")
+else()
+    execute_process(
+        COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/acp-config.sh plugins-dir
+        OUTPUT_VARIABLE _ACP_PLUGINS_DIR_OUT
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        RESULT_VARIABLE _ACP_CONFIG_RESULT
+    )
+    if(_ACP_CONFIG_RESULT EQUAL 0 AND _ACP_PLUGINS_DIR_OUT)
+        set(APC_PLUGINS_DIR "${_ACP_PLUGINS_DIR_OUT}")
+    else()
+        message(WARNING "ACP_PLUGINS_DIR not configured. Run /setup first or set ACP_PLUGINS_DIR env var.")
+        set(APC_PLUGINS_DIR "$ENV{HOME}/AudioPlugins")
+    endif()
+endif()
 if(EXISTS "${APC_PLUGINS_DIR}")
     message(STATUS "Scanning for plugins (external): ${APC_PLUGINS_DIR}")
     file(GLOB EXTERNAL_PLUGIN_DIRS "${APC_PLUGINS_DIR}/*")

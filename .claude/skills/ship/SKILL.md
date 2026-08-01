@@ -478,7 +478,7 @@ function New-DistributionPackage {
     }
 
     # Copy documentation
-    $apcPluginsDir = "$env:USERPROFILE\Projects\VST-PLUGINS\ACP-Plugins"
+    $apcPluginsDir = "${APC_PLUGINS_DIR}"
     if (Test-Path "$apcPluginsDir\$PluginName") { $pluginDir = "$apcPluginsDir\$PluginName" } else { $pluginDir = "plugins/$PluginName" }
     Copy-Item "$pluginDir/README.md" $DistDir/ -ErrorAction SilentlyContinue
     Copy-Item "CHANGELOG.md" $DistDir/ -ErrorAction SilentlyContinue

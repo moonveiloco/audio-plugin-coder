@@ -20,7 +20,7 @@ $ErrorActionPreference = "Stop"
 
 $RootPath = (Get-Item "$PSScriptRoot\..").FullName
 $BuildDir = "$RootPath\build"
-$ApcPluginsDir = "$env:USERPROFILE\Projects\VST-PLUGINS\ACP-Plugins"
+$ApcPluginsDir = & "$PSScriptRoot\acp-config.ps1" plugins-dir
 if (Test-Path "$ApcPluginsDir\$PluginName") {
     $PluginDir = "$ApcPluginsDir\$PluginName"
 } else {

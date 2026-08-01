@@ -19,7 +19,7 @@ Carica `.claude/skills/design/SKILL.md`
 Nessuna generazione di codice di produzione — solo iterazione creativa.
 
 ## Output
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/Design/` con mockup e specifiche
+- `${APC_PLUGINS_DIR}/[Name]/Design/` con mockup e specifiche
 - `v1-ui-spec.md`
 - `v1-style-guide.md`
 

@@ -7,20 +7,25 @@ description: "PHASE 1: Dream - Plugin ideation and creative brief"
 Avvia il processo di ideazione per un nuovo plugin audio.
 
 ## Prerequisiti
-- Nessuno (punto di ingresso)
+- **FIRST RUN CHECK:** Verifica che ACP sia configurato:
+  ```bash
+  bash scripts/acp-config.sh is-setup    # macOS/Linux
+  .\scripts\acp-config.ps1 is-setup     # Windows
+  ```
+  Se fallisce (exit 1), STOP ed esegui `/setup`. Non procedere fino al completamento del setup.
 
 ## Stato
-Verifica che `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]` non esista già. Se esiste, usa `/resume`.
+Verifica che `${APC_PLUGINS_DIR}/[Name]` non esista già. Se esiste, usa `/resume`.
 
 ## Esecuzione
 Carica ed esegui la skill `.claude/skills/dream/SKILL.md`
 
 ## Output
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/creative-brief.md`
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.ideas/parameter-spec.md`
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/status.json`
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.gitignore`
-- `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/.gitattributes`
+- `${APC_PLUGINS_DIR}/[Name]/.ideas/creative-brief.md`
+- `${APC_PLUGINS_DIR}/[Name]/.ideas/parameter-spec.md`
+- `${APC_PLUGINS_DIR}/[Name]/status.json`
+- `${APC_PLUGINS_DIR}/[Name]/.gitignore`
+- `${APC_PLUGINS_DIR}/[Name]/.gitattributes`
 
 ## Completamento
 ```

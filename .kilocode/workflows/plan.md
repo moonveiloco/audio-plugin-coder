@@ -8,7 +8,7 @@ description: "PHASE 2: Architecture - Define structure and UI framework"
 ```powershell
 . "$PSScriptRoot\..\scripts\state-management.ps1"
 
-$apcPluginsDir = "$env:USERPROFILE\Projects\VST-PLUGINS\ACP-Plugins"
+$apcPluginsDir = "${APC_PLUGINS_DIR}"
 if (Test-Path "$apcPluginsDir\$PluginName") { $pluginDir = "$apcPluginsDir\$PluginName" } else { $pluginDir = "plugins/$PluginName" }
 
 if (-not (Test-PluginState -PluginPath $pluginDir -RequiredPhase "ideation" -RequiredFiles @(".ideas/creative-brief.md", ".ideas/parameter-spec.md"))) {

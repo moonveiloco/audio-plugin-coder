@@ -26,7 +26,7 @@ See `.claude\workflows\test.md` for:
 
 - Test results
 - Validation report
-- Updates `~/Projects/VST-PLUGINS/ACP-Plugins/[Name]/status.json` with test status
+- Updates `${APC_PLUGINS_DIR}/[Name]/status.json` with test status
 
 ## TEST TYPES
 
