@@ -9,7 +9,7 @@ description: "PHASE 2: Architecture - Define structure and UI framework"
 . "$PSScriptRoot\..\scripts\state-management.ps1"
 
 $apcPluginsDir = "${APC_PLUGINS_DIR}"
-if (Test-Path "$apcPluginsDir\$PluginName") { $pluginDir = "$apcPluginsDir\$PluginName" } else { $pluginDir = "plugins/$PluginName" }
+if (Test-Path "$apcPluginsDir\$PluginName") { $pluginDir = "$apcPluginsDir\$PluginName" } else { Write-Error "Plugin '$PluginName' not found in APC_PLUGINS_DIR ($apcPluginsDir). Run /setup or create the plugin with /dream."; exit 1 }
 
 if (-not (Test-PluginState -PluginPath $pluginDir -RequiredPhase "ideation" -RequiredFiles @(".ideas/creative-brief.md", ".ideas/parameter-spec.md"))) {
     Write-Error "Prerequisites not met. Complete /dream first."

@@ -7,10 +7,10 @@ description: "PHASE 1: Dream - Plugin ideation and creative brief"
 Avvia il processo di ideazione per un nuovo plugin audio.
 
 ## Prerequisiti
-- **FIRST RUN CHECK:** Verifica che ACP sia configurato:
+- **FIRST RUN CHECK:** Verifica che APC sia configurato:
   ```bash
-  bash scripts/acp-config.sh is-setup    # macOS/Linux
-  .\scripts\acp-config.ps1 is-setup     # Windows
+  bash scripts/apc-config.sh is-setup    # macOS/Linux
+  .\scripts\apc-config.ps1 is-setup     # Windows
   ```
   Se fallisce (exit 1), STOP ed esegui `/setup`. Non procedere fino al completamento del setup.
 

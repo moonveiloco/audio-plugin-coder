@@ -72,32 +72,25 @@ endif()
 # PLUGIN DISCOVERY
 # ============================================
 
-# Legacy plugins inside the ACP repo
-message(STATUS "Scanning for plugins (legacy): ${CMAKE_CURRENT_SOURCE_DIR}/plugins")
-file(GLOB LEGACY_PLUGIN_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/plugins/*")
-
 # External plugins in APC_PLUGINS_DIR
-# APC_PLUGINS_DIR: Read from ACP config, fallback to env var
-if(DEFINED ENV{ACP_PLUGINS_DIR})
-    set(APC_PLUGINS_DIR "$ENV{ACP_PLUGINS_DIR}")
+# APC_PLUGINS_DIR: Read from APC config, fallback to env var
+if(DEFINED ENV{APC_PLUGINS_DIR})
+    set(APC_PLUGINS_DIR "$ENV{APC_PLUGINS_DIR}")
 else()
     execute_process(
-        COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/acp-config.sh plugins-dir
-        OUTPUT_VARIABLE _ACP_PLUGINS_DIR_OUT
+        COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/apc-config.sh plugins-dir
+        OUTPUT_VARIABLE _APC_PLUGINS_DIR_OUT
         OUTPUT_STRIP_TRAILING_WHITESPACE
-        RESULT_VARIABLE _ACP_CONFIG_RESULT
+        RESULT_VARIABLE _APC_CONFIG_RESULT
     )
-    if(_ACP_CONFIG_RESULT EQUAL 0 AND _ACP_PLUGINS_DIR_OUT)
-        set(APC_PLUGINS_DIR "${_ACP_PLUGINS_DIR_OUT}")
+    if(_APC_CONFIG_RESULT EQUAL 0 AND _APC_PLUGINS_DIR_OUT)
+        set(APC_PLUGINS_DIR "${_APC_PLUGINS_DIR_OUT}")
     else()
-        message(WARNING
-            "ACP_PLUGINS_DIR not configured (acp-config.sh exited with "
-            "${_ACP_CONFIG_RESULT}). External plugins will NOT be scanned.\n"
-            "  - Run `/setup` to configure ACP, OR\n"
-            "  - Set the ACP_PLUGINS_DIR env var, OR\n"
-            "  - Continue with legacy plugins in `plugins/` only.\n"
-            "Falling back to $ENV{HOME}/AudioPlugins (likely empty/nonexistent).")
-        set(APC_PLUGINS_DIR "$ENV{HOME}/AudioPlugins")
+        message(FATAL_ERROR
+            "APC_PLUGINS_DIR not configured (apc-config.sh exited with "
+            "${_APC_CONFIG_RESULT}). External plugins will NOT be scanned.\n"
+            "  - Run `/setup` to configure APC, OR\n"
+            "  - Set the APC_PLUGINS_DIR env var.")
     endif()
 endif()
 if(EXISTS "${APC_PLUGINS_DIR}")
@@ -107,8 +100,8 @@ else()
     set(EXTERNAL_PLUGIN_DIRS "")
 endif()
 
-# Combine both lists
-set(PLUGIN_DIRS ${LEGACY_PLUGIN_DIRS} ${EXTERNAL_PLUGIN_DIRS})
+# Combine plugin list (external only; legacy plugins/ removed)
+set(PLUGIN_DIRS ${EXTERNAL_PLUGIN_DIRS})
 
 set(APC_PLUGIN_COUNT 0)
 

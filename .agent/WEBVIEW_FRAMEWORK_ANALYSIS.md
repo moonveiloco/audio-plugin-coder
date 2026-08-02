@@ -391,13 +391,13 @@ Before generating code, the AI should:
 ## Appendix A: Complete JUCE Bridge Code
 
 ### Part 1: Native Interop (320 lines)
-See: `plugins/AngelGrain/Source/ui/public/index.html` lines 330-362
+See: `examples/AngelGrain/Source/ui/public/index.html` lines 330-362
 
 ### Part 2: JUCE Bridge (58 lines)
-See: `plugins/AngelGrain/Source/ui/public/index.html` lines 364-418
+See: `examples/AngelGrain/Source/ui/public/index.html` lines 364-418
 
 ### Part 3: Plugin Logic (Variable)
-See: `plugins/AngelGrain/Source/ui/public/index.html` lines 420-481
+See: `examples/AngelGrain/Source/ui/public/index.html` lines 420-481
 
 ---
 
@@ -405,7 +405,7 @@ See: `plugins/AngelGrain/Source/ui/public/index.html` lines 420-481
 
 ### Working (AngelGrain)
 ```
-plugins/AngelGrain/
+examples/AngelGrain/
 └── Source/
     └── ui/
         └── public/
@@ -414,7 +414,7 @@ plugins/AngelGrain/
 
 ### Alternative (Framework Convention)
 ```
-plugins/PluginName/
+$APC_PLUGINS_DIR/PluginName/
 └── Design/
     └── index.html  ← Single file, all code inline
 ```

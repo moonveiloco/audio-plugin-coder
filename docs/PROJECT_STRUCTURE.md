@@ -13,7 +13,7 @@ audio-plugin-coder/
 ├── build/                  # Build artifacts (gitignored)
 ├── dist/                   # Distribution packages (gitignored)
 ├── docs/                   # Documentation
-├── plugins/                # Your plugin projects
+├── examples/               # Read-only reference plugins (CloudWash, gnarly2, ...)
 ├── scripts/                # Build and utility scripts
 ├── .github/                # GitHub Actions workflows
 ├── CMakeLists.txt          # Root CMake configuration
@@ -93,12 +93,12 @@ git submodule update --init --recursive
 
 ---
 
-### `plugins/` - Plugin Projects
+### `$APC_PLUGINS_DIR` - Plugin Projects
 
-Each plugin has its own directory with standardized structure.
+Each plugin has its own directory (outside the APC repo, configured via `/setup`) with standardized structure.
 
 ```
-plugins/
+$APC_PLUGINS_DIR/
 └── [PluginName]/
     ├── .ideas/             # Planning and specifications
     │   ├── creative-brief.md
@@ -305,7 +305,7 @@ target_link_libraries(PluginName
 
 ```
 build/
-└── plugins/
+└── external/
     └── [PluginName]/
         └── [PluginName]_artefacts/
             └── Release/

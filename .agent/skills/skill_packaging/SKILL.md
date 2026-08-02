@@ -467,7 +467,7 @@ function New-DistributionPackage {
     New-Item -ItemType Directory -Path $DistDir -Force | Out-Null
 
     $apcPluginsDir = "${APC_PLUGINS_DIR}"
-    if (Test-Path "$apcPluginsDir\$PluginName") { $pluginDir = "$apcPluginsDir\$PluginName" } else { $pluginDir = "plugins/$PluginName" }
+if (Test-Path "$apcPluginsDir\$PluginName") { $pluginDir = "$apcPluginsDir\$PluginName" } else { Write-Error "Plugin '$PluginName' not found in APC_PLUGINS_DIR ($apcPluginsDir). Run /setup or create the plugin with /dream."; exit 1 }
 
     # Copy all installers
     if ($Artifacts.Windows) {
@@ -526,7 +526,7 @@ See LICENSE.txt for full license terms.
 
 ```powershell
 $apcPluginsDir = "${APC_PLUGINS_DIR}"
-if (Test-Path "$apcPluginsDir\$PluginName") { $pluginDir = "$apcPluginsDir\$PluginName" } else { $pluginDir = "plugins/$PluginName" }
+if (Test-Path "$apcPluginsDir\$PluginName") { $pluginDir = "$apcPluginsDir\$PluginName" } else { Write-Error "Plugin '$PluginName' not found in APC_PLUGINS_DIR ($apcPluginsDir). Run /setup or create the plugin with /dream."; exit 1 }
 Update-PluginState -PluginPath $pluginDir -Phase "ship_complete" -Updates @{
     "version" = $Version
     "validation.ship_ready" = $true

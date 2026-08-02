@@ -168,7 +168,7 @@ function Apply-DesignFromLibrary {
 
         # Copy preview.html as v1-test.html (WebView only)
         $apcPluginsDir = "${APC_PLUGINS_DIR}"
-        if (Test-Path "$apcPluginsDir\$PluginName") { $pluginDir = "$apcPluginsDir\$PluginName" } else { $pluginDir = "plugins/$PluginName" }
+        if (Test-Path "$apcPluginsDir\$PluginName") { $pluginDir = "$apcPluginsDir\$PluginName" } else { Write-Error "Plugin '$PluginName' not found in APC_PLUGINS_DIR ($apcPluginsDir). Run /setup or create the plugin with /dream."; exit 1 }
         $state = Get-PluginState -PluginPath $pluginDir
         if ($state.ui_framework -eq "webview") {
             Copy-Item "$designPath/preview.html" "$pluginDir/Design/v1-test.html"

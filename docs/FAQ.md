@@ -170,7 +170,7 @@ No. Always use the build script. Never run cmake/msbuild directly.
 ### Where are the build outputs?
 
 ```
-build/plugins/MyPlugin/MyPlugin_artefacts/Release/
+build/external/MyPlugin/MyPlugin_artefacts/Release/
 ├── MyPlugin.vst3/          # VST3 plugin
 └── MyPlugin.exe            # Standalone
 ```
@@ -243,7 +243,7 @@ Or let the `/ship` command handle it.
 
 - **Build errors:** Console output from build script
 - **Plugin crashes:** Documents/APC_CRASH_REPORT.txt
-- **State errors:** `plugins/MyPlugin/status.json` → `error_recovery.error_log`
+- **State errors:** `$APC_PLUGINS_DIR/MyPlugin/status.json` → `error_recovery.error_log`
 
 ### How do I debug a crash?
 
@@ -269,9 +269,9 @@ Or let the `/ship` command handle it.
 Restore-PluginState -PluginPath "plugins\MyPlugin"
 ```
 
-Or use git:
+Or restore from backup (plugins live outside the repo in `$APC_PLUGINS_DIR`):
 ```powershell
-git checkout -- plugins/MyPlugin/
+bash scripts/rollback.sh MyPlugin <version>
 ```
 
 ### What if the AI makes a mistake?

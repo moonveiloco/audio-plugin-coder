@@ -1,15 +1,15 @@
-# ACP Config Manager (Windows / PowerShell)
-# Reads/writes the global ACP configuration.
+# APC Config Manager (Windows / PowerShell)
+# Reads/writes the global APC configuration.
 # Single source of truth for plugins_dir, juce_dir, and setup state.
 #
 # Usage:
-#   .\scripts\acp-config.ps1 path
-#   .\scripts\acp-config.ps1 get <key>
-#   .\scripts\acp-config.ps1 set <key> <value>
-#   .\scripts\acp-config.ps1 is-setup
-#   .\scripts\acp-config.ps1 plugins-dir    # exit 1 if unset
-#   .\scripts\acp-config.ps1 juce-dir       # exit 1 if unset
-#   .\scripts\acp-config.ps1 init
+#   .\scripts\apc-config.ps1 path
+#   .\scripts\apc-config.ps1 get <key>
+#   .\scripts\apc-config.ps1 set <key> <value>
+#   .\scripts\apc-config.ps1 is-setup
+#   .\scripts\apc-config.ps1 plugins-dir    # exit 1 if unset
+#   .\scripts\apc-config.ps1 juce-dir       # exit 1 if unset
+#   .\scripts\apc-config.ps1 init
 
 param(
     [Parameter(Position = 0)]
@@ -22,22 +22,22 @@ param(
     [string]$Value
 )
 
-function Get-AcpConfigPath {
+function Get-ApcConfigPath {
     $base = if ($env:APPDATA) { $env:APPDATA } else { $env:USERPROFILE }
-    Join-Path $base "acp\config.json"
+    Join-Path $base "apc\config.json"
 }
 
-function Ensure-AcpConfigDir {
-    $dir = Split-Path (Get-AcpConfigPath) -Parent
+function Ensure-ApcConfigDir {
+    $dir = Split-Path (Get-ApcConfigPath) -Parent
     if (-not (Test-Path $dir)) {
         New-Item -ItemType Directory -Path $dir -Force | Out-Null
     }
 }
 
-function Initialize-AcpConfig {
-    $cfg = Get-AcpConfigPath
+function Initialize-ApcConfig {
+    $cfg = Get-ApcConfigPath
     if (-not (Test-Path $cfg)) {
-        Ensure-AcpConfigDir
+        Ensure-ApcConfigDir
         $default = @{
             version           = 1
             setup_complete    = $false
@@ -51,9 +51,9 @@ function Initialize-AcpConfig {
     }
 }
 
-function Get-AcpConfigValue {
+function Get-ApcConfigValue {
     param([string]$k)
-    $cfg = Get-AcpConfigPath
+    $cfg = Get-ApcConfigPath
     if (-not (Test-Path $cfg)) { return "" }
     try {
         $data = Get-Content $cfg -Raw | ConvertFrom-Json
@@ -65,10 +65,10 @@ function Get-AcpConfigValue {
     }
 }
 
-function Set-AcpConfigValue {
+function Set-ApcConfigValue {
     param([string]$k, [string]$v)
-    $cfg = Get-AcpConfigPath
-    if (-not (Test-Path $cfg)) { Initialize-AcpConfig }
+    $cfg = Get-ApcConfigPath
+    if (-not (Test-Path $cfg)) { Initialize-ApcConfig }
     $data = Get-Content $cfg -Raw | ConvertFrom-Json
     if ($data.PSObject.Properties.Name -contains $k) {
         $data.$k = $v
@@ -78,46 +78,46 @@ function Set-AcpConfigValue {
     $data | ConvertTo-Json -Depth 3 | Set-Content -Path $cfg -Encoding UTF8
 }
 
-function Test-AcpSetup {
-    $val = Get-AcpConfigValue "setup_complete"
+function Test-ApcSetup {
+    $val = Get-ApcConfigValue "setup_complete"
     return ($val -eq "True")
 }
 
 switch ($Command) {
-    "path"         { Get-AcpConfigPath }
+    "path"         { Get-ApcConfigPath }
     "get"          {
-        if (-not $Key) { Write-Error "Usage: acp-config.ps1 get <key>"; exit 1 }
-        Get-AcpConfigValue -k $Key
+        if (-not $Key) { Write-Error "Usage: apc-config.ps1 get <key>"; exit 1 }
+        Get-ApcConfigValue -k $Key
     }
     "set"          {
         if (-not $Key -or -not $PSBoundParameters.ContainsKey('Value')) {
-            Write-Error "Usage: acp-config.ps1 set <key> <value>"; exit 1
+            Write-Error "Usage: apc-config.ps1 set <key> <value>"; exit 1
         }
-        Set-AcpConfigValue -k $Key -v $Value
+        Set-ApcConfigValue -k $Key -v $Value
     }
     "is-setup"     {
-        if (Test-AcpSetup) { exit 0 } else { exit 1 }
+        if (Test-ApcSetup) { exit 0 } else { exit 1 }
     }
     "plugins-dir"  {
-        $v = Get-AcpConfigValue -k "plugins_dir"
+        $v = Get-ApcConfigValue -k "plugins_dir"
         if ([string]::IsNullOrWhiteSpace($v)) {
-            Write-Error "ACP not configured: plugins_dir is null. Run /setup first."
+            Write-Error "APC not configured: plugins_dir is null. Run /setup first."
             exit 1
         }
         $v
     }
     "juce-dir"     {
-        $v = Get-AcpConfigValue -k "juce_dir"
+        $v = Get-ApcConfigValue -k "juce_dir"
         if ([string]::IsNullOrWhiteSpace($v)) {
-            Write-Error "ACP not configured: juce_dir is null. Run /setup first."
+            Write-Error "APC not configured: juce_dir is null. Run /setup first."
             exit 1
         }
         $v
     }
-    "init"         { Initialize-AcpConfig }
+    "init"         { Initialize-ApcConfig }
     default        {
         Write-Host @"
-ACP Config Manager
+APC Config Manager
 
 Commands:
   path           Print the config file path

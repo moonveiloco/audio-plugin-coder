@@ -247,7 +247,7 @@ All installers include a license agreement (EULA).
 
 **Custom License:** Place `LICENSE.txt` in your plugin folder:
 ```
-plugins/{PluginName}/LICENSE.txt
+$APC_PLUGINS_DIR/{PluginName}/LICENSE.txt
 ```
 
 **License includes:**

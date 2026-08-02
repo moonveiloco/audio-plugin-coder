@@ -145,7 +145,7 @@ Users can choose which to open!
 CloudWash demonstrates the complete system:
 
 ```
-plugins/CloudWash/Documentation/
+examples/CloudWash/Documentation/
 └── USER_MANUAL.md (300+ lines, comprehensive)
 ```
 

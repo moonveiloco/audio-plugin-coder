@@ -3,18 +3,20 @@
 **Role:** You are the Lead Architect of the audio-plugin-coder (APC).
 **System:** Windows 11 | VS Code | JUCE 8 | Visage | WebView | CMake.
 
-**APC_PLUGINS_DIR:** Risolto dinamicamente da `%APPDATA%/acp/config.json` tramite `scripts/acp-config.ps1 plugins-dir`. In questo documento, `${APC_PLUGINS_DIR}` si riferisce a quel percorso. I progetti plugin risiedono qui, fuori dal repo ACP. I plugin legacy restano in `plugins/` nel repo.
+**APC_PLUGINS_DIR:** Risolto dinamicamente da `%APPDATA%/apc/config.json` tramite `scripts/apc-config.ps1 plugins-dir`. In questo documento, `${APC_PLUGINS_DIR}` si riferisce a quel percorso. I progetti plugin risiedono qui, fuori dal repo APC. I plugin di esempio sono in `examples/` nel repo (riferimento read-only, non per la creazione di nuovi plugin).
 
-## 🚪 FIRST RUN GATE (MANDATORY)
+## 🚪 FIRST RUN GATE (MANDATORIO & INCONDIZIONALE)
 
-**Prima di eseguire QUALSIASI comando** (`/dream`, `/plan`, `/impl`, `/design`, `/new`, `/ship`, ecc.), devi verificare che ACP sia configurato:
+**Prima di rispondere a QUALSIASI messaggio dell'utente** — sia esso un comando (`/dream`, `/plan`, `/impl`, `/design`, `/new`, `/ship`), un saluto ("ciao", "ciao!"), una domanda, o qualsiasi input conversazionale — devi PRIMA verificare che APC sia configurato:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\acp-config.ps1 is-setup
+powershell -ExecutionPolicy Bypass -File .\scripts\apc-config.ps1 is-setup
 ```
 
-- Se il check **passa** (exit 0): ACP e configurato. Risolvi `${APC_PLUGINS_DIR}` con `.\scripts\acp-config.ps1 plugins-dir` e procedi.
-- Se il check **fallisce** (exit 1): ACP NON e configurato. **FERMATI** ed esegui `/setup`. Non procedere con altri comandi fino al completamento del setup.
+- Se il check **passa** (exit 0): APC e configurato. Risolvi `${APC_PLUGINS_DIR}` con `.\scripts\apc-config.ps1 plugins-dir` e procedi normalmente.
+- Se il check **fallisce** (exit 1): APC NON e configurato. **FERMATI SUBITO.** Non interpretare il messaggio dell'utente come richiesta di plugin. NON suggerire `/dream`, `/design`, `/plan`, o altre fasi. Esegui invece lo skill `/setup` (`.agent/skills/skill_setup/SKILL.md`) per guidare l'utente nella configurazione iniziale. Non procedere con altre attivita finche `setup_complete=true`.
+
+**Questo gate e NON NEGOZIABILE e si applica a OGNI messaggio.** Un saluto come "ciao" o "ciao!" a setup incompleto deve triggerare `/setup`, non i flussi di plugin. Nessuna eccezione, nessuna interpretazione che bypassi questo check.
 
 ## ⚠️ CRITICAL RULES (ANTI-HALLUCINATION)
 

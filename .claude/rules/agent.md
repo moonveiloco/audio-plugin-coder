@@ -3,26 +3,26 @@
 **Role:** You are the Lead Architect of the audio-plugin-coder (APC).
 **System:** Windows 11 / macOS | VS Code | JUCE 8 | Visage | WebView | CMake.
 
-**APC_PLUGINS_DIR:** Resolved at runtime from `~/.config/acp/config.json` (Linux/macOS) or `%APPDATA%/acp/config.json` (Windows) via `scripts/acp-config.sh plugins-dir` / `scripts/acp-config.ps1 plugins-dir`. Throughout this document, `${APC_PLUGINS_DIR}` refers to that dynamically-resolved path. Plugin projects live here, outside the ACP repo. New plugins go here. Legacy plugins remain in `plugins/` inside the repo. Each plugin in APC_PLUGINS_DIR can be its own Git repository.
+**APC_PLUGINS_DIR:** Resolved at runtime from `~/.config/apc/config.json` (Linux/macOS) or `%APPDATA%/apc/config.json` (Windows) via `scripts/apc-config.sh plugins-dir` / `scripts/apc-config.ps1 plugins-dir`. Throughout this document, `${APC_PLUGINS_DIR}` refers to that dynamically-resolved path. Plugin projects live here, outside the APC repo. New plugins go here. Plugin examples live in `examples/` inside the repo (read-only reference, not for new plugin creation). Each plugin in APC_PLUGINS_DIR can be its own Git repository.
 
-## 🚪 FIRST RUN GATE (MANDATORY)
+## 🚪 FIRST RUN GATE (MANDATORY & UNCONDITIONAL)
 
-**Before executing ANY command** (`/dream`, `/plan`, `/impl`, `/design`, `/new`, `/ship`, etc.), you MUST verify that ACP is configured:
+**Before responding to ANY user message** — whether it's a command (`/dream`, `/plan`, `/impl`, `/design`, `/new`, `/ship`), a greeting ("ciao", "hello"), a question, or any conversational input — you MUST FIRST verify that APC is configured:
 
 **macOS/Linux:**
 ```bash
-bash scripts/acp-config.sh is-setup
+bash scripts/apc-config.sh is-setup
 ```
 
 **Windows:**
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\acp-config.ps1 is-setup
+powershell -ExecutionPolicy Bypass -File .\scripts\apc-config.ps1 is-setup
 ```
 
-- If the check **passes** (exit 0): ACP is configured. Resolve `${APC_PLUGINS_DIR}` to the actual path with `bash scripts/acp-config.sh plugins-dir` and proceed with the user's command.
-- If the check **fails** (exit 1): ACP is NOT configured. **STOP immediately** and execute the `/setup` skill (`.claude/skills/setup/SKILL.md`). Do NOT proceed with any other command until setup is complete.
+- If the check **passes** (exit 0): APC is configured. Resolve `${APC_PLUGINS_DIR}` to the actual path with `bash scripts/apc-config.sh plugins-dir` and proceed normally with the user's request.
+- If the check **fails** (exit 1): APC is NOT configured. **STOP immediately.** Do NOT interpret the user's message as a plugin request. Do NOT suggest `/dream`, `/design`, `/plan`, or any other phase. Instead, execute the `/setup` skill (`.claude/skills/setup/SKILL.md`) to guide the user through first-run configuration. Do NOT proceed with any other task until `setup_complete=true`.
 
-**This gate is NON-NEGOTIABLE.** No plugin work happens without a valid config.
+**This gate is NON-NEGOTIABLE and applies to EVERY message.** A greeting like "ciao" or "hello" when setup is incomplete must trigger `/setup`, not plugin workflows. No exceptions, no interpretations that bypass this check.
 
 ## ⚠️ CRITICAL RULES (ANTI-HALLUCINATION)
 

@@ -30,7 +30,7 @@ ALL JavaScript must be inline in index.html (900+ lines typical).
 **Reference:**
 - `.claude/troubleshooting/resolutions/webview-es6-modules-fail.md`
 - `.claude/skills/skill_design_webview/WEBVIEW-PRODUCTION-GUIDE.md`
-- Working example: `plugins/CloudWash/Source/ui/public/index.html`
+- Working example: `examples/CloudWash/Source/ui/public/index.html`
 
 ---
 
@@ -245,7 +245,7 @@ target_compile_definitions(YourPlugin
 1. **Check browser test first:**
    ```bash
    # Open test-local.html in Chrome/Edge
-   plugins/YourPlugin/Source/ui/public/test-local.html
+   $APC_PLUGINS_DIR/YourPlugin/Source/ui/public/test-local.html
    ```
 
 2. **Look for ES6 module errors:**
@@ -330,12 +330,12 @@ target_compile_definitions(YourPlugin
   - webview-001 through webview-008
 
 ### Working Examples
-- **`plugins/CloudWash/Source/ui/public/index.html`** ⭐
+- **`examples/CloudWash/Source/ui/public/index.html`** ⭐
   - 978 lines, 34KB
   - COMPLETE working implementation
   - Use as template for all new plugins
 
-- **`plugins/AngelGrain/`**
+- **`examples/AngelGrain/`**
   - Another working WebView plugin
   - Simpler than CloudWash
 
@@ -346,7 +346,7 @@ target_compile_definitions(YourPlugin
 ### 1. Copy CloudWash Template
 ```powershell
 # Copy working implementation
-cp plugins/CloudWash/Source/ui/public/index.html plugins/YourPlugin/Source/ui/public/
+cp examples/CloudWash/Source/ui/public/index.html $APC_PLUGINS_DIR/YourPlugin/Source/ui/public/
 ```
 
 ### 2. Modify for Your Plugin
@@ -359,7 +359,7 @@ cp plugins/CloudWash/Source/ui/public/index.html plugins/YourPlugin/Source/ui/pu
 ### 3. Test in Browser
 ```bash
 # Save as test-local.html and open in browser
-plugins/YourPlugin/Source/ui/public/test-local.html
+$APC_PLUGINS_DIR/YourPlugin/Source/ui/public/test-local.html
 ```
 
 ### 4. Update C++ Side

@@ -126,7 +126,7 @@ private:
 ### Step 1: Create Directory Structure
 
 ```
-plugins/YourPlugin/
+$APC_PLUGINS_DIR/YourPlugin/
 └── Source/
     └── ui/
         └── public/
@@ -142,7 +142,7 @@ plugins/YourPlugin/
 ```powershell
 # Copy from JUCE modules to your plugin
 Copy-Item "_tools/JUCE/modules/juce_gui_extra/native/javascript/index.js" `
-    "plugins/YourPlugin/Source/ui/public/js/juce/index.js"
+    "$APC_PLUGINS_DIR/YourPlugin/Source/ui/public/js/juce/index.js"
 ```
 
 ### Step 3: Create index.html

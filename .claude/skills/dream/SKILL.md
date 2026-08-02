@@ -5,15 +5,15 @@
 **Output Location:** `${APC_PLUGINS_DIR}/[Name]/`
 
 ## 🚪 PREREQUISITE: FIRST RUN CHECK
-Before starting, verify ACP is configured:
+Before starting, verify APC is configured:
 
 **macOS/Linux:**
 ```bash
-bash scripts/acp-config.sh is-setup
+bash scripts/apc-config.sh is-setup
 ```
 **Windows:**
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\acp-config.ps1 is-setup
+powershell -ExecutionPolicy Bypass -File .\scripts\apc-config.ps1 is-setup
 ```
 
 If the check **fails** (exit 1), STOP and execute `/setup` instead. Do not proceed until setup is complete.
@@ -21,9 +21,9 @@ If the check **fails** (exit 1), STOP and execute `/setup` instead. Do not proce
 If the check **passes**, resolve the plugins directory:
 ```bash
 # macOS/Linux
-APC_PLUGINS_DIR="$(bash scripts/acp-config.sh plugins-dir)"
+APC_PLUGINS_DIR="$(bash scripts/apc-config.sh plugins-dir)"
 # Windows
-$ApcPluginsDir = & .\scripts\acp-config.ps1 plugins-dir
+$ApcPluginsDir = & .\scripts\apc-config.ps1 plugins-dir
 ```
 
 ## ⛔ OUTPUT RESTRICTIONS (MANDATORY)

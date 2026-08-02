@@ -2,10 +2,10 @@
 description: "Complete plugin development from idea to shipped product"
 ---
 ## 🚪 PREREQUISITE: FIRST RUN CHECK
-Verifica che ACP sia configurato prima di iniziare:
+Verifica che APC sia configurato prima di iniziare:
 ```bash
-bash scripts/acp-config.sh is-setup    # macOS/Linux
-.\scripts\acp-config.ps1 is-setup     # Windows
+bash scripts/apc-config.sh is-setup    # macOS/Linux
+.\scripts\apc-config.ps1 is-setup     # Windows
 ```
 Se fallisce, esegui `/setup` prima di continuare.
 

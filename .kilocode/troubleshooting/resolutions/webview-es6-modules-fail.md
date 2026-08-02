@@ -89,7 +89,7 @@ export function myFunction() { }
 
 Your current failing structure:
 ```
-plugins/YourPlugin/Source/ui/public/
+$APC_PLUGINS_DIR/YourPlugin/Source/ui/public/
 ├── index.html              ← Has <script type="module">
 ├── js/
 │   ├── index.js           ← NOT LOADED
@@ -193,7 +193,7 @@ juce_add_binary_data(YourPlugin_WebUI
 **CloudWash Plugin** demonstrates the correct approach:
 
 ```
-plugins/CloudWash/Source/ui/public/
+examples/CloudWash/Source/ui/public/
 ├── index.html           ← 978 lines, 34KB, ALL JavaScript inline
 ├── test-local.html      ← Browser test version
 └── js/                  ← NOT USED (reference only)
@@ -201,7 +201,7 @@ plugins/CloudWash/Source/ui/public/
     └── juce/index.js
 ```
 
-**File:** `plugins/CloudWash/Source/ui/public/index.html`
+**File:** `examples/CloudWash/Source/ui/public/index.html`
 - Line 1-7: HTML header
 - Line 8-363: CSS (inline)
 - Line 364-540: HTML body structure
@@ -223,7 +223,7 @@ plugins/CloudWash/Source/ui/public/
 ### 1. Test in Browser FIRST
 ```bash
 # Open test-local.html in Chrome/Edge
-plugins/YourPlugin/Source/ui/public/test-local.html
+$APC_PLUGINS_DIR/YourPlugin/Source/ui/public/test-local.html
 ```
 
 **Expected:**
@@ -307,7 +307,7 @@ juce_add_binary_data(Plugin_WebUI
    - Write everything in `<script>` block
 
 2. **Use CloudWash as template**
-   - Copy `plugins/CloudWash/Source/ui/public/index.html`
+   - Copy `examples/CloudWash/Source/ui/public/index.html`
    - Modify for your plugin
    - Test in browser before building
 
@@ -334,7 +334,7 @@ juce_add_binary_data(Plugin_WebUI
 ### Step 1: Extract JUCE Library
 ```bash
 # Copy JUCE library content
-cp plugins/YourPlugin/Source/ui/public/js/juce/index.js juce_library_backup.js
+cp $APC_PLUGINS_DIR/YourPlugin/Source/ui/public/js/juce/index.js juce_library_backup.js
 ```
 
 ### Step 2: Remove Module Syntax

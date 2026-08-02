@@ -33,7 +33,7 @@ There are two places where icons are used:
 Create an `Assets` folder in your plugin directory:
 
 ```
-plugins/YourPlugin/
+$APC_PLUGINS_DIR/YourPlugin/
 ├── Assets/
 │   ├── icon.ico          # Windows icon (multi-resolution)
 │   ├── icon.icns         # macOS icon (optional)
@@ -172,10 +172,10 @@ explorer build\plugins\YourPlugin\YourPlugin_artefacts\Release\Standalone
 
 ## Example: Complete Setup
 
-### File: `plugins/MyPlugin/Assets/icon.ico`
+### File: `$APC_PLUGINS_DIR/MyPlugin/Assets/icon.ico`
 Multi-resolution Windows icon file
 
-### File: `plugins/MyPlugin/CMakeLists.txt`
+### File: `$APC_PLUGINS_DIR/MyPlugin/CMakeLists.txt`
 ```cmake
 juce_add_plugin(MyPlugin
     COMPANY_NAME "APC"

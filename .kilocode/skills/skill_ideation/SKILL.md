@@ -5,15 +5,15 @@
 **Output Location:** `${APC_PLUGINS_DIR}/[Name]/`
 
 ## 🚪 PREREQUISITE: FIRST RUN CHECK
-Prima di iniziare, verifica che ACP sia configurato:
+Prima di iniziare, verifica che APC sia configurato:
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\acp-config.ps1 is-setup
+powershell -ExecutionPolicy Bypass -File .\scripts\apc-config.ps1 is-setup
 ```
 Se il check fallisce (exit 1), STOP ed esegui `/setup`. Non procedere fino al completamento del setup.
 
 Se il check passa, risolvi la directory:
 ```powershell
-$ApcPluginsDir = & .\scripts\acp-config.ps1 plugins-dir
+$ApcPluginsDir = & .\scripts\apc-config.ps1 plugins-dir
 ```
 
 ## ⛔ OUTPUT RESTRICTIONS (MANDATORY)

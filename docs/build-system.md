@@ -24,17 +24,15 @@ audio-plugin-coder/
 ├── _tools/
 │   └── JUCE/
 │       └── CMakeLists.txt      # JUCE framework
-├── plugins/
-│   └── [PluginName]/
-│       └── CMakeLists.txt      # Plugin-specific config
-└── build/                      # Build artifacts (generated)
-    └── plugins/
-        └── [PluginName]/
-            └── [PluginName]_artefacts/
-                └── Release/
-                    ├── [PluginName].vst3/
-                    ├── [PluginName].exe
-                    └── [PluginName].lib
+├── examples/                   # Read-only reference plugins (CloudWash, gnarly2, ...)
+├── build/                      # Build artifacts (generated)
+│   └── external/
+│       └── [PluginName]/
+│           └── [PluginName]_artefacts/
+│               └── Release/
+│                   ├── [PluginName].vst3/
+│                   ├── [PluginName].exe
+│                   └── [PluginName].lib
 ```
 
 ### Build Flow
@@ -90,18 +88,18 @@ add_subdirectory(_tools/JUCE)
 # Enable all plugin formats by default
 set(FORMATS VST3 Standalone)
 
-# Include all plugin directories
-file(GLOB PLUGIN_DIRS "plugins/*")
+# Include all plugin directories (external APC_PLUGINS_DIR + env var fallback)
+file(GLOB PLUGIN_DIRS "$ENV{APC_PLUGINS_DIR}/*")
 foreach(plugin_dir ${PLUGIN_DIRS})
     if(IS_DIRECTORY ${plugin_dir})
-        add_subdirectory(${plugin_dir})
+        add_subdirectory(${plugin_dir} ${CMAKE_BINARY_DIR}/external/$(get_filename_component(${plugin_dir} NAME)))
     endif()
 endforeach()
 ```
 
 **Key Points:**
 - JUCE is added as a subdirectory (not called via `find_package`)
-- Automatically discovers plugins in `plugins/` directory
+- Discovers plugins in `APC_PLUGINS_DIR` (configured via `/setup`, external to the repo)
 - Sets global C++20 standard
 - **MUST declare `LANGUAGES C CXX`** — JUCE needs C for Sheenbidi (text rendering) and juceaide (build tool). Without C, `CMAKE_C_COMPILE_OBJECT` will be undefined at generate time
 
@@ -303,7 +301,7 @@ Validates WebView plugin configuration:
 ```powershell
 param([Parameter(Mandatory=$true)][string]$PluginName)
 
-$PluginPath = "plugins/$PluginName"
+$PluginPath = "$env:APC_PLUGINS_DIR/$PluginName"
 $Checks = @{
     CMakeListsExists = Test-Path "$PluginPath/CMakeLists.txt"
     BinaryDataTarget = $false
@@ -336,7 +334,7 @@ Validates critical member declaration order:
 ```powershell
 param([Parameter(Mandatory=$true)][string]$PluginName)
 
-$HeaderPath = "plugins/$PluginName/Source/PluginEditor.h"
+$HeaderPath = "$env:APC_PLUGINS_DIR/$PluginName/Source/PluginEditor.h"
 $Content = Get-Content $HeaderPath -Raw
 
 # Check for correct order pattern
@@ -606,7 +604,7 @@ cmake -S . -B build  # Don't run directly
 powershell -ExecutionPolicy Bypass -File .\scripts\build-and-install.ps1 -PluginName MyPlugin
 
 # Bad (from plugin directory)
-cd plugins/MyPlugin  # Don't do this
+cd "$env:APC_PLUGINS_DIR/MyPlugin"  # Don't do this — run from audio-plugin-coder/ root
 ```
 
 ### 3. Clean Builds

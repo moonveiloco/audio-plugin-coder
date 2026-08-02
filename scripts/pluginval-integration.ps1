@@ -97,12 +97,12 @@ function Test-WithPluginVal {
         $testResults.Categories = $testCategories
 
         # Update status.json
-        $apcPluginsDir = & "$PSScriptRoot\acp-config.ps1" plugins-dir
+        $apcPluginsDir = & "$PSScriptRoot\apc-config.ps1" plugins-dir
 if ($LASTEXITCODE -ne 0) { Write-Error "Run /setup first."; exit 1 }
-        if (Test-Path "$apcPluginsDir\$PluginName") {
-            $pluginDir = "$apcPluginsDir\$PluginName"
-        } else {
-            $pluginDir = "plugins/$PluginName"
+        $pluginDir = "$apcPluginsDir\$PluginName"
+        if (-not (Test-Path $pluginDir)) {
+            Write-Error "Plugin '$PluginName' not found in APC_PLUGINS_DIR ($apcPluginsDir). Run /setup or create the plugin with /dream."
+            exit 1
         }
         Update-PluginState -PluginPath $pluginDir -Updates @{
             "validation.tests_passed" = $passed
@@ -151,12 +151,12 @@ if ($LASTEXITCODE -ne 0) { Write-Error "Run /setup first."; exit 1 }
 function Get-PluginValReport {
     param([string]$PluginName)
 
-    $apcPluginsDir = & "$PSScriptRoot\acp-config.ps1" plugins-dir
+    $apcPluginsDir = & "$PSScriptRoot\apc-config.ps1" plugins-dir
     if ($LASTEXITCODE -ne 0) { Write-Error "Run /setup first."; exit 1 }
-    if (Test-Path "$apcPluginsDir\$PluginName") {
-        $pluginDir = "$apcPluginsDir\$PluginName"
-    } else {
-        $pluginDir = "plugins/$PluginName"
+    $pluginDir = "$apcPluginsDir\$PluginName"
+    if (-not (Test-Path $pluginDir)) {
+        Write-Error "Plugin '$PluginName' not found in APC_PLUGINS_DIR ($apcPluginsDir). Run /setup or create the plugin with /dream."
+        exit 1
     }
     $state = Get-PluginState -PluginPath $pluginDir
 

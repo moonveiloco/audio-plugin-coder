@@ -64,7 +64,7 @@ Transform a vague idea into a concrete plugin concept with defined parameters.
 ### Outputs
 
 ```
-plugins/MyPlugin/
+$APC_PLUGINS_DIR/MyPlugin/
 ├── .ideas/
 │   ├── creative-brief.md      # Vision and concept
 │   └── parameter-spec.md      # Parameter definitions
@@ -163,7 +163,7 @@ Design the DSP architecture and select the appropriate UI framework.
 ### Outputs
 
 ```
-plugins/MyPlugin/.ideas/
+$APC_PLUGINS_DIR/MyPlugin/.ideas/
 ├── architecture.md            # DSP design
 └── plan.md                    # Implementation strategy
 ```
@@ -295,7 +295,7 @@ Create visual mockups and detailed UI specifications.
 ### Outputs
 
 ```
-plugins/MyPlugin/
+$APC_PLUGINS_DIR/MyPlugin/
 └── Design/
     ├── v1-ui-spec.md          # Layout specification
     ├── v1-style-guide.md      # Visual reference
@@ -303,7 +303,7 @@ plugins/MyPlugin/
  
 Visage preview (optional):
 ```
-plugins/MyPlugin/Source/
+$APC_PLUGINS_DIR/MyPlugin/Source/
     ├── PluginEditor.h
     ├── PluginEditor.cpp
     └── VisageControls.h
@@ -428,7 +428,7 @@ Write the C++ DSP and UI code.
 ### Outputs
 
 ```
-plugins/MyPlugin/Source/
+$APC_PLUGINS_DIR/MyPlugin/Source/
 ├── PluginProcessor.h
 ├── PluginProcessor.cpp
 ├── PluginEditor.h

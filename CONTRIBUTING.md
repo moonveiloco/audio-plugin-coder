@@ -33,26 +33,26 @@ We welcome contributions from the community! Whether you're fixing bugs, adding 
 
 ### First Run Configuration
 
-APC uses a global config file (`~/.config/acp/config.json` on Linux/macOS, `%APPDATA%/acp/config.json` on Windows) to store the plugins output directory and JUCE path. This is machine-agnostic — each developer configures their own setup.
+APC uses a global config file (`~/.config/apc/config.json` on Linux/macOS, `%APPDATA%/apc/config.json` on Windows) to store the plugins output directory and JUCE path. This is machine-agnostic — each developer configures their own setup.
 
 When you first start the AI agent, it will detect the missing config and guide you through `/setup`. You can also run `/setup` manually at any time to reconfigure.
 
-**Config is read via:** `scripts/acp-config.sh` (macOS/Linux) or `scripts/acp-config.ps1` (Windows). All skills, workflows, and scripts reference `${APC_PLUGINS_DIR}` which is resolved from this config at runtime.
+**Config is read via:** `scripts/apc-config.sh` (macOS/Linux) or `scripts/apc-config.ps1` (Windows). All skills, workflows, and scripts reference `${APC_PLUGINS_DIR}` which is resolved from this config at runtime.
 
 **Never hardcode plugin paths.** Always use the config helper:
 ```bash
 # Get the plugins directory
-bash scripts/acp-config.sh plugins-dir
+bash scripts/apc-config.sh plugins-dir
 
 # Check if setup is complete
-bash scripts/acp-config.sh is-setup
+bash scripts/apc-config.sh is-setup
 ```
 
-**Regression tests:** After modifying `scripts/acp-config.sh` or `scripts/acp-config.ps1`, run the contract tests to verify the behavior is unchanged:
+**Regression tests:** After modifying `scripts/apc-config.sh` or `scripts/apc-config.ps1`, run the contract tests to verify the behavior is unchanged:
 ```bash
-bash scripts/test-acp-config.sh   # 14 tests, exit 0 = pass
+bash scripts/test-apc-config.sh   # 14 tests, exit 0 = pass
 ```
-The tests are isolated (use a throwaway `XDG_CONFIG_HOME`) and never touch your real `~/.config/acp/config.json`.
+The tests are isolated (use a throwaway `XDG_CONFIG_HOME`) and never touch your real `~/.config/apc/config.json`.
 
 ## Guidelines
 

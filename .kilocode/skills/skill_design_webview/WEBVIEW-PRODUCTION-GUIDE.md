@@ -40,7 +40,7 @@
 ## 📁 File Structure
 
 ```
-plugins/YourPlugin/Source/ui/public/
+$APC_PLUGINS_DIR/YourPlugin/Source/ui/public/
 ├── index.html              ← PRODUCTION (all JS inline, 900+ lines)
 ├── test-local.html         ← BROWSER TEST (same as index.html)
 └── js/
@@ -779,7 +779,7 @@ juce_add_binary_data(YourPlugin_WebUI
 
 ### Working Example
 **CloudWash Plugin:**
-- File: `plugins/CloudWash/Source/ui/public/index.html`
+- File: `examples/CloudWash/Source/ui/public/index.html`
 - 978 lines, 34KB
 - 10 knobs, 4 modes, freeze button, 2 dropdowns
 - Full JUCE integration
@@ -787,7 +787,7 @@ juce_add_binary_data(YourPlugin_WebUI
 
 ### Key Files
 ```
-plugins/YourPlugin/
+$APC_PLUGINS_DIR/YourPlugin/
 ├── Source/
 │   ├── PluginProcessor.h/cpp
 │   ├── PluginEditor.h/cpp

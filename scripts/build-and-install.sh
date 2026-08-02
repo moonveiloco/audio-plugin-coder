@@ -29,11 +29,12 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_PATH="$(cd "$SCRIPT_DIR/.." && pwd)"
 BUILD_DIR="$ROOT_PATH/build"
-APC_PLUGINS_DIR="$(bash "$SCRIPT_DIR/acp-config.sh" plugins-dir)" || { echo "Run /setup first." >&2; exit 1; }
-if [ -d "$APC_PLUGINS_DIR/$PLUGIN_NAME" ]; then
-    PLUGIN_DIR="$APC_PLUGINS_DIR/$PLUGIN_NAME"
-else
-    PLUGIN_DIR="$ROOT_PATH/plugins/$PLUGIN_NAME"
+APC_PLUGINS_DIR="$(bash "$SCRIPT_DIR/apc-config.sh" plugins-dir)" || { echo "Run /setup first." >&2; exit 1; }
+PLUGIN_DIR="$APC_PLUGINS_DIR/$PLUGIN_NAME"
+if [ ! -d "$PLUGIN_DIR" ]; then
+    echo "Error: Plugin '$PLUGIN_NAME' not found in APC_PLUGINS_DIR ($APC_PLUGINS_DIR)." >&2
+    echo "       Run /setup or check that the plugin was created with /dream." >&2
+    exit 1
 fi
 STATUS_JSON="$PLUGIN_DIR/status.json"
 BUILD_START_TIME="$(date +%s)"

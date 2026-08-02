@@ -354,4 +354,4 @@ Additionally:
 **Attempts to Resolve:** 4 iterations
 **Time to Resolution:** 30 minutes
 **Related Skills:** `.claude/skills/skill_design_webview/SKILL.md`
-**Working Examples:** `plugins/CloudWash/`, `plugins/AngelGrain/`
+**Working Examples:** `examples/CloudWash/`, `examples/AngelGrain/`

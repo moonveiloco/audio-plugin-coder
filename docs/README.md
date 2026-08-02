@@ -144,7 +144,7 @@ audio-plugin-coder/
 │   └── troubleshooting/    # Known issues
 ├── _tools/                 # JUCE, pluginval
 ├── docs/                   # This documentation
-├── plugins/                # Your plugins
+├── examples/               # Read-only reference plugins
 ├── scripts/                # Build automation
 └── build/                  # Build artifacts
 ```

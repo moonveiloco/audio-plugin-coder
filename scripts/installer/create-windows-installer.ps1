@@ -7,7 +7,7 @@
     It replaces placeholders in the template with actual plugin information.
 
 .PARAMETER PluginName
-    Name of the plugin (must match folder name in plugins/)
+    Name of the plugin (must match folder name in APC_PLUGINS_DIR)
 
 .PARAMETER Version
     Version number (e.g., "1.0.0")

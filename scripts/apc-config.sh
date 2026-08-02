@@ -1,34 +1,34 @@
 #!/usr/bin/env bash
-# ACP Config Manager (macOS/Linux)
-# Reads/writes the global ACP configuration at ~/.config/acp/config.json
+# APC Config Manager (macOS/Linux)
+# Reads/writes the global APC configuration at ~/.config/apc/config.json
 # This is the single source of truth for plugins_dir, juce_dir, and setup state.
 #
 # Usage:
-#   bash scripts/acp-config.sh path          # print config file path
-#   bash scripts/acp-config.sh get <key>     # get a value (empty if missing)
-#   bash scripts/acp-config.sh set <key> <v> # set a value
-#   bash scripts/acp-config.sh is-setup      # exit 0 if setup_complete=true, 1 otherwise
-#   bash scripts/acp-config.sh plugins-dir   # print plugins_dir (exit 1 if unset)
-#   bash scripts/acp-config.sh juce-dir      # print juce_dir (exit 1 if unset)
-#   bash scripts/acp-config.sh init          # create default config if missing
+#   bash scripts/apc-config.sh path          # print config file path
+#   bash scripts/apc-config.sh get <key>     # get a value (empty if missing)
+#   bash scripts/apc-config.sh set <key> <v> # set a value
+#   bash scripts/apc-config.sh is-setup      # exit 0 if setup_complete=true, 1 otherwise
+#   bash scripts/apc-config.sh plugins-dir   # print plugins_dir (exit 1 if unset)
+#   bash scripts/apc-config.sh juce-dir      # print juce_dir (exit 1 if unset)
+#   bash scripts/apc-config.sh init          # create default config if missing
 
 set -euo pipefail
 
-_acp_config_path() {
-    echo "${XDG_CONFIG_HOME:-$HOME/.config}/acp/config.json"
+_apc_config_path() {
+    echo "${XDG_CONFIG_HOME:-$HOME/.config}/apc/config.json"
 }
 
-_acp_config_ensure_dir() {
+_apc_config_ensure_dir() {
     local dir
-    dir="$(dirname "$(_acp_config_path)")"
+    dir="$(dirname "$(_apc_config_path)")"
     mkdir -p "$dir"
 }
 
-_acp_config_init() {
+_apc_config_init() {
     local cfg
-    cfg="$(_acp_config_path)"
+    cfg="$(_apc_config_path)"
     if [[ ! -f "$cfg" ]]; then
-        _acp_config_ensure_dir
+        _apc_config_ensure_dir
         cat > "$cfg" <<'JSON'
 {
   "version": 1,
@@ -43,10 +43,10 @@ JSON
     fi
 }
 
-_acp_config_get() {
+_apc_config_get() {
     local key="$1"
     local cfg
-    cfg="$(_acp_config_path)"
+    cfg="$(_apc_config_path)"
     if [[ ! -f "$cfg" ]]; then
         echo ""
         return 0
@@ -66,13 +66,13 @@ except: print('')
     fi
 }
 
-_acp_config_set() {
+_apc_config_set() {
     local key="$1"
     local val="$2"
     local cfg
-    cfg="$(_acp_config_path)"
+    cfg="$(_apc_config_path)"
     if [[ ! -f "$cfg" ]]; then
-        _acp_config_init
+        _apc_config_init
     fi
     if command -v jq &>/dev/null; then
         local tmp
@@ -90,49 +90,49 @@ json.dump(d,open(cfg,'w'),indent=2)
     fi
 }
 
-_acp_config_is_setup() {
+_apc_config_is_setup() {
     local val
-    val="$(_acp_config_get setup_complete)"
+    val="$(_apc_config_get setup_complete)"
     [[ "$val" == "true" ]]
 }
 
 case "${1:-help}" in
     path)
-        _acp_config_path
+        _apc_config_path
         ;;
     get)
         if [[ $# -lt 2 ]]; then echo "Usage: $0 get <key>" >&2; exit 1; fi
-        _acp_config_get "$2"
+        _apc_config_get "$2"
         ;;
     set)
         if [[ $# -lt 3 ]]; then echo "Usage: $0 set <key> <value>" >&2; exit 1; fi
-        _acp_config_set "$2" "$3"
+        _apc_config_set "$2" "$3"
         ;;
     is-setup)
-        if _acp_config_is_setup; then exit 0; else exit 1; fi
+        if _apc_config_is_setup; then exit 0; else exit 1; fi
         ;;
     plugins-dir)
-        v="$(_acp_config_get plugins_dir)"
+        v="$(_apc_config_get plugins_dir)"
         if [[ -z "$v" ]]; then
-            echo "ACP not configured: plugins_dir is null. Run /setup first." >&2
+            echo "APC not configured: plugins_dir is null. Run /setup first." >&2
             exit 1
         fi
         echo "$v"
         ;;
     juce-dir)
-        v="$(_acp_config_get juce_dir)"
+        v="$(_apc_config_get juce_dir)"
         if [[ -z "$v" ]]; then
-            echo "ACP not configured: juce_dir is null. Run /setup first." >&2
+            echo "APC not configured: juce_dir is null. Run /setup first." >&2
             exit 1
         fi
         echo "$v"
         ;;
     init)
-        _acp_config_init
+        _apc_config_init
         ;;
     help|--help|-h)
         cat <<'USAGE'
-ACP Config Manager
+APC Config Manager
 
 Commands:
   path           Print the config file path

@@ -77,7 +77,7 @@
 ### **Working Examples**
 
 #### 5. **CloudWash Plugin** ⭐⭐⭐
-**Location:** `plugins/CloudWash/Source/ui/public/index.html`
+**Location:** `examples/CloudWash/Source/ui/public/index.html`
 
 **Stats:**
 - 978 lines
@@ -104,7 +104,7 @@
 ### CloudWash Plugin Improvements
 
 #### Fix 1: Knob Rendering Glitch ✅
-**File:** `plugins/CloudWash/Source/ui/public/index.html`
+**File:** `examples/CloudWash/Source/ui/public/index.html`
 **Line:** 177-183
 **Change:**
 ```css
@@ -124,7 +124,7 @@
 ---
 
 #### Fix 2: Meter Documentation ✅
-**File:** `plugins/CloudWash/Source/ui/public/index.html`
+**File:** `examples/CloudWash/Source/ui/public/index.html`
 **Line:** 925-960
 **Added:**
 - 36-line comment block explaining C++ connection
@@ -170,7 +170,7 @@
 
 **Step 3:** Copy CloudWash template
 ```powershell
-cp plugins/CloudWash/Source/ui/public/index.html ${APC_PLUGINS_DIR}/YourPlugin/Source/ui/public/
+cp examples/CloudWash/Source/ui/public/index.html ${APC_PLUGINS_DIR}/YourPlugin/Source/ui/public/
 ```
 
 **Step 4:** Modify for your plugin
@@ -255,7 +255,7 @@ cp plugins/CloudWash/Source/ui/public/index.html ${APC_PLUGINS_DIR}/YourPlugin/S
 1. This file (`WEBVIEW-DOCUMENTATION-SUMMARY.md`)
 2. `WEBVIEW-PRODUCTION-GUIDE.md`
 3. `KNOWN-ISSUES-AND-SOLUTIONS.md`
-4. `plugins/CloudWash/Source/ui/public/index.html` (example)
+4. `examples/CloudWash/Source/ui/public/index.html` (example)
 
 ### When Troubleshooting
 1. `KNOWN-ISSUES-AND-SOLUTIONS.md` (quick reference)

@@ -25,7 +25,7 @@ APC uses GitHub Actions to build plugins for platforms you don't have local acce
 
 | Parameter | Type | Description | Options |
 |-----------|------|-------------|---------|
-| `plugin_name` | string | Name of plugin folder | Any plugin in `plugins/` |
+| `plugin_name` | string | Name of plugin folder | Any plugin in `APC_PLUGINS_DIR` |
 | `platforms` | choice | Platforms to build | `all`, `windows`, `macos`, `linux`, `windows,macos`, `windows,linux`, `macos,linux` |
 
 #### Platform Selection Examples
@@ -158,7 +158,7 @@ The release job runs after all platform builds complete (successfully or not).
 **Artifact Upload Paths:**
 
 Linux artifacts are nested deeper than Windows/macOS:
-- Actual output: `build/plugins/{PluginName}/{PluginName}_artefacts/Release/{VST3,LV2,Standalone}/`
+- Actual output: `build/external/{PluginName}/{PluginName}_artefacts/Release/{VST3,LV2,Standalone}/`
 - Upload globs use `build/**/Release/VST3/` etc. to match regardless of plugin subdirectory depth
 
 ## Using the Workflows
@@ -170,7 +170,7 @@ Linux artifacts are nested deeper than Windows/macOS:
 3. Select **"Build and Release"** from the left sidebar
 4. Click the **"Run workflow"** button
 5. Fill in the parameters:
-   - **Plugin name**: Enter the exact folder name from `plugins/`
+   - **Plugin name**: Enter the exact folder name from `APC_PLUGINS_DIR`
    - **Platforms**: Select which platforms to build
 6. Click **"Run workflow"**
 

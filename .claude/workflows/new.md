@@ -11,15 +11,15 @@ description: "Complete plugin development from idea to shipped product"
 ---
 
 ## 🚪 PREREQUISITE: FIRST RUN CHECK
-Before starting, verify ACP is configured:
+Before starting, verify APC is configured:
 
 **macOS/Linux:**
 ```bash
-bash scripts/acp-config.sh is-setup
+bash scripts/apc-config.sh is-setup
 ```
 **Windows:**
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\acp-config.ps1 is-setup
+powershell -ExecutionPolicy Bypass -File .\scripts\apc-config.ps1 is-setup
 ```
 
 If the check **fails** (exit 1), STOP and execute `/setup` instead. Do not proceed until setup is complete.

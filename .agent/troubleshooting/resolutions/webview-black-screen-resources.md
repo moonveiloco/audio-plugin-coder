@@ -159,7 +159,7 @@ target_link_libraries(CloudWash
 
 ### Step 4: Check BinaryData Variable Names
 
-CMake may mangle filenames. Check `build/plugins/CloudWash/juce_binarydata_CloudWash_WebUI/JuceLibraryCode/BinaryData.h` to see actual variable names:
+CMake may mangle filenames. Check `build/external/CloudWash/juce_binarydata_CloudWash_WebUI/JuceLibraryCode/BinaryData.h` to see actual variable names:
 
 ```cpp
 namespace BinaryData
@@ -184,7 +184,7 @@ cmake --build build --config Release --target CloudWash_VST3
 
 ### 2. Check BinaryData Generated
 ```bash
-ls build/plugins/CloudWash/juce_binarydata_CloudWash_WebUI/JuceLibraryCode/
+ls build/external/CloudWash/juce_binarydata_CloudWash_WebUI/JuceLibraryCode/
 ```
 
 Should see:

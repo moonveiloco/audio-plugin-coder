@@ -116,11 +116,11 @@ For **Claude Code**:
 
 3. **First Run Configuration:**
 
-When you start the AI agent for the first time (e.g., type `/dream MyReverb`), the agent will detect that ACP is not yet configured and will guide you through a short setup:
+When you start the AI agent for the first time (e.g., type `/dream MyReverb`), the agent will detect that APC is not yet configured and will guide you through a short setup:
 
 1. Choose a folder name for your plugins (e.g., `AudioPlugins` — will be created in your home directory)
 2. Specify where JUCE is installed (e.g., `~/JUCE`)
-3. The configuration is saved to `~/.config/acp/config.json` (Linux/macOS) or `%APPDATA%/acp/config.json` (Windows)
+3. The configuration is saved to `~/.config/apc/config.json` (Linux/macOS) or `%APPDATA%/apc/config.json` (Windows)
 
 You can also manually trigger setup at any time:
 ```
@@ -187,9 +187,9 @@ You: Delay time, feedback, wow/flutter amount, saturation, mix
 AI: ✅ Dream phase complete!
     
     Files created:
-    - plugins/TapeDelay/.ideas/creative-brief.md
-    - plugins/TapeDelay/.ideas/parameter-spec.md
-    - plugins/TapeDelay/status.json
+    - $APC_PLUGINS_DIR/TapeDelay/.ideas/creative-brief.md
+    - $APC_PLUGINS_DIR/TapeDelay/.ideas/parameter-spec.md
+    - $APC_PLUGINS_DIR/TapeDelay/status.json
     
     Next step: /plan TapeDelay
 ```
@@ -230,12 +230,7 @@ audio-plugin-coder/
 │   ├── max-external/            # Max/MSP external templates
 │   └── status-template.json     # Plugin state template
 ├── docs/                        # Comprehensive documentation
-├── plugins/                     # Generated plugins
-│   └── [YourPlugin]/
-│       ├── .ideas/              # Specs and planning
-│       ├── Design/              # UI mockups
-│       ├── Source/              # C++ code
-│       └── status.json          # State tracking
+├── examples/                   # Read-only reference plugins (CloudWash, gnarly2, ...)
 ├── scripts/                     # Build automation
 │   ├── build-and-install.ps1    # Windows build script
 │   ├── build-and-install.sh     # macOS build script
@@ -243,6 +238,16 @@ audio-plugin-coder/
 │   ├── state-management.sh      # macOS state management
 │   └── installer/               # Platform-specific installers
 └── build/                       # Compilation artifacts
+```
+
+**User plugins** live outside the repo in `$APC_PLUGINS_DIR` (configured via `/setup`):
+```
+$APC_PLUGINS_DIR/
+└── [YourPlugin]/
+    ├── .ideas/              # Specs and planning
+    ├── Design/              # UI mockups
+    ├── Source/              # C++ code
+    └── status.json          # State tracking
 ```
 
 ### How Skills Work

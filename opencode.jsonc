@@ -4,7 +4,7 @@
     "paths": [".claude/skills"]
   },
   "instructions": [
-    "APC_PLUGINS_DIR is read from ~/.config/acp/config.json via scripts/acp-config.sh plugins-dir. If config is missing or setup_complete=false, run /setup first. Legacy plugins remain in plugins/ inside the repo.",
+    "APC_PLUGINS_DIR is read from ~/.config/apc/config.json via scripts/apc-config.sh plugins-dir. If config is missing or setup_complete=false, run /setup first. Plugin examples live in examples/ inside the repo (read-only reference, not for new plugin creation). New plugins go in APC_PLUGINS_DIR outside the repo.",
     "JUCE_DIR = ~/JUCE (JUCE 9, non _tools/JUCE che è JUCE 8)",
     "JUCE 8→9 breaking: Drawable non eredita Component (usa DrawableComponent wrapper), SVG createFromSVG(XmlElement&) rimosso (usa createFromSVGFile/String), multi-touch Windows richiede usesWindowsMultiTouch(), Linux EGL non GLX (installa libegl-dev)",
     "Usa scripts/build-and-install.sh per build, mai cmake manuale",

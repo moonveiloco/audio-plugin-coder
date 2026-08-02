@@ -115,7 +115,7 @@ CloudWashAudioProcessor::CloudWashAudioProcessor()
 
 ### Step 1: Check VCV Rack Clouds Implementation
 
-Look at `plugins/CloudWash/Org_Code/AudibleInstruments-2/src/Clouds.cpp`:
+Look at `examples/CloudWash/Org_Code/AudibleInstruments-2/src/Clouds.cpp`:
 
 ```cpp
 // Find the exact:
@@ -185,15 +185,15 @@ It will break on the exact line that crashes, showing which of these is the prob
 ## Files to Check
 
 1. **VCV Rack Reference:**
-   - `plugins/CloudWash/Org_Code/AudibleInstruments-2/src/Clouds.cpp`
+   - `examples/CloudWash/Org_Code/AudibleInstruments-2/src/Clouds.cpp`
    - Look for exact buffer sizes and Init() sequence
 
 2. **Clouds Source:**
-   - `plugins/CloudWash/Source/dsp/clouds/dsp/granular_processor.h`
+   - `examples/CloudWash/Source/dsp/clouds/dsp/granular_processor.h`
    - Check Init() requirements
 
 3. **Sample Rate Converter:**
-   - `plugins/CloudWash/Source/dsp/clouds/dsp/sample_rate_converter.h`
+   - `examples/CloudWash/Source/dsp/clouds/dsp/sample_rate_converter.h`
    - Check template parameter requirements
 
 ## Temporary State

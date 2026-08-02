@@ -20,7 +20,7 @@ $ErrorActionPreference = "Stop"
 
 $RootPath = (Get-Item "$PSScriptRoot\..").FullName
 $BuildDir = "$RootPath\build"
-$ApcPluginsDir = & "$PSScriptRoot\acp-config.ps1" plugins-dir
+$ApcPluginsDir = & "$PSScriptRoot\apc-config.ps1" plugins-dir
 if ($LASTEXITCODE -ne 0) { Write-Error "Run /setup first."; exit 1 }
 if (Test-Path "$ApcPluginsDir\$PluginName") {
     $PluginDir = "$ApcPluginsDir\$PluginName"
