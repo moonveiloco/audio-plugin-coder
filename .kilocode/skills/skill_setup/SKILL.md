@@ -68,14 +68,7 @@ Check if the directory already exists:
   - If "use it" → proceed
   - If "choose another" → go back to Step 2
 
-## STEP 4: JUCE PATH
-Ask the user where JUCE is installed:
-
-> Dove e installato JUCE? (Suggerito: `~/JUCE`)
-
-**ASK the user.** Accept the default or a custom path. Verify the path exists (or warn if it doesn't, but allow proceeding).
-
-## STEP 5: SAVE CONFIGURATION
+## STEP 4: SAVE CONFIGURATION
 Write the configuration using the helper:
 
 **macOS/Linux:**
@@ -84,7 +77,6 @@ bash scripts/apc-config.sh set setup_complete true
 bash scripts/apc-config.sh set setup_at "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 bash scripts/apc-config.sh set plugins_dir "<full_plugins_path>"
 bash scripts/apc-config.sh set plugins_folder_name "<folder_name>"
-bash scripts/apc-config.sh set juce_dir "<juce_path>"
 ```
 
 **Windows:**
@@ -93,10 +85,11 @@ powershell -ExecutionPolicy Bypass -File .\scripts\apc-config.ps1 set setup_comp
 powershell -ExecutionPolicy Bypass -File .\scripts\apc-config.ps1 set setup_at (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
 powershell -ExecutionPolicy Bypass -File .\scripts\apc-config.ps1 set plugins_dir "<full_plugins_path>"
 powershell -ExecutionPolicy Bypass -File .\scripts\apc-config.ps1 set plugins_folder_name "<folder_name>"
-powershell -ExecutionPolicy Bypass -File .\scripts\apc-config.ps1 set juce_dir "<juce_path>"
 ```
 
-## STEP 5.5: INITIALIZE PLUGINS DIRECTORY README
+**Note:** JUCE is not part of the configuration — it is a Git submodule bundled with the APC repo at `_tools/JUCE`. The build system (`CMakeLists.txt`) references it directly. No user input is needed for JUCE.
+
+## STEP 4.5: INITIALIZE PLUGINS DIRECTORY README
 Copy the plugins-directory README template into the user's plugins folder so they have on-disk documentation of the structure, build commands, and APC relationship.
 
 **macOS/Linux:**
@@ -111,22 +104,21 @@ powershell -ExecutionPolicy Bypass -File .\scripts\init-plugins-dir.ps1
 
 This is idempotent — it skips if `README.md` already exists (won't overwrite user customizations). The template substitutes the folder name and full path automatically. Confirm to the user: "Aggiunto `README.md` in `<plugins_dir>` con le istruzioni d'uso."
 
-## STEP 6: CONFIRMATION
+## STEP 5: CONFIRMATION
 Verify the config was written:
 ```bash
 bash scripts/apc-config.sh plugins-dir
-bash scripts/apc-config.sh juce-dir
 ```
 
 Confirm to the user:
 
 > Configurazione completata!
 > - Plugin salvati in: `<plugins_dir>`
-> - JUCE: `<juce_dir>`
+> - JUCE: submodule in `_tools/JUCE` (incluso nel repo)
 >
 > Ora puoi usare `/dream <NomePlugin>` per creare il tuo primo plugin.
 
-## STEP 7: TERMINATION
+## STEP 6: TERMINATION
 STOP. Do not auto-start `/dream`.
 
 ---

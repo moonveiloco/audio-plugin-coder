@@ -2,7 +2,7 @@
 # APC Config Contract Tests (macOS/Linux)
 #
 # Verifies the behavior contract of scripts/apc-config.sh:
-#   - plugins-dir / juce-dir exit 1 + stderr when value is null/empty
+#   - plugins-dir exits 1 + stderr when value is null/empty
 #   - is-setup exits 1 when setup_complete != true, 0 when true
 #   - get <key> stays permissive (exit 0, empty stdout) for null values
 #   - set writes values that plugins-dir then returns
@@ -51,9 +51,6 @@ echo "=========================="
 rc=0; out="$(bash "$APC_CONFIG" plugins-dir 2>/dev/null)" || rc=$?
 assert "config absent: plugins-dir exit 1" 1 "" "$rc" "$out"
 
-rc=0; out="$(bash "$APC_CONFIG" juce-dir 2>/dev/null)" || rc=$?
-assert "config absent: juce-dir exit 1" 1 "" "$rc" "$out"
-
 rc=0; bash "$APC_CONFIG" is-setup >/dev/null 2>&1 || rc=$?
 assert "config absent: is-setup exit 1" 1 "" "$rc" ""
 
@@ -65,17 +62,11 @@ assert "init: setup_complete=false" 0 "false" "$rc" "$out"
 rc=0; bash "$APC_CONFIG" is-setup >/dev/null 2>&1 || rc=$?
 assert "init: is-setup still 1" 1 "" "$rc" ""
 
-# --- Test 3: plugins-dir / juce-dir still fail when null (but config exists) ---
+# --- Test 3: plugins-dir still fails when null (but config exists) ---
 rc=0; out="$(bash "$APC_CONFIG" plugins-dir 2>/dev/null)" || rc=$?
 assert "null plugins_dir: plugins-dir exit 1" 1 "" "$rc" "$out"
 
-rc=0; out="$(bash "$APC_CONFIG" juce-dir 2>/dev/null)" || rc=$?
-assert "null juce_dir: juce-dir exit 1" 1 "" "$rc" "$out"
-
 # --- Test 4: get stays permissive for null value ---
-rc=0; out="$(bash "$APC_CONFIG" get juce_dir)" || rc=$?
-assert "get juce_dir permissive (empty, exit 0)" 0 "" "$rc" "$out"
-
 rc=0; out="$(bash "$APC_CONFIG" get nonexistent_key)" || rc=$?
 assert "get unknown key permissive (empty, exit 0)" 0 "" "$rc" "$out"
 
@@ -83,10 +74,6 @@ assert "get unknown key permissive (empty, exit 0)" 0 "" "$rc" "$out"
 bash "$APC_CONFIG" set plugins_dir "$TMP/myplugins" >/dev/null 2>&1
 rc=0; out="$(bash "$APC_CONFIG" plugins-dir 2>/dev/null)" || rc=$?
 assert "after set plugins_dir: plugins-dir exit 0 + value" 0 "$TMP/myplugins" "$rc" "$out"
-
-bash "$APC_CONFIG" set juce_dir "$TMP/juce" >/dev/null 2>&1
-rc=0; out="$(bash "$APC_CONFIG" juce-dir 2>/dev/null)" || rc=$?
-assert "after set juce_dir: juce-dir exit 0 + value" 0 "$TMP/juce" "$rc" "$out"
 
 # --- Test 6: setup_complete=true flips is-setup ---
 bash "$APC_CONFIG" set setup_complete true >/dev/null 2>&1

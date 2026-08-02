@@ -33,7 +33,7 @@ We welcome contributions from the community! Whether you're fixing bugs, adding 
 
 ### First Run Configuration
 
-APC uses a global config file (`~/.config/apc/config.json` on Linux/macOS, `%APPDATA%/apc/config.json` on Windows) to store the plugins output directory and JUCE path. This is machine-agnostic — each developer configures their own setup.
+APC uses a global config file (`~/.config/apc/config.json` on Linux/macOS, `%APPDATA%/apc/config.json` on Windows) to store the plugins output directory. JUCE is not part of the configuration — it is a Git submodule bundled with the APC repo at `_tools/JUCE`. This is machine-agnostic — each developer configures their own plugins directory.
 
 When you first start the AI agent, it will detect the missing config and guide you through `/setup`. You can also run `/setup` manually at any time to reconfigure.
 
@@ -50,7 +50,7 @@ bash scripts/apc-config.sh is-setup
 
 **Regression tests:** After modifying `scripts/apc-config.sh` or `scripts/apc-config.ps1`, run the contract tests to verify the behavior is unchanged:
 ```bash
-bash scripts/test-apc-config.sh   # 14 tests, exit 0 = pass
+bash scripts/test-apc-config.sh   # 10 tests, exit 0 = pass
 ```
 The tests are isolated (use a throwaway `XDG_CONFIG_HOME`) and never touch your real `~/.config/apc/config.json`.
 

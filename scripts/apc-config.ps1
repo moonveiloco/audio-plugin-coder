@@ -1,6 +1,6 @@
 # APC Config Manager (Windows / PowerShell)
 # Reads/writes the global APC configuration.
-# Single source of truth for plugins_dir, juce_dir, and setup state.
+# Single source of truth for plugins_dir and setup state.
 #
 # Usage:
 #   .\scripts\apc-config.ps1 path
@@ -8,7 +8,6 @@
 #   .\scripts\apc-config.ps1 set <key> <value>
 #   .\scripts\apc-config.ps1 is-setup
 #   .\scripts\apc-config.ps1 plugins-dir    # exit 1 if unset
-#   .\scripts\apc-config.ps1 juce-dir       # exit 1 if unset
 #   .\scripts\apc-config.ps1 init
 
 param(
@@ -44,7 +43,6 @@ function Initialize-ApcConfig {
             setup_at          = $null
             plugins_dir       = $null
             plugins_folder_name = $null
-            juce_dir          = $null
         }
         $default | ConvertTo-Json -Depth 3 | Set-Content -Path $cfg -Encoding UTF8
         Write-Host "Created default config at $cfg" -ForegroundColor Green
@@ -106,14 +104,6 @@ switch ($Command) {
         }
         $v
     }
-    "juce-dir"     {
-        $v = Get-ApcConfigValue -k "juce_dir"
-        if ([string]::IsNullOrWhiteSpace($v)) {
-            Write-Error "APC not configured: juce_dir is null. Run /setup first."
-            exit 1
-        }
-        $v
-    }
     "init"         { Initialize-ApcConfig }
     default        {
         Write-Host @"
@@ -125,7 +115,6 @@ Commands:
   set <key> <v>  Set a config value
   is-setup       Exit 0 if setup_complete=true, else exit 1
   plugins-dir    Print plugins_dir (exit 1 + stderr if unset)
-  juce-dir       Print juce_dir (exit 1 + stderr if unset)
   init           Create default config if missing
 "@
     }

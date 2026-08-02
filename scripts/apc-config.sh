@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # APC Config Manager (macOS/Linux)
 # Reads/writes the global APC configuration at ~/.config/apc/config.json
-# This is the single source of truth for plugins_dir, juce_dir, and setup state.
+# This is the single source of truth for plugins_dir and setup state.
 #
 # Usage:
 #   bash scripts/apc-config.sh path          # print config file path
@@ -9,7 +9,6 @@
 #   bash scripts/apc-config.sh set <key> <v> # set a value
 #   bash scripts/apc-config.sh is-setup      # exit 0 if setup_complete=true, 1 otherwise
 #   bash scripts/apc-config.sh plugins-dir   # print plugins_dir (exit 1 if unset)
-#   bash scripts/apc-config.sh juce-dir      # print juce_dir (exit 1 if unset)
 #   bash scripts/apc-config.sh init          # create default config if missing
 
 set -euo pipefail
@@ -35,8 +34,7 @@ _apc_config_init() {
   "setup_complete": false,
   "setup_at": null,
   "plugins_dir": null,
-  "plugins_folder_name": null,
-  "juce_dir": null
+  "plugins_folder_name": null
 }
 JSON
         echo "Created default config at $cfg" >&2
@@ -119,14 +117,6 @@ case "${1:-help}" in
         fi
         echo "$v"
         ;;
-    juce-dir)
-        v="$(_apc_config_get juce_dir)"
-        if [[ -z "$v" ]]; then
-            echo "APC not configured: juce_dir is null. Run /setup first." >&2
-            exit 1
-        fi
-        echo "$v"
-        ;;
     init)
         _apc_config_init
         ;;
@@ -140,7 +130,6 @@ Commands:
   set <key> <v>  Set a config value
   is-setup       Exit 0 if setup_complete=true, else exit 1
   plugins-dir    Print plugins_dir (exit 1 + stderr if unset)
-  juce-dir       Print juce_dir (exit 1 + stderr if unset)
   init           Create default config if missing
 USAGE
         ;;
