@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
+project({{PLUGIN_NAME_LOWER}} VERSION 1.0.0 LANGUAGES C CXX)
 
 # ============================================
 # APC WORKSPACE BOOTSTRAP
@@ -14,10 +15,15 @@ endif()
 if(NOT EXISTS "${APC_TOOLS_DIR}/_tools/JUCE")
     message(FATAL_ERROR "JUCE not found at ${APC_TOOLS_DIR}/_tools/JUCE")
 endif()
-add_subdirectory("${APC_TOOLS_DIR}/_tools/JUCE")
 
+# PIC is required: Visage/JUCE static libs get linked into shared plugin modules.
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-add_subdirectory("${APC_TOOLS_DIR}/_tools/visage")
+# Visage plugins use native C++ UI, not the web browser; disable it to avoid
+# pulling in GTK/webkit on Linux.
+add_compile_definitions(JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0)
+# Out-of-tree subdirectories need an explicit binary directory.
+add_subdirectory("${APC_TOOLS_DIR}/_tools/JUCE" "${CMAKE_BINARY_DIR}/_tools/JUCE")
+add_subdirectory("${APC_TOOLS_DIR}/_tools/visage" "${CMAKE_BINARY_DIR}/_tools/visage")
 if(TARGET visage AND NOT TARGET visage::visage)
     add_library(visage::visage ALIAS visage)
 endif()
@@ -30,6 +36,9 @@ juce_add_plugin({{PLUGIN_NAME_LOWER}}
     FORMATS VST3 Standalone
     PRODUCT_NAME "{{PLUGIN_DISPLAY_NAME}}"
 )
+
+# Generate JuceHeader.h (not automatic in JUCE 8 CMake API)
+juce_generate_juce_header({{PLUGIN_NAME_LOWER}})
 
 # Binary assets (fonts)
 juce_add_binary_data({{PLUGIN_NAME_LOWER}}_Assets

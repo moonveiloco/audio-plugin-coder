@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
+project({{PLUGIN_NAME_LOWER}} VERSION 1.0.0 LANGUAGES C CXX)
 
 # ============================================
 # APC WORKSPACE BOOTSTRAP
@@ -13,7 +14,8 @@ endif()
 if(NOT EXISTS "${APC_TOOLS_DIR}/_tools/JUCE")
     message(FATAL_ERROR "JUCE not found at ${APC_TOOLS_DIR}/_tools/JUCE")
 endif()
-add_subdirectory("${APC_TOOLS_DIR}/_tools/JUCE")
+# Out-of-tree subdirectory needs an explicit binary directory.
+add_subdirectory("${APC_TOOLS_DIR}/_tools/JUCE" "${CMAKE_BINARY_DIR}/_tools/JUCE")
 
 # Plugin definition with WebView2 support
 juce_add_plugin({{PLUGIN_NAME_LOWER}}
@@ -24,6 +26,9 @@ juce_add_plugin({{PLUGIN_NAME_LOWER}}
     PRODUCT_NAME "{{PLUGIN_DISPLAY_NAME}}"
     NEEDS_WEBVIEW2 TRUE
 )
+
+# Generate JuceHeader.h (not automatic in JUCE 8 CMake API)
+juce_generate_juce_header({{PLUGIN_NAME_LOWER}})
 
 # CRITICAL: Embed web UI files into binary
 # This creates a zip file and embeds it as C++ binary data

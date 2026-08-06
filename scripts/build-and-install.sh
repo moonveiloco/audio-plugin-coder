@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# APC Master Builder (macOS)
-# Configures, builds, and installs audio plugins using Xcode generator.
+# APC Master Builder (macOS / Linux)
+# Configures, builds, and installs audio plugins.
+# macOS: Xcode generator. Linux: "Unix Makefiles" generator.
 #
 # Usage: bash scripts/build-and-install.sh <PluginName> [--no-install] [--skip-tests]
 
@@ -46,6 +47,16 @@ fi
 STATUS_JSON="$PLUGIN_DIR/status.json"
 BUILD_START_TIME="$(date +%s)"
 
+# --- PLATFORM DETECTION ---
+OS_NAME="$(uname -s)"
+IS_LINUX=false
+IS_MACOS=false
+if [[ "$OS_NAME" == "Darwin" ]]; then
+    IS_MACOS=true
+elif [[ "$OS_NAME" == "Linux" ]]; then
+    IS_LINUX=true
+fi
+
 # CMake target name: derive from the plugin's juce_add_plugin(...) call.
 # Templates use the lowercase plugin name, so CMake targets are lowercase.
 CMAKE_TARGET="$(grep -oE 'juce_add_plugin\([A-Za-z0-9_]+' "$PLUGIN_DIR/CMakeLists.txt" 2>/dev/null | head -1 | sed 's/juce_add_plugin(//')"
@@ -88,11 +99,17 @@ if $USE_VISAGE; then
     VISAGE_FLAG="-DAPC_ENABLE_VISAGE:BOOL=ON"
 fi
 
+CMAKE_GEN_ARGS=()
+CMAKE_CONFIG_TYPE=""
+if $IS_MACOS; then
+    CMAKE_GEN_ARGS=(-G Xcode -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13)
+else
+    CMAKE_GEN_ARGS=(-G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release)
+fi
+
 CONFIG_OUTPUT=""
 CONFIG_OUTPUT=$(cmake -S "$PLUGIN_DIR" -B "$BUILD_DIR" \
-    -G Xcode \
-    -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" \
-    -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13 \
+    "${CMAKE_GEN_ARGS[@]}" \
     -DAPC_TOOLS_DIR="$APC_TOOLS_DIR" \
     --fresh \
     $VISAGE_FLAG 2>&1) || {
@@ -137,12 +154,16 @@ VST3_OUTPUT=$(cmake --build "$BUILD_DIR" --config Release --target "${CMAKE_TARG
 }
 
 # --- 3. BUILD AU (AudioUnit) ---
-echo "Compiling AudioUnit..."
-AU_OUTPUT=""
-AU_OUTPUT=$(cmake --build "$BUILD_DIR" --config Release --target "${CMAKE_TARGET}_AU" 2>&1) || {
-    echo "WARNING: AudioUnit build failed (non-fatal)" >&2
-    echo "$AU_OUTPUT" >&2
-}
+if $IS_MACOS; then
+    echo "Compiling AudioUnit..."
+    AU_OUTPUT=""
+    AU_OUTPUT=$(cmake --build "$BUILD_DIR" --config Release --target "${CMAKE_TARGET}_AU" 2>&1) || {
+        echo "WARNING: AudioUnit build failed (non-fatal)" >&2
+        echo "$AU_OUTPUT" >&2
+    }
+else
+    echo "Skipping AudioUnit (macOS only)"
+fi
 
 # --- 4. BUILD STANDALONE ---
 echo "Compiling Standalone..."
@@ -159,32 +180,39 @@ if ! $NO_INSTALL; then
     # Find and install VST3
     VST3_BUNDLE="$(find "$BUILD_DIR" -name "${PLUGIN_NAME}.vst3" -type d | head -1)"
     if [[ -n "$VST3_BUNDLE" ]]; then
-        VST3_DEST="$HOME/Library/Audio/Plug-Ins/VST3/${PLUGIN_NAME}.vst3"
+        if $IS_MACOS; then
+            VST3_DEST="$HOME/Library/Audio/Plug-Ins/VST3/${PLUGIN_NAME}.vst3"
+        else
+            VST3_DEST="$HOME/.vst3/${PLUGIN_NAME}.vst3"
+        fi
         if [[ -d "$VST3_DEST" ]]; then
             rm -rf "$VST3_DEST"
         fi
+        mkdir -p "$(dirname "$VST3_DEST")"
         cp -R "$VST3_BUNDLE" "$VST3_DEST"
         echo "INSTALLED VST3 to: $VST3_DEST"
     else
         echo "WARNING: VST3 bundle not found in build output"
     fi
 
-    # Find and install AU
-    AU_BUNDLE="$(find "$BUILD_DIR" -name "${PLUGIN_NAME}.component" -type d 2>/dev/null | head -1 || true)"
-    if [[ -n "$AU_BUNDLE" ]]; then
-        AU_DEST="$HOME/Library/Audio/Plug-Ins/Components/${PLUGIN_NAME}.component"
-        if [[ -d "$AU_DEST" ]]; then
-            rm -rf "$AU_DEST"
+    if $IS_MACOS; then
+        # Find and install AU
+        AU_BUNDLE="$(find "$BUILD_DIR" -name "${PLUGIN_NAME}.component" -type d 2>/dev/null | head -1 || true)"
+        if [[ -n "$AU_BUNDLE" ]]; then
+            AU_DEST="$HOME/Library/Audio/Plug-Ins/Components/${PLUGIN_NAME}.component"
+            if [[ -d "$AU_DEST" ]]; then
+                rm -rf "$AU_DEST"
+            fi
+            cp -R "$AU_BUNDLE" "$AU_DEST"
+            echo "INSTALLED AU to: $AU_DEST"
         fi
-        cp -R "$AU_BUNDLE" "$AU_DEST"
-        echo "INSTALLED AU to: $AU_DEST"
-    fi
 
-    # Report Standalone location
-    STANDALONE_APP="$(find "$BUILD_DIR" -name "${PLUGIN_NAME}.app" -type d 2>/dev/null | head -1 || true)"
-    if [[ -n "$STANDALONE_APP" ]]; then
-        echo "STANDALONE built at: $STANDALONE_APP"
-        echo "Tip: Copy to /Applications/ if desired."
+        # Report Standalone location
+        STANDALONE_APP="$(find "$BUILD_DIR" -name "${PLUGIN_NAME}.app" -type d 2>/dev/null | head -1 || true)"
+        if [[ -n "$STANDALONE_APP" ]]; then
+            echo "STANDALONE built at: $STANDALONE_APP"
+            echo "Tip: Copy to /Applications/ if desired."
+        fi
     fi
 fi
 
@@ -207,15 +235,22 @@ if [[ -n "$VST3_SRC" ]]; then
 fi
 
 # AU (macOS only)
-AU_SRC="$(find "$BUILD_DIR" -path "*artefacts/Release/AU/${PLUGIN_NAME}.component" -type d 2>/dev/null | head -1 || true)"
-if [[ -n "$AU_SRC" ]]; then
-    cp -R "$AU_SRC" "$STAGE_DIR/AU/"
-    STAGED_COUNT=$((STAGED_COUNT + 1))
-    echo "STAGED AU → $STAGE_DIR/AU/"
+if $IS_MACOS; then
+    AU_SRC="$(find "$BUILD_DIR" -path "*artefacts/Release/AU/${PLUGIN_NAME}.component" -type d 2>/dev/null | head -1 || true)"
+    if [[ -n "$AU_SRC" ]]; then
+        cp -R "$AU_SRC" "$STAGE_DIR/AU/"
+        STAGED_COUNT=$((STAGED_COUNT + 1))
+        echo "STAGED AU → $STAGE_DIR/AU/"
+    fi
 fi
 
-# Standalone
-SA_SRC="$(find "$BUILD_DIR" -path "*artefacts/Release/Standalone/${PLUGIN_NAME}.app" -type d 2>/dev/null | head -1 || true)"
+# Standalone (macOS: .app bundle; Linux: executable ELF)
+SA_SRC=""
+if $IS_MACOS; then
+    SA_SRC="$(find "$BUILD_DIR" -path "*artefacts/Release/Standalone/${PLUGIN_NAME}.app" -type d 2>/dev/null | head -1 || true)"
+else
+    SA_SRC="$(find "$BUILD_DIR" -path "*artefacts/Release/Standalone/${PLUGIN_NAME}" -type f -executable 2>/dev/null | head -1 || true)"
+fi
 if [[ -n "$SA_SRC" ]]; then
     cp -R "$SA_SRC" "$STAGE_DIR/Standalone/"
     STAGED_COUNT=$((STAGED_COUNT + 1))
