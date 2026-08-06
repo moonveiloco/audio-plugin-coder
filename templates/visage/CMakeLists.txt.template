@@ -1,4 +1,26 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.22)
+
+# ============================================
+# APC WORKSPACE BOOTSTRAP
+# ============================================
+# APC_TOOLS_DIR points at the APC repo root (audio-plugin-coder/), where
+# _tools/JUCE, _tools/visage and include/ live. It is injected by
+# build-and-install.* (from the tools_dir config key). When missing, fall
+# back to the repo that owns this script's parent dir.
+if(NOT DEFINED APC_TOOLS_DIR)
+    message(FATAL_ERROR "APC_TOOLS_DIR not set. Build via build-and-install or pass -DAPC_TOOLS_DIR=<repo>")
+endif()
+
+if(NOT EXISTS "${APC_TOOLS_DIR}/_tools/JUCE")
+    message(FATAL_ERROR "JUCE not found at ${APC_TOOLS_DIR}/_tools/JUCE")
+endif()
+add_subdirectory("${APC_TOOLS_DIR}/_tools/JUCE")
+
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+add_subdirectory("${APC_TOOLS_DIR}/_tools/visage")
+if(TARGET visage AND NOT TARGET visage::visage)
+    add_library(visage::visage ALIAS visage)
+endif()
 
 # Plugin definition with Visage support
 juce_add_plugin({{PLUGIN_NAME_LOWER}}
@@ -12,7 +34,7 @@ juce_add_plugin({{PLUGIN_NAME_LOWER}}
 # Binary assets (fonts)
 juce_add_binary_data({{PLUGIN_NAME_LOWER}}_Assets
     SOURCES
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../_tools/visage/visage_graphics/fonts/Lato-Regular.ttf
+        ${APC_TOOLS_DIR}/_tools/visage/visage_graphics/fonts/Lato-Regular.ttf
     NAMESPACE {{PLUGIN_NAME_LOWER}}_BinaryData
 )
 
@@ -28,7 +50,7 @@ target_sources({{PLUGIN_NAME_LOWER}}
 target_include_directories({{PLUGIN_NAME_LOWER}}
     PRIVATE
         Source
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../common
+        ${APC_TOOLS_DIR}/include
 )
 
 # Required JUCE modules + Visage

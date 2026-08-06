@@ -237,16 +237,17 @@ audio-plugin-coder/
 │   ├── state-management.ps1     # Windows state management
 │   ├── state-management.sh      # macOS state management
 │   └── installer/               # Platform-specific installers
-└── build/                       # Compilation artifacts
 ```
 
-**User plugins** live outside the repo in `$APC_PLUGINS_DIR` (configured via `/setup`):
+**User plugins** live outside the repo in `$APC_PLUGINS_DIR` (configured via `/setup`). Each plugin builds **inside its own folder**:
 ```
 $APC_PLUGINS_DIR/
 └── [YourPlugin]/
     ├── .ideas/              # Specs and planning
     ├── Design/              # UI mockups
     ├── Source/              # C++ code
+    ├── CMakeLists.txt       # Self-contained (bootstraps APC_TOOLS_DIR + JUCE)
+    ├── build/               # Build artifacts (generated, per-plugin)
     └── status.json          # State tracking
 ```
 

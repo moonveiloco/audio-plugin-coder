@@ -77,6 +77,7 @@ bash scripts/apc-config.sh set setup_complete true
 bash scripts/apc-config.sh set setup_at "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 bash scripts/apc-config.sh set plugins_dir "<full_plugins_path>"
 bash scripts/apc-config.sh set plugins_folder_name "<folder_name>"
+bash scripts/apc-config.sh set tools_dir "$(pwd)"
 ```
 
 **Windows:**
@@ -85,9 +86,10 @@ powershell -ExecutionPolicy Bypass -File .\scripts\apc-config.ps1 set setup_comp
 powershell -ExecutionPolicy Bypass -File .\scripts\apc-config.ps1 set setup_at (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
 powershell -ExecutionPolicy Bypass -File .\scripts\apc-config.ps1 set plugins_dir "<full_plugins_path>"
 powershell -ExecutionPolicy Bypass -File .\scripts\apc-config.ps1 set plugins_folder_name "<folder_name>"
+powershell -ExecutionPolicy Bypass -File .\scripts\apc-config.ps1 set tools_dir (Get-Location).Path
 ```
 
-**Note:** JUCE is not part of the configuration — it is a Git submodule bundled with the APC repo at `_tools/JUCE`. The build system (`CMakeLists.txt`) references it directly. No user input is needed for JUCE.
+**Note:** `tools_dir` stores the path to the **APC repo** (where `_tools/JUCE`, `_tools/visage` and `include/` live). Plugins read it (as `APC_TOOLS_DIR`) to build standalone inside their own folder. JUCE itself is not part of the config — it is a Git submodule bundled with the APC repo at `_tools/JUCE`. If `tools_dir` is missing, the build scripts fall back to the repo that owns `scripts/`, so the key is optional.
 
 ## STEP 4.5: INITIALIZE PLUGINS DIRECTORY README
 Copy the plugins-directory README template into the user's plugins folder so they have on-disk documentation of the structure, build commands, and APC relationship.

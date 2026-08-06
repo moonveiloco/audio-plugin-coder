@@ -1,6 +1,6 @@
 # Visage Template
 
-This template uses `VisageJuceHost.h` from `common/` to render a Visage UI inside a JUCE plugin editor.
+This template uses `VisageJuceHost.h` from `include/` to render a Visage UI inside a JUCE plugin editor.
 
 Files:
 - `PluginEditor.h/.cpp` uses `VisagePluginEditor`

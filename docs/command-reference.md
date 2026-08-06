@@ -261,10 +261,18 @@ Next Step: Run /impl EchoReverb to start implementation
 
 ### Build Scripts
 
-#### build-and-install.ps1
+#### build-and-install.ps1 / build-and-install.sh
 
+Builds a plugin **inside its own folder** at `<plugins_dir>/<Name>/build/`. The plugin's CMakeLists receives `APC_TOOLS_DIR` (the APC repo path) so each plugin builds standalone.
+
+**Windows:**
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\build-and-install.ps1 -PluginName <Name> [-NoInstall] [-SkipTests] [-Strict]
+```
+
+**macOS / Linux:**
+```bash
+bash scripts/build-and-install.sh <Name> [-NoInstall] [-SkipTests] [-Strict]
 ```
 
 **Parameters:**
@@ -283,6 +291,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\build-and-install.ps1 -Plugin
 # Build only (no install)
 powershell -ExecutionPolicy Bypass -File .\scripts\build-and-install.ps1 -PluginName MyPlugin -NoInstall
 ```
+
+**Artifacts:** staged into `<plugins_dir>/<Name>/build/VST3/` (and `Standalone/`, `AU/` on macOS) after a successful build.
 
 ---
 
@@ -515,7 +525,8 @@ gh run download <run-id> --dir dist/github-artifacts
 
 | Script | Purpose |
 |--------|---------|
-| `build-and-install.ps1` | Build plugin |
+| `build-and-install.ps1` | Build plugin (Windows) |
+| `build-and-install.sh` | Build plugin (macOS / Linux) |
 | `validate-*.ps1` | Validation |
 | `setup.ps1` | Initialize |
 | `system-check.ps1` | Check requirements |

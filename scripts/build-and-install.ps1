@@ -19,13 +19,20 @@ $ErrorActionPreference = "Stop"
 . "$PSScriptRoot\pluginval-integration.ps1"
 
 $RootPath = (Get-Item "$PSScriptRoot\..").FullName
-$BuildDir = "$RootPath\build"
 $ApcPluginsDir = & "$PSScriptRoot\apc-config.ps1" plugins-dir
 if ($LASTEXITCODE -ne 0) { Write-Error "Run /setup first."; exit 1 }
-if (Test-Path "$ApcPluginsDir\$PluginName") {
-    $PluginDir = "$ApcPluginsDir\$PluginName"
-} else {
-    $PluginDir = "$RootPath\plugins\$PluginName"
+$PluginDir = "$ApcPluginsDir\$PluginName"
+if (-not (Test-Path $PluginDir)) {
+    Write-Error "Plugin '$PluginName' not found in APC_PLUGINS_DIR ($ApcPluginsDir). Run /setup first."
+    exit 1
+}
+# Build dir lives INSIDE the plugin directory (self-contained per-plugin builds)
+$BuildDir = Join-Path $PluginDir "build"
+# APC_TOOLS_DIR: the APC repo root holding _tools/JUCE, _tools/visage, include/.
+# Read from config (tools_dir), falling back to the repo owning scripts/.
+$ApcToolsDir = & "$PSScriptRoot\apc-config.ps1" tools-dir 2>$null
+if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($ApcToolsDir)) {
+    $ApcToolsDir = $RootPath
 }
 $StatusJson = "$PluginDir\status.json"
 $UseVisage = $false
@@ -47,6 +54,19 @@ if ($UseVisage) {
     Write-Host "Framework: visage" -ForegroundColor DarkGray
 }
 
+# CMake target name: derive from the plugin's juce_add_plugin(...) call.
+# Templates use the lowercase plugin name, so CMake targets are lowercase.
+$CmakeTarget = $null
+if (Test-Path "$PluginDir\CMakeLists.txt") {
+    $match = Select-String -Path "$PluginDir\CMakeLists.txt" -Pattern 'juce_add_plugin\([A-Za-z0-9_]+' | Select-Object -First 1
+    if ($match -and $match.Line -match 'juce_add_plugin\(([A-Za-z0-9_]+)') {
+        $CmakeTarget = $matches[1]
+    }
+}
+if (-not $CmakeTarget) {
+    $CmakeTarget = $PluginName.ToLower()
+}
+
 # Validate prerequisites
 $state = Get-PluginState -PluginPath $PluginDir
 if ($state.current_phase -ne "code_complete" -and -not $SkipTests) {
@@ -56,7 +76,7 @@ if ($state.current_phase -ne "code_complete" -and -not $SkipTests) {
 # 1. Configure with error monitoring
 Write-Host "Configuring build..." -ForegroundColor Yellow
 $visageFlag = if ($UseVisage) { "-DAPC_ENABLE_VISAGE:BOOL=ON" } else { "" }
-$configureCommand = "cmake -S `"$RootPath`" -B `"$BuildDir`" -G `"Visual Studio 17 2022`" -A x64 --fresh $visageFlag"
+$configureCommand = "cmake -S `"$PluginDir`" -B `"$BuildDir`" -G `"Visual Studio 17 2022`" -A x64 -DAPC_TOOLS_DIR=`"$ApcToolsDir`" --fresh $visageFlag"
 $configResult = Invoke-MonitoredCommand -Command $configureCommand -ShowOutput -ThrowOnError
 
 if ($configResult.Errors.Count -gt 0) {
@@ -72,7 +92,7 @@ if ($configResult.Errors.Count -gt 0) {
 
 # 2. Build VST3 with error monitoring
 Write-Host "Compiling VST3..." -ForegroundColor Yellow
-$buildVst3Command = "cmake --build `"$BuildDir`" --config Release --target `"$($PluginName)_VST3`""
+$buildVst3Command = "cmake --build `"$BuildDir`" --config Release --target `"$($CmakeTarget)_VST3`""
 $vst3Result = Invoke-MonitoredCommand -Command $buildVst3Command -ShowOutput -ThrowOnError
 
 if ($vst3Result.Errors.Count -gt 0) {
@@ -96,7 +116,7 @@ if ($vst3Result.Errors.Count -gt 0) {
 
 # 3. Build Standalone with error monitoring
 Write-Host "Compiling Standalone..." -ForegroundColor Yellow
-$buildStandaloneCommand = "cmake --build `"$BuildDir`" --config Release --target `"$($PluginName)_Standalone`""
+$buildStandaloneCommand = "cmake --build `"$BuildDir`" --config Release --target `"$($CmakeTarget)_Standalone`""
 $standaloneResult = Invoke-MonitoredCommand -Command $buildStandaloneCommand -ShowOutput -ThrowOnError
 
 if ($standaloneResult.Errors.Count -gt 0) {
@@ -178,42 +198,44 @@ if (-not $NoInstall) {
     }
 }
 
-# 5.5. Stage artifacts to plugin dir (external plugins only)
+# 5.5. Stage artifacts in plugin dir
+# Build output already lives in $BuildDir (per-plugin builds).
+# Organize the JUCE <name>_artefacts/Release bundles into VST3/Standalone
+# subfolders so tooling can enumerate them.
 $StagedCount = 0
-if ($PluginDir -like "$ApcPluginsDir\*") {
-    Write-Host "Staging artifacts to plugin directory..." -ForegroundColor Yellow
-    $StageDir = Join-Path $PluginDir "build"
-    if (Test-Path $StageDir) { Remove-Item $StageDir -Recurse -Force }
-    New-Item -ItemType Directory -Path $StageDir -Force | Out-Null
+Write-Host "Staging artifacts in plugin build dir..." -ForegroundColor Yellow
+$StageDir = $BuildDir
+foreach ($fmt in @("VST3", "Standalone")) {
+    $fmtDir = Join-Path $StageDir $fmt
+    if (Test-Path $fmtDir) { Remove-Item $fmtDir -Recurse -Force }
+}
+New-Item -ItemType Directory -Path (Join-Path $StageDir "VST3") -Force | Out-Null
+New-Item -ItemType Directory -Path (Join-Path $StageDir "Standalone") -Force | Out-Null
 
-    # VST3
-    $vst3Src = Get-ChildItem -Path $BuildDir -Recurse -Directory -Filter "$PluginName.vst3" -ErrorAction SilentlyContinue |
-        Where-Object { $_.FullName -like "*external\${PluginName}*artefacts\Release\VST3\*" } |
-        Select-Object -First 1
-    if ($vst3Src) {
-        $vst3Dest = Join-Path $StageDir "VST3"
-        New-Item -ItemType Directory -Path $vst3Dest -Force | Out-Null
-        Copy-Item -Path $vst3Src.FullName -Destination $vst3Dest -Recurse -Force
-        $StagedCount++
-        Write-Host "STAGED VST3 → $vst3Dest" -ForegroundColor Green
-    }
+# VST3
+$vst3Src = Get-ChildItem -Path $BuildDir -Recurse -Directory -Filter "$PluginName.vst3" -ErrorAction SilentlyContinue |
+    Where-Object { $_.FullName -like "*artefacts\Release\VST3\*" } |
+    Select-Object -First 1
+if ($vst3Src) {
+    $vst3Dest = Join-Path $StageDir "VST3"
+    Copy-Item -Path $vst3Src.FullName -Destination $vst3Dest -Recurse -Force
+    $StagedCount++
+    Write-Host "STAGED VST3 → $vst3Dest" -ForegroundColor Green
+}
 
-    # AU (not applicable on Windows, but kept for cross-platform consistency)
-    # Standalone
-    $saSrc = Get-ChildItem -Path $BuildDir -Recurse -Filter "$PluginName.exe" -ErrorAction SilentlyContinue |
-        Where-Object { $_.FullName -like "*external\${PluginName}*artefacts\Release\Standalone\*" } |
-        Select-Object -First 1
-    if ($saSrc) {
-        $saDest = Join-Path $StageDir "Standalone"
-        New-Item -ItemType Directory -Path $saDest -Force | Out-Null
-        Copy-Item -Path $saSrc.FullName -Destination $saDest -Recurse -Force
-        $StagedCount++
-        Write-Host "STAGED Standalone → $saDest" -ForegroundColor Green
-    }
+# Standalone
+$saSrc = Get-ChildItem -Path $BuildDir -Recurse -Filter "$PluginName.exe" -ErrorAction SilentlyContinue |
+    Where-Object { $_.FullName -like "*artefacts\Release\Standalone\*" } |
+    Select-Object -First 1
+if ($saSrc) {
+    $saDest = Join-Path $StageDir "Standalone"
+    Copy-Item -Path $saSrc.FullName -Destination $saDest -Recurse -Force
+    $StagedCount++
+    Write-Host "STAGED Standalone → $saDest" -ForegroundColor Green
+}
 
-    if ($StagedCount -eq 0) {
-        Write-Warning "no artifacts staged (no matching bundles found in build cache)"
-    }
+if ($StagedCount -eq 0) {
+    Write-Warning "no artifacts staged (no matching bundles found in build cache)"
 }
 
 # 6. Update build status (build_info block)
@@ -240,9 +262,9 @@ if (Test-Path $StatusJson) {
         if ($clOut) { $compiler = $clOut.Trim() }
     } catch {}
 
-    # Build artifacts array (only for staged external plugins)
+    # Build artifacts array (from staged format subfolders)
     $artifacts = @()
-    if ($PluginDir -like "$ApcPluginsDir\*" -and (Test-Path $StageDir)) {
+    if (Test-Path $StageDir) {
         foreach ($fmtDir in (Get-ChildItem -Path $StageDir -Directory -ErrorAction SilentlyContinue)) {
             $bundle = Get-ChildItem -Path $fmtDir.FullName -Recurse -Directory -ErrorAction SilentlyContinue |
                 Where-Object { $_.Name -match '\.(vst3|component|app|lv2)$' } |
@@ -263,7 +285,7 @@ if (Test-Path $StatusJson) {
 
     # Build type string
     $buildType = "VST3"
-    if ($PluginDir -like "$ApcPluginsDir\*" -and (Test-Path $StageDir) -and $artifacts.Count -gt 0) {
+    if ((Test-Path $StageDir) -and $artifacts.Count -gt 0) {
         $buildType = ($artifacts | ForEach-Object { $_.format }) -join '+'
     }
 

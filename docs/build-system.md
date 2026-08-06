@@ -8,9 +8,10 @@ APC uses a CMake-based build system with JUCE 8 as the audio plugin framework. T
 
 **Key Principles:**
 - Never run cmake/msbuild directly - always use scripts
-- Build from repository root, not plugin subdirectories
+- Build each plugin from its own folder (`cmake -S <PluginDir> -B <PluginDir>/build`), never from the repo root
 - Use PowerShell 7+ on Windows
-- All build artifacts go to `build/` directory
+- Build artifacts live **inside the plugin folder** at `<plugins_dir>/[PluginName]/build/`
+- Plugins locate the APC repo through the `tools_dir` config key (used as `APC_TOOLS_DIR` in their CMakeLists); scripts fall back to the repo owning `scripts/`
 
 ---
 
@@ -19,20 +20,26 @@ APC uses a CMake-based build system with JUCE 8 as the audio plugin framework. T
 ### Directory Structure
 
 ```
-audio-plugin-coder/
-├── CMakeLists.txt              # Root CMake configuration
+audio-plugin-coder/                # APC repo (= tools_dir)
+├── CMakeLists.txt                 # Repo-level CMake (optional/root convenience)
 ├── _tools/
 │   └── JUCE/
-│       └── CMakeLists.txt      # JUCE framework
-├── examples/                   # Read-only reference plugins (CloudWash, gnarly2, ...)
-├── build/                      # Build artifacts (generated)
-│   └── external/
-│       └── [PluginName]/
-│           └── [PluginName]_artefacts/
-│               └── Release/
-│                   ├── [PluginName].vst3/
-│                   ├── [PluginName].exe
-│                   └── [PluginName].lib
+│       └── CMakeLists.txt         # JUCE framework (Git submodule)
+├── include/                       # Shared headers (VisageJuceHost.h, ...)
+├── examples/                      # Read-only reference plugins (CloudWash, gnarly2, ...)
+└── scripts/                       # Build/install/config helpers
+
+~/AudioPlugins/[PluginName]/       # A plugin created via /new (external to repo)
+├── CMakeLists.txt                 # Self-contained: bootstraps APC_TOOLS_DIR + JUCE
+└── build/                         # Build artifacts (generated)
+    ├── CMakeCache.txt
+    ├── VST3/                      # Staged installable artifacts
+    │   └── [PluginName].vst3/
+    └── [PluginName]_artefacts/
+        └── Release/
+            ├── [PluginName].vst3/
+            ├── [PluginName].exe
+            └── [PluginName].lib
 ```
 
 ### Build Flow
@@ -233,52 +240,39 @@ endif()
 
 ## Build Scripts
 
-### build-and-install.ps1
+### build-and-install.ps1 / build-and-install.sh
 
-The main build script ([`build-and-install.ps1`](scripts/build-and-install.ps1)):
+The main build scripts ([`build-and-install.ps1`](scripts/build-and-install.ps1) / [`build-and-install.sh`](scripts/build-and-install.sh)) build each plugin **inside its own folder**. Simplified logic (Windows):
 
 ```powershell
 param(
     [Parameter(Mandatory=$true)]
     [string]$PluginName,
-
     [switch]$NoInstall,
     [switch]$SkipTests,
     [switch]$Strict
 )
 
-# Validate environment
-if (-not (Test-Path "_tools/JUCE/CMakeLists.txt")) {
-    Write-Error "JUCE not found. Run: git submodule update --init --recursive"
-    exit 1
-}
+$PluginsDir = & "$PSScriptRoot\apc-config.ps1" plugins-dir
+$PluginDir  = Join-Path $PluginsDir $PluginName
+$BuildDir   = Join-Path $PluginDir "build"
 
-# Create build directory
-$BuildDir = "build"
-New-Item -ItemType Directory -Force -Path $BuildDir | Out-Null
+# APC repo (hosts _tools/JUCE, _tools/visage, include/) — fallback to script owner
+$ApcToolsDir = & "$PSScriptRoot\apc-config.ps1" tools-dir
+if (-not $ApcToolsDir) { $ApcToolsDir = (Resolve-Path "$PSScriptRoot\..").Path }
 
-# Configure
-cmake -S . -B $BuildDir -G "Visual Studio 17 2022" -A x64
-if ($LASTEXITCODE -ne 0) { exit 1 }
+# Target name is the lowercase plugin name (juce_add_plugin produces <name>_VST3)
+$CmakeTarget = ... # parsed lowercase from CMakeLists.txt juce_add_plugin(...)
 
-# Build VST3
-cmake --build $BuildDir --config Release --target "${PluginName}_VST3"
-if ($LASTEXITCODE -ne 0) { exit 1 }
+# Configure from the plugin folder, telling it where APC lives
+cmake -S $PluginDir -B $BuildDir -DAPC_TOOLS_DIR="$ApcToolsDir" -G "Visual Studio 17 2022" -A x64
 
-# Build Standalone
-cmake --build $BuildDir --config Release --target "${PluginName}_Standalone"
-if ($LASTEXITCODE -ne 0) { exit 1 }
+# Build
+cmake --build $BuildDir --config Release --target "${CmakeTarget}_VST3"
+cmake --build $BuildDir --config Release --target "${CmakeTarget}_Standalone"
 
-# Install (unless -NoInstall)
-if (-not $NoInstall) {
-    cmake --install $BuildDir --config Release --component "${PluginName}_VST3"
-}
-
-# Run tests (unless -SkipTests)
-if (-not $SkipTests) {
-    & "$PSScriptRoot\pluginval-integration.ps1" -PluginName $PluginName
-}
-
+# Stage into $BuildDir/VST3 and $BuildDir/Standalone (unless -NoInstall)
+# Run pluginval tests (unless -SkipTests)
 Write-Host "Build complete!" -ForegroundColor Green
 ```
 
@@ -286,6 +280,9 @@ Write-Host "Build complete!" -ForegroundColor Green
 ```powershell
 # Full build and install
 powershell -ExecutionPolicy Bypass -File .\scripts\build-and-install.ps1 -PluginName MyPlugin
+
+# macOS / Linux
+bash scripts/build-and-install.sh MyPlugin
 
 # Build only (no install)
 powershell -ExecutionPolicy Bypass -File .\scripts\build-and-install.ps1 -PluginName MyPlugin -NoInstall
@@ -390,16 +387,16 @@ exit 1
 
 ### Debug vs Release
 
-**Debug Build:**
+**Debug Build:** *(from the plugin folder, pointing at the APC repo via `APC_TOOLS_DIR`)*
 ```powershell
-cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Debug
-cmake --build build --config Debug --target MyPlugin_VST3
+cmake -S "$PluginDir" -B "$PluginDir\build" -DAPC_TOOLS_DIR="<apc_repo_path>" -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Debug
+cmake --build "$PluginDir\build" --config Debug --target myplugin_VST3
 ```
 
 **Release Build:**
 ```powershell
-cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release
-cmake --build build --config Release --target MyPlugin_VST3
+cmake -S "$PluginDir" -B "$PluginDir\build" -DAPC_TOOLS_DIR="<apc_repo_path>" -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release
+cmake --build "$PluginDir\build" --config Release --target myplugin_VST3
 ```
 
 ### Compiler Flags

@@ -24,16 +24,16 @@
   },
   "license": "MIT",
   "bin": {
-    "audio-plugin-coder": "bin/setup.js"
+    "audio-plugin-coder": "scripts/install.js"
   },
   "scripts": {
-    "setup": "node ./bin/setup.js"
+    "setup": "node ./scripts/install.js"
   },
   "engines": {
     "node": ">=18.0.0"
   },
   "files": [
-    "bin/",
+    "scripts/install.js",
     "README.md",
     "CHANGELOG.md",
     "LICENCE.md"

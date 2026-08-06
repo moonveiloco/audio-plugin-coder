@@ -62,6 +62,9 @@ if(APC_ENABLE_VISAGE)
     if(NOT EXISTS "${VISAGE_DIR}")
         message(FATAL_ERROR "Visage missing at ${VISAGE_DIR}")
     endif()
+    # Visage is linked into shared plugin modules (VST3 .so / AU bundle) on most
+    # platforms, so its static libs and OBJECT libraries MUST be built with PIC.
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
     add_subdirectory("${VISAGE_DIR}")
     if(TARGET visage AND NOT TARGET visage::visage)
         add_library(visage::visage ALIAS visage)

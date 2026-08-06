@@ -72,7 +72,7 @@ target_sources(gnarly3
 target_include_directories(gnarly3
     PRIVATE
         Source
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../common
+        ${CMAKE_SOURCE_DIR}/include
 )
 
 # ============================================

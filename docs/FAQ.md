@@ -169,11 +169,15 @@ No. Always use the build script. Never run cmake/msbuild directly.
 
 ### Where are the build outputs?
 
+Each plugin builds **inside its own folder**:
+
 ```
-build/external/MyPlugin/MyPlugin_artefacts/Release/
+$APC_PLUGINS_DIR/MyPlugin/build/VST3/
 ├── MyPlugin.vst3/          # VST3 plugin
 └── MyPlugin.exe            # Standalone
 ```
+
+Raw CMake artifacts live in `$APC_PLUGINS_DIR/MyPlugin/build/MyPlugin_artefacts/Release/`.
 
 ### Why is my VST3 not showing in my DAW?
 

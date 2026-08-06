@@ -554,7 +554,7 @@ console.log("Debug message:", variable);
       "name": "Debug Standalone",
       "type": "cppvsdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/external/MyPlugin/MyPlugin_artefacts/Debug/Standalone/MyPlugin.exe",
+      "program": "${workspaceFolder}/build/MyPlugin_artefacts/Debug/Standalone/MyPlugin.exe",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",

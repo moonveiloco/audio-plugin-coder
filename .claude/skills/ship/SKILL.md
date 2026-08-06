@@ -34,13 +34,19 @@ $CurrentOS = if ($IsWindows -or ($env:OS -eq "Windows_NT")) { "Windows" }
              elseif ($IsLinux) { "Linux" }
              else { "Unknown" }
 
-# Check for existing local build
-$BuildDir = "build"
+# Build dir lives INSIDE the plugin folder (per-plugin builds)
+$PluginsDir = & "$PSScriptRoot\..\scripts\apc-config.ps1" plugins-dir 2>$null
+if (-not $PluginsDir) { $PluginsDir = Read-Host "plugins_dir (from apc-config) not found — enter it" }
+$PluginFolder = if ($PluginName) { $PluginName } else { Split-Path (Get-Location) -Leaf }
+$BuildDir = Join-Path $PluginsDir $PluginFolder
+$BuildDir = Join-Path $BuildDir "build"
+
 $HasLocalBuild = Test-Path "$BuildDir/*_artefacts/Release/*.vst3" -or
                  Test-Path "$BuildDir/*_artefacts/Release/*.component" -or
                  Test-Path "$BuildDir/*_artefacts/*.vst3"
 
 Write-Host "Current Platform: $CurrentOS" -ForegroundColor Cyan
+Write-Host "Plugin Build Dir: $BuildDir" -ForegroundColor Cyan
 Write-Host "Local Build Found: $HasLocalBuild" -ForegroundColor Cyan
 ```
 
@@ -101,8 +107,8 @@ Write-Host "  GitHub Actions: $($PlatformsNeedingGitHub -join ', ')" -Foreground
 **CRITICAL**: This step runs BEFORE installer creation and ensures documentation exists.
 
 ```powershell
-# Check if Documentation folder exists
-$DocPath = "plugins\$PluginName\Documentation"
+# Check if Documentation folder exists (inside the plugin folder)
+$DocPath = Join-Path $PluginsDir "$PluginName\Documentation"
 
 if (-not (Test-Path $DocPath)) {
     Write-Host "Creating Documentation folder..." -ForegroundColor Yellow
@@ -187,7 +193,7 @@ function New-WindowsInstaller {
 
     # Generate installer script from template
     $TemplatePath = "scripts/installer-template.iss"
-    $IssPath = "build/$PluginName-installer.iss"
+    $IssPath = Join-Path $BuildDir "$PluginName-installer.iss"
 
     $Template = Get-Content $TemplatePath -Raw
     $IssContent = $Template `

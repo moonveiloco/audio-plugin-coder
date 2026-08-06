@@ -9,6 +9,7 @@
 #   bash scripts/apc-config.sh set <key> <v> # set a value
 #   bash scripts/apc-config.sh is-setup      # exit 0 if setup_complete=true, 1 otherwise
 #   bash scripts/apc-config.sh plugins-dir   # print plugins_dir (exit 1 if unset)
+#   bash scripts/apc-config.sh tools-dir      # print tools_dir (exit 1 if unset)
 #   bash scripts/apc-config.sh init          # create default config if missing
 
 set -euo pipefail
@@ -34,7 +35,8 @@ _apc_config_init() {
   "setup_complete": false,
   "setup_at": null,
   "plugins_dir": null,
-  "plugins_folder_name": null
+  "plugins_folder_name": null,
+  "tools_dir": null
 }
 JSON
         echo "Created default config at $cfg" >&2
@@ -117,6 +119,14 @@ case "${1:-help}" in
         fi
         echo "$v"
         ;;
+    tools-dir)
+        v="$(_apc_config_get tools_dir)"
+        if [[ -z "$v" ]]; then
+            echo "APC not configured: tools_dir is null. Run /setup first." >&2
+            exit 1
+        fi
+        echo "$v"
+        ;;
     init)
         _apc_config_init
         ;;
@@ -130,6 +140,7 @@ Commands:
   set <key> <v>  Set a config value
   is-setup       Exit 0 if setup_complete=true, else exit 1
   plugins-dir    Print plugins_dir (exit 1 + stderr if unset)
+  tools-dir      Print tools_dir (exit 1 + stderr if unset)
   init           Create default config if missing
 USAGE
         ;;

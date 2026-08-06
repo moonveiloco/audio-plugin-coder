@@ -28,7 +28,6 @@ fi
 # --- PATH RESOLUTION ---
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_PATH="$(cd "$SCRIPT_DIR/.." && pwd)"
-BUILD_DIR="$ROOT_PATH/build"
 APC_PLUGINS_DIR="$(bash "$SCRIPT_DIR/apc-config.sh" plugins-dir)" || { echo "Run /setup first." >&2; exit 1; }
 PLUGIN_DIR="$APC_PLUGINS_DIR/$PLUGIN_NAME"
 if [ ! -d "$PLUGIN_DIR" ]; then
@@ -36,8 +35,23 @@ if [ ! -d "$PLUGIN_DIR" ]; then
     echo "       Run /setup or check that the plugin was created with /dream." >&2
     exit 1
 fi
+# Build dir lives INSIDE the plugin directory (self-contained per-plugin builds)
+BUILD_DIR="$PLUGIN_DIR/build"
+# APC_TOOLS_DIR: the APC repo root holding _tools/JUCE, _tools/visage, include/.
+# Read from config (tools_dir), falling back to the repo owning scripts/.
+APC_TOOLS_DIR="$(bash "$SCRIPT_DIR/apc-config.sh" tools-dir 2>/dev/null || true)"
+if [[ -z "$APC_TOOLS_DIR" ]]; then
+    APC_TOOLS_DIR="$ROOT_PATH"
+fi
 STATUS_JSON="$PLUGIN_DIR/status.json"
 BUILD_START_TIME="$(date +%s)"
+
+# CMake target name: derive from the plugin's juce_add_plugin(...) call.
+# Templates use the lowercase plugin name, so CMake targets are lowercase.
+CMAKE_TARGET="$(grep -oE 'juce_add_plugin\([A-Za-z0-9_]+' "$PLUGIN_DIR/CMakeLists.txt" 2>/dev/null | head -1 | sed 's/juce_add_plugin(//')"
+if [[ -z "$CMAKE_TARGET" ]]; then
+    CMAKE_TARGET="${PLUGIN_NAME,,}"
+fi
 
 # --- IMPORT MODULES ---
 # shellcheck source=state-management.sh
@@ -75,10 +89,11 @@ if $USE_VISAGE; then
 fi
 
 CONFIG_OUTPUT=""
-CONFIG_OUTPUT=$(cmake -S "$ROOT_PATH" -B "$BUILD_DIR" \
+CONFIG_OUTPUT=$(cmake -S "$PLUGIN_DIR" -B "$BUILD_DIR" \
     -G Xcode \
     -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" \
     -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13 \
+    -DAPC_TOOLS_DIR="$APC_TOOLS_DIR" \
     --fresh \
     $VISAGE_FLAG 2>&1) || {
     echo "ERROR: CMake configuration failed" >&2
@@ -102,7 +117,7 @@ CONFIG_OUTPUT=$(cmake -S "$ROOT_PATH" -B "$BUILD_DIR" \
 # --- 2. BUILD VST3 ---
 echo "Compiling VST3..."
 VST3_OUTPUT=""
-VST3_OUTPUT=$(cmake --build "$BUILD_DIR" --config Release --target "${PLUGIN_NAME}_VST3" 2>&1) || {
+VST3_OUTPUT=$(cmake --build "$BUILD_DIR" --config Release --target "${CMAKE_TARGET}_VST3" 2>&1) || {
     echo "ERROR: VST3 build failed" >&2
     echo "$VST3_OUTPUT" >&2
 
@@ -124,7 +139,7 @@ VST3_OUTPUT=$(cmake --build "$BUILD_DIR" --config Release --target "${PLUGIN_NAM
 # --- 3. BUILD AU (AudioUnit) ---
 echo "Compiling AudioUnit..."
 AU_OUTPUT=""
-AU_OUTPUT=$(cmake --build "$BUILD_DIR" --config Release --target "${PLUGIN_NAME}_AU" 2>&1) || {
+AU_OUTPUT=$(cmake --build "$BUILD_DIR" --config Release --target "${CMAKE_TARGET}_AU" 2>&1) || {
     echo "WARNING: AudioUnit build failed (non-fatal)" >&2
     echo "$AU_OUTPUT" >&2
 }
@@ -132,7 +147,7 @@ AU_OUTPUT=$(cmake --build "$BUILD_DIR" --config Release --target "${PLUGIN_NAME}
 # --- 4. BUILD STANDALONE ---
 echo "Compiling Standalone..."
 STANDALONE_OUTPUT=""
-STANDALONE_OUTPUT=$(cmake --build "$BUILD_DIR" --config Release --target "${PLUGIN_NAME}_Standalone" 2>&1) || {
+STANDALONE_OUTPUT=$(cmake --build "$BUILD_DIR" --config Release --target "${CMAKE_TARGET}_Standalone" 2>&1) || {
     echo "WARNING: Standalone build failed (non-fatal)" >&2
     echo "$STANDALONE_OUTPUT" >&2
 }
@@ -173,55 +188,56 @@ if ! $NO_INSTALL; then
     fi
 fi
 
-# --- 5.5. STAGE ARTIFACTS TO PLUGIN DIR (external plugins only) ---
+# --- 5.5. STAGE ARTIFACTS IN PLUGIN DIR ---
+# Build output already lives in $PLUGIN_DIR/build (per-plugin builds).
+# Organize the JUCE <name>_artefacts/Release bundles into VST3/AU/Standalone/LV2
+# subfolders so tooling (build_artifacts_json) can enumerate them.
 STAGED_COUNT=0
-if [[ "$PLUGIN_DIR" == "$APC_PLUGINS_DIR/"* ]]; then
-    echo "Staging artifacts to plugin directory..."
-    STAGE_DIR="$PLUGIN_DIR/build"
-    rm -rf "$STAGE_DIR"
-    mkdir -p "$STAGE_DIR/VST3" "$STAGE_DIR/AU" "$STAGE_DIR/Standalone"
+echo "Staging artifacts in plugin build dir..."
+STAGE_DIR="$PLUGIN_DIR/build"
+rm -rf "$STAGE_DIR/VST3" "$STAGE_DIR/AU" "$STAGE_DIR/Standalone" "$STAGE_DIR/LV2"
+mkdir -p "$STAGE_DIR/VST3" "$STAGE_DIR/AU" "$STAGE_DIR/Standalone"
 
-    # VST3
-    VST3_SRC="$(find "$BUILD_DIR" -path "*external/${PLUGIN_NAME}*artefacts/Release/VST3/${PLUGIN_NAME}.vst3" -type d 2>/dev/null | head -1 || true)"
-    if [[ -n "$VST3_SRC" ]]; then
-        cp -R "$VST3_SRC" "$STAGE_DIR/VST3/"
-        STAGED_COUNT=$((STAGED_COUNT + 1))
-        echo "STAGED VST3 → $STAGE_DIR/VST3/"
-    fi
+# VST3
+VST3_SRC="$(find "$BUILD_DIR" -path "*artefacts/Release/VST3/${PLUGIN_NAME}.vst3" -type d 2>/dev/null | head -1 || true)"
+if [[ -n "$VST3_SRC" ]]; then
+    cp -R "$VST3_SRC" "$STAGE_DIR/VST3/"
+    STAGED_COUNT=$((STAGED_COUNT + 1))
+    echo "STAGED VST3 → $STAGE_DIR/VST3/"
+fi
 
-    # AU (macOS only)
-    AU_SRC="$(find "$BUILD_DIR" -path "*external/${PLUGIN_NAME}*artefacts/Release/AU/${PLUGIN_NAME}.component" -type d 2>/dev/null | head -1 || true)"
-    if [[ -n "$AU_SRC" ]]; then
-        cp -R "$AU_SRC" "$STAGE_DIR/AU/"
-        STAGED_COUNT=$((STAGED_COUNT + 1))
-        echo "STAGED AU → $STAGE_DIR/AU/"
-    fi
+# AU (macOS only)
+AU_SRC="$(find "$BUILD_DIR" -path "*artefacts/Release/AU/${PLUGIN_NAME}.component" -type d 2>/dev/null | head -1 || true)"
+if [[ -n "$AU_SRC" ]]; then
+    cp -R "$AU_SRC" "$STAGE_DIR/AU/"
+    STAGED_COUNT=$((STAGED_COUNT + 1))
+    echo "STAGED AU → $STAGE_DIR/AU/"
+fi
 
-    # Standalone
-    SA_SRC="$(find "$BUILD_DIR" -path "*external/${PLUGIN_NAME}*artefacts/Release/Standalone/${PLUGIN_NAME}.app" -type d 2>/dev/null | head -1 || true)"
-    if [[ -n "$SA_SRC" ]]; then
-        cp -R "$SA_SRC" "$STAGE_DIR/Standalone/"
-        STAGED_COUNT=$((STAGED_COUNT + 1))
-        echo "STAGED Standalone → $STAGE_DIR/Standalone/"
-    fi
+# Standalone
+SA_SRC="$(find "$BUILD_DIR" -path "*artefacts/Release/Standalone/${PLUGIN_NAME}.app" -type d 2>/dev/null | head -1 || true)"
+if [[ -n "$SA_SRC" ]]; then
+    cp -R "$SA_SRC" "$STAGE_DIR/Standalone/"
+    STAGED_COUNT=$((STAGED_COUNT + 1))
+    echo "STAGED Standalone → $STAGE_DIR/Standalone/"
+fi
 
-    # LV2 (Linux)
-    LV2_SRC="$(find "$BUILD_DIR" -path "*external/${PLUGIN_NAME}*artefacts/Release/LV2/${PLUGIN_NAME}.lv2" -type d 2>/dev/null | head -1 || true)"
-    if [[ -n "$LV2_SRC" ]]; then
-        mkdir -p "$STAGE_DIR/LV2"
-        cp -R "$LV2_SRC" "$STAGE_DIR/LV2/"
-        STAGED_COUNT=$((STAGED_COUNT + 1))
-        echo "STAGED LV2 → $STAGE_DIR/LV2/"
-    fi
+# LV2 (Linux)
+LV2_SRC="$(find "$BUILD_DIR" -path "*artefacts/Release/LV2/${PLUGIN_NAME}.lv2" -type d 2>/dev/null | head -1 || true)"
+if [[ -n "$LV2_SRC" ]]; then
+    mkdir -p "$STAGE_DIR/LV2"
+    cp -R "$LV2_SRC" "$STAGE_DIR/LV2/"
+    STAGED_COUNT=$((STAGED_COUNT + 1))
+    echo "STAGED LV2 → $STAGE_DIR/LV2/"
+fi
 
-    # Remove empty format dirs to keep things tidy
-    for d in "$STAGE_DIR"/*/; do
-        rmdir "$d" 2>/dev/null || true
-    done
+# Remove empty format dirs to keep things tidy
+for d in "$STAGE_DIR"/*/; do
+    rmdir "$d" 2>/dev/null || true
+done
 
-    if [[ $STAGED_COUNT -eq 0 ]]; then
-        echo "WARNING: no artifacts staged (no matching bundles found in build cache)"
-    fi
+if [[ $STAGED_COUNT -eq 0 ]]; then
+    echo "WARNING: no artifacts staged (no matching bundles found in build cache)"
 fi
 
 # --- 6. UPDATE BUILD STATUS ---

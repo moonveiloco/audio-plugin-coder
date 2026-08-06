@@ -66,6 +66,10 @@ assert "init: is-setup still 1" 1 "" "$rc" ""
 rc=0; out="$(bash "$APC_CONFIG" plugins-dir 2>/dev/null)" || rc=$?
 assert "null plugins_dir: plugins-dir exit 1" 1 "" "$rc" "$out"
 
+# --- Test 3b: tools-dir fails when null (but config exists) ---
+rc=0; out="$(bash "$APC_CONFIG" tools-dir 2>/dev/null)" || rc=$?
+assert "null tools_dir: tools-dir exit 1" 1 "" "$rc" "$out"
+
 # --- Test 4: get stays permissive for null value ---
 rc=0; out="$(bash "$APC_CONFIG" get nonexistent_key)" || rc=$?
 assert "get unknown key permissive (empty, exit 0)" 0 "" "$rc" "$out"
@@ -74,6 +78,11 @@ assert "get unknown key permissive (empty, exit 0)" 0 "" "$rc" "$out"
 bash "$APC_CONFIG" set plugins_dir "$TMP/myplugins" >/dev/null 2>&1
 rc=0; out="$(bash "$APC_CONFIG" plugins-dir 2>/dev/null)" || rc=$?
 assert "after set plugins_dir: plugins-dir exit 0 + value" 0 "$TMP/myplugins" "$rc" "$out"
+
+# --- Test 5b: set + read back tools_dir ---
+bash "$APC_CONFIG" set tools_dir "$TMP/tools" >/dev/null 2>&1
+rc=0; out="$(bash "$APC_CONFIG" tools-dir 2>/dev/null)" || rc=$?
+assert "after set tools_dir: tools-dir exit 0 + value" 0 "$TMP/tools" "$rc" "$out"
 
 # --- Test 6: setup_complete=true flips is-setup ---
 bash "$APC_CONFIG" set setup_complete true >/dev/null 2>&1
@@ -84,6 +93,11 @@ assert "setup_complete=true: is-setup exit 0" 0 "" "$rc" ""
 bash "$APC_CONFIG" set plugins_dir "" >/dev/null 2>&1
 rc=0; out="$(bash "$APC_CONFIG" plugins-dir 2>/dev/null)" || rc=$?
 assert "empty plugins_dir: plugins-dir exit 1" 1 "" "$rc" "$out"
+
+# --- Test 7b: tools-dir exits 1 if value set to empty string ---
+bash "$APC_CONFIG" set tools_dir "" >/dev/null 2>&1
+rc=0; out="$(bash "$APC_CONFIG" tools-dir 2>/dev/null)" || rc=$?
+assert "empty tools_dir: tools-dir exit 1" 1 "" "$rc" "$out"
 
 # --- Test 8: path command prints the isolated config path ---
 rc=0; out="$(bash "$APC_CONFIG" path)" || rc=$?

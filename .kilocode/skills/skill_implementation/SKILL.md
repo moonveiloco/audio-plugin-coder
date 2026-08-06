@@ -159,7 +159,7 @@ Choose (1-3): _
 
 **For Visage Framework:**
 Convert approved design to Visage C++ code (Source/VisageControls.h).
-Use templates from `templates/visage/` and the shared host in `common/VisageJuceHost.h`.
+Use templates from `templates/visage/` and the shared host in `include/VisageJuceHost.h`.
 
 ---
 
@@ -738,6 +738,7 @@ if ($state.ui_framework -eq "webview") {
 ```
 
 **Step 2: Build plugin**
+**Windows (PowerShell):**
 ```powershell
 # Build plugin with validation
 try {
@@ -750,10 +751,23 @@ try {
 }
 ```
 
+**macOS / Linux (Bash):**
+```bash
+# Build plugin with validation
+if bash scripts/build-and-install.sh "[Name]"; then
+    echo "Build completed successfully"
+else
+    echo "Build failed — check the build script and JUCE configuration" >&2
+    exit 1
+fi
+```
+
+**Note:** Build output lives **inside the plugin folder** at `<plugins_dir>/[Name]/build/` (per-plugin builds). Artifacts are staged to `<plugins_dir>/[Name]/build/VST3/` etc. Do NOT create a build directory in the APC repo root.
+
 **If build fails:**
 1. Read error messages carefully
 2. Verify JUCE modules are properly included
-3. Ensure CMakeLists.txt is correctly configured
+3. Ensure CMakeLists.txt is correctly configured (`APC_TOOLS_DIR` must point at the APC repo)
 4. Fix issues and rebuild
 
 **If build succeeds:**
