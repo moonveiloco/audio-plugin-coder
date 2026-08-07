@@ -1,0 +1,33 @@
+{
+  "name": "Skeuomorph",
+  "description": "High-end studio hardware skeuomorphism: realistic, tactile interfaces mimicking premium outboard gear. Polished machined-metal knobs with knurled rings, brushed graphite panels, brass accents, glass-face VU meters and 7-segment LED displays. Deep shadows, specular highlights and layered gradients give controls physical affordance.",
+  "palette": {
+    "background": "#1E1E22",
+    "surface": "#2A2A2F",
+    "surfaceHighlight": "#3A3A40",
+    "primary": "#E0E3E8",
+    "secondary": "#C9A24B",
+    "accent": "#E8B339",
+    "textPrimary": "#E8EAED",
+    "textSecondary": "#9BA1A8",
+    "border": "#4A4A52"
+  },
+  "typography": {
+    "fontFamilyHeadings": "'Chakra Petch', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+    "fontFamilyBody": "'Chakra Petch', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+    "fontSizeSmall": "10px",
+    "fontSizeBase": "12px",
+    "fontSizeLarge": "18px",
+    "fontWeightLight": 400,
+    "fontWeightRegular": 500,
+    "fontWeightBold": 700
+  },
+  "components": {
+    "knobStyle": "machined-metal",
+    "faderStyle": "metal-slot",
+    "borderRadius": "6px",
+    "borderWidth": "1px",
+    "shadowIntensity": "strong",
+    "activeGlow": true
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "Bright Vintage",
+  "description": "A warm, light analog design system inspired by 70s hardware synthesizers. Brushed aluminum panels, walnut wooden knobs, silk-screened monospace labels, and glowing amber LEDs. Rooted in Korg MS-20 / Roland SH-1000 / ARP 2600 hardware with clean modern layout structure.",
+  "palette": {
+    "background": "#C6C6C6",
+    "surface": "#DADADA",
+    "surfaceHighlight": "#EFEFEF",
+    "primary": "#D97706",
+    "secondary": "#F59E0B",
+    "accent": "#E8590C",
+    "textPrimary": "#3A3A3A",
+    "textSecondary": "#666666",
+    "border": "#8F8F8F"
+  },
+  "typography": {
+    "fontFamilyHeadings": "ui-monospace, SFMono-Regular, Menlo, Consolas, \"Courier New\", monospace",
+    "fontFamilyBody": "ui-monospace, SFMono-Regular, Menlo, Consolas, \"Courier New\", monospace",
+    "fontSizeSmall": "9px",
+    "fontSizeBase": "12px",
+    "fontSizeLarge": "18px",
+    "fontWeightLight": 300,
+    "fontWeightRegular": 600,
+    "fontWeightBold": 700
+  },
+  "components": {
+    "knobStyle": "vintage-wood",
+    "faderStyle": "vintage",
+    "borderRadius": "8px",
+    "borderWidth": "1px",
+    "shadowIntensity": "medium",
+    "activeGlow": true
+  }
+}

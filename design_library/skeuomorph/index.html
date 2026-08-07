@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SKEUOMORPH — Mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <div class="plugin-container" id="plugin">
+      <div class="screw tl"></div>
+      <div class="screw tr"></div>
+      <div class="screw bl"></div>
+      <div class="screw br"></div>
+
+      <div class="plugin-header">
+        <div class="plugin-title">
+          SKEUOMORPH
+          <span class="plugin-subtitle">STUDIO HARDWARE SERIES</span>
+        </div>
+        <div class="header-controls">
+          <div class="led-label">PWR</div>
+          <div class="switch on" id="power-switch" role="switch" aria-label="Power" aria-checked="true">
+            <div class="switch-thumb"></div>
+          </div>
+          <div class="led on" id="power-led"></div>
+        </div>
+      </div>
+
+      <div class="plugin-body">
+        <!-- ============ LEFT: FILTER / ENVELOPE ============ -->
+        <div class="left-section">
+          <div class="panel-box">
+            <span class="panel-label">FILTER</span>
+            <div class="panel-row">
+              <div class="knob-container">
+                <div class="knob" data-label="Cutoff">
+                  <div class="knob-ring"></div>
+                  <div class="knob-body"></div>
+                  <div class="knob-specular"></div>
+                  <div class="knob-pointer"></div>
+                  <div class="knob-cap"></div>
+                </div>
+                <span class="knob-label">Cutoff</span>
+                <span class="knob-value">0.50</span>
+              </div>
+              <div class="knob-container">
+                <div class="knob" data-label="Reso">
+                  <div class="knob-ring"></div>
+                  <div class="knob-body"></div>
+                  <div class="knob-specular"></div>
+                  <div class="knob-pointer"></div>
+                  <div class="knob-cap"></div>
+                </div>
+                <span class="knob-label">Reso</span>
+                <span class="knob-value">0.50</span>
+              </div>
+              <div class="knob-container">
+                <div class="knob" data-label="Drive">
+                  <div class="knob-ring"></div>
+                  <div class="knob-body"></div>
+                  <div class="knob-specular"></div>
+                  <div class="knob-pointer"></div>
+                  <div class="knob-cap"></div>
+                </div>
+                <span class="knob-label">Drive</span>
+                <span class="knob-value">0.50</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-box">
+            <span class="panel-label">Envelope</span>
+            <div class="panel-row">
+              <div class="fader-container" data-label="Attack">
+                <div class="fader-track">
+                  <div class="fader-fill"></div>
+                  <div class="fader-handle"></div>
+                </div>
+                <span class="fader-label">A</span>
+              </div>
+              <div class="fader-container" data-label="Decay">
+                <div class="fader-track">
+                  <div class="fader-fill"></div>
+                  <div class="fader-handle"></div>
+                </div>
+                <span class="fader-label">D</span>
+              </div>
+              <div class="fader-container" data-label="Sustain">
+                <div class="fader-track">
+                  <div class="fader-fill"></div>
+                  <div class="fader-handle"></div>
+                </div>
+                <span class="fader-label">S</span>
+              </div>
+              <div class="fader-container" data-label="Release">
+                <div class="fader-track">
+                  <div class="fader-fill"></div>
+                  <div class="fader-handle"></div>
+                </div>
+                <span class="fader-label">R</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ RIGHT: MASTER / UTILITY ============ -->
+        <div class="right-section">
+          <div class="panel-box">
+            <span class="panel-label">Master</span>
+            <div class="vu-wrap" id="vu-wrap"></div>
+            <span class="vu-title">Output</span>
+          </div>
+
+          <div class="panel-box">
+            <span class="panel-label">Control</span>
+            <div class="panel-row">
+              <div class="display-wrap">
+                <div class="display-box" id="display-box">
+                  <svg class="digit" viewBox="-2 0 18 42" data-digit="0">
+                    <polygon class="seg a" points="2,3 10,3 12,5 10,7 2,7 0,5"/>
+                    <polygon class="seg b" points="14,5 16,7 14,19 12,21 10,19 12,7"/>
+                    <polygon class="seg c" points="14,23 16,25 14,37 12,39 10,37 12,25"/>
+                    <polygon class="seg d" points="2,35 10,35 12,37 10,39 2,39 0,37"/>
+                    <polygon class="seg e" points="0,25 2,23 4,25 2,37 0,39 -2,37"/>
+                    <polygon class="seg f" points="0,7 2,5 4,7 2,19 0,21 -2,19"/>
+                    <polygon class="seg g" points="2,19 10,19 12,21 10,23 2,23 0,21"/>
+                  </svg>
+                  <svg class="digit" viewBox="-2 0 18 42" data-digit="1">
+                    <polygon class="seg a" points="2,3 10,3 12,5 10,7 2,7 0,5"/>
+                    <polygon class="seg b" points="14,5 16,7 14,19 12,21 10,19 12,7"/>
+                    <polygon class="seg c" points="14,23 16,25 14,37 12,39 10,37 12,25"/>
+                    <polygon class="seg d" points="2,35 10,35 12,37 10,39 2,39 0,37"/>
+                    <polygon class="seg e" points="0,25 2,23 4,25 2,37 0,39 -2,37"/>
+                    <polygon class="seg f" points="0,7 2,5 4,7 2,19 0,21 -2,19"/>
+                    <polygon class="seg g" points="2,19 10,19 12,21 10,23 2,23 0,21"/>
+                  </svg>
+                  <svg class="digit" viewBox="-2 0 18 42" data-digit="2">
+                    <polygon class="seg a" points="2,3 10,3 12,5 10,7 2,7 0,5"/>
+                    <polygon class="seg b" points="14,5 16,7 14,19 12,21 10,19 12,7"/>
+                    <polygon class="seg c" points="14,23 16,25 14,37 12,39 10,37 12,25"/>
+                    <polygon class="seg d" points="2,35 10,35 12,37 10,39 2,39 0,37"/>
+                    <polygon class="seg e" points="0,25 2,23 4,25 2,37 0,39 -2,37"/>
+                    <polygon class="seg f" points="0,7 2,5 4,7 2,19 0,21 -2,19"/>
+                    <polygon class="seg g" points="2,19 10,19 12,21 10,23 2,23 0,21"/>
+                  </svg>
+                </div>
+                <span class="display-label">Level</span>
+              </div>
+
+              <div class="knob-container">
+                <div class="knob small" data-label="Volume">
+                  <div class="knob-ring"></div>
+                  <div class="knob-body"></div>
+                  <div class="knob-specular"></div>
+                  <div class="knob-pointer"></div>
+                  <div class="knob-cap"></div>
+                </div>
+                <span class="knob-label">Volume</span>
+                <span class="knob-value">0.50</span>
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:8px;align-items:center;">
+                <button class="btn on" id="btn-bypass" aria-pressed="true">Bypass</button>
+                <button class="btn" id="btn-link" aria-pressed="false">Link</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="footer-text">CPU: 1%</div>
+        <div class="footer-text">JUCE WEBVIEW 8</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

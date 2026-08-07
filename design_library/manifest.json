@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2026-01-24T00:00:00Z",
-  "totalDesigns": 2,
+  "lastUpdated": "2026-08-07T12:00:00Z",
+  "totalDesigns": 4,
   "designs": [
     {
       "id": "amber-signal",
@@ -49,6 +49,54 @@
       },
       "bestFor": ["synths", "modulators", "utility"],
       "created": "2026-01-24",
+      "usageCount": 0
+    },
+    {
+      "id": "bright_vintage",
+      "name": "Bright Vintage",
+      "path": "bright_vintage",
+      "vibe": "70s analog hardware: brushed aluminum, walnut knobs, amber LEDs",
+      "category": "vintage",
+      "tags": ["vintage", "analog", "warm", "retro", "hardware"],
+      "supports": {
+        "visage": false,
+        "webview": true
+      },
+      "examples": {
+        "webview": ["preview.html"],
+        "visage": []
+      },
+      "colors": {
+        "primary": "#D97706",
+        "accent": "#E8590C",
+        "background": "#C6C6C6"
+      },
+      "bestFor": ["synths", "drum-machines", "sequencers", "analog-emulation"],
+      "created": "2026-08-07",
+      "usageCount": 0
+    },
+    {
+      "id": "skeuomorph",
+      "name": "Skeuomorph",
+      "path": "skeuomorph",
+      "vibe": "Realistic, tactile high-end studio hardware",
+      "category": "skeuomorphic",
+      "tags": ["realistic", "tactile", "hardware", "textured", "3d", "premium"],
+      "supports": {
+        "visage": false,
+        "webview": true
+      },
+      "examples": {
+        "webview": ["preview.html"],
+        "visage": []
+      },
+      "colors": {
+        "primary": "#E0E3E8",
+        "accent": "#E8B339",
+        "background": "#1E1E22"
+      },
+      "bestFor": ["effects", "eq", "dynamics", "channel-strips", "synths"],
+      "created": "2026-08-07",
       "usageCount": 0
     }
   ]

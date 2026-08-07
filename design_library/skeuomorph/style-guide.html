@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skeuomorph — Style Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sg-container">
+    <header class="sg-header">
+      <div class="sg-title">Skeuomorph</div>
+      <div class="sg-subtitle">High-end studio hardware — machined metal, brushed graphite, brass, glass-face metering.</div>
+    </header>
+
+    <section class="sg-section">
+      <h2 class="sg-section-title">Palette</h2>
+      <div class="sg-grid" id="palette-grid"></div>
+    </section>
+
+    <section class="sg-section">
+      <h2 class="sg-section-title">Typography</h2>
+      <div class="sg-grid">
+        <div class="sg-typo-box">
+          <div class="sample" style="font-family:var(--font-headings);font-weight:var(--font-weight-bold);font-size:22px;">Chakra Petch Bold</div>
+          <div class="meta">Headings — 700, uppercase, 0.28em letterspacing</div>
+        </div>
+        <div class="sg-typo-box">
+          <div class="sample" style="font-size:14px;">The quick brown fox jumps over the lazy dog 0123456789</div>
+          <div class="meta">Body — 500, 12px</div>
+        </div>
+        <div class="sg-typo-box">
+          <div class="sample" style="font-size:10px;letter-spacing:0.2em;">CONTROL LABELS &amp; PANEL SERIGRAPHY</div>
+          <div class="meta">Labels — 8–10px, 0.18–0.34em letterspacing, uppercase</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sg-section">
+      <h2 class="sg-section-title">Components</h2>
+      <div class="sg-spec-grid" id="spec-grid"></div>
+    </section>
+  </div>
+
+  <script>
+    const palette = {
+      background: '#1E1E22',
+      surface: '#2A2A2F',
+      surfaceHighlight: '#3A3A40',
+      primary: '#E0E3E8',
+      secondary: '#C9A24B',
+      accent: '#E8B339',
+      textPrimary: '#E8EAED',
+      textSecondary: '#9BA1A8',
+      border: '#4A4A52'
+    };
+    const grid = document.getElementById('palette-grid');
+    Object.entries(palette).forEach(([name, hex]) => {
+      const sw = document.createElement('div');
+      sw.className = 'sg-swatch';
+      sw.innerHTML = '<div class="sg-swatch-color" style="background:' + hex + '"></div>' +
+        '<div class="sg-swatch-info"><div class="sg-swatch-name">' + name + '</div>' +
+        '<div class="sg-swatch-hex">' + hex + '</div></div>';
+      grid.appendChild(sw);
+    });
+
+    const specs = [
+      { key: 'knobStyle', value: 'machined-metal' },
+      { key: 'faderStyle', value: 'metal-slot' },
+      { key: 'borderRadius', value: '6px' },
+      { key: 'borderWidth', value: '1px' },
+      { key: 'shadowIntensity', value: 'strong' },
+      { key: 'activeGlow', value: 'true' }
+    ];
+    const sgrid = document.getElementById('spec-grid');
+    specs.forEach((s) => {
+      const item = document.createElement('div');
+      item.className = 'sg-spec-item';
+      item.innerHTML = '<div class="sg-spec-key">' + s.key + '</div><div class="sg-spec-value">' + s.value + '</div>';
+      sgrid.appendChild(item);
+    });
+  </script>
+</body>
+</html>
