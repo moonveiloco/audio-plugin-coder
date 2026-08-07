@@ -1,4 +1,4 @@
-# JUCE 8 CRITICAL SYSTEM PROTOCOLS
+# JUCE 9 CRITICAL SYSTEM PROTOCOLS
 **REQUIRED READING:** strict constraints for Windows 11 & APC Monorepo.
 ## 1. ⚠️ GOLDEN BUILD RULES (HIGHEST PRIORITY)
 ### A. The "One-Script" Rule
@@ -34,8 +34,8 @@
 
 ## 3. 🐧 LINUX/MACOS CRITICAL REQUIREMENTS
 
-### A. WebView Dual-Flag System (JUCE 8)
-**CRITICAL:** JUCE 8 has **TWO SEPARATE FLAGS** for WebView plugins:
+### A. WebView Dual-Flag System (JUCE 9)
+**CRITICAL:** JUCE 9 has **TWO SEPARATE FLAGS** for WebView plugins:
 
 | Platform | Flag | Purpose |
 |----------|------|---------|

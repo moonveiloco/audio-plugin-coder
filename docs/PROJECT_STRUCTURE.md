@@ -78,7 +78,7 @@ Third-party tools and frameworks required by APC.
 
 ```
 _tools/
-├── JUCE/                   # JUCE 8 framework
+├── JUCE/                   # JUCE 9 framework
 │   ├── modules/            # JUCE modules (audio, GUI, DSP)
 │   ├── examples/           # Example plugins
 │   └── CMakeLists.txt      # JUCE CMake configuration

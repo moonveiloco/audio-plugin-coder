@@ -133,7 +133,7 @@ if ($phaseIssues) {
 
 ## **Where to Put Your Current Document:**
 
-Your "JUCE 8 CRITICAL SYSTEM PROTOCOLS" should go in **two places**:
+Your "JUCE 9 CRITICAL SYSTEM PROTOCOLS" should go in **two places**:
 
 ### **1. As a Rule** (`...agent/rules/juce-build-protocols.md`)
 Because these are **constraints that always apply**

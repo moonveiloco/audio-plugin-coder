@@ -59,7 +59,7 @@ private:
 
 ---
 
-### 3. JUCE 8 API Changes
+### 3. JUCE 9 API Changes
 **Severity:** HIGH
 **Issue ID:** webview-005, webview-006
 
@@ -67,7 +67,7 @@ private:
 1. `withUserDataFolder()` moved to nested class
 2. `Resource` uses `std::vector<std::byte>` not `MemoryBlock`
 
-**Correct JUCE 8 Pattern:**
+**Correct JUCE 9 Pattern:**
 ```cpp
 webView = std::make_unique<juce::WebBrowserComponent>(
     juce::WebBrowserComponent::Options{}
@@ -202,7 +202,7 @@ std::optional<WebBrowserComponent::Resource> getResource(const String& url)
 ### C++ Side
 
 - [ ] Member order: Relays → WebView → Attachments
-- [ ] JUCE 8 API used (WinWebView2 nested class)
+- [ ] JUCE 9 API used (WinWebView2 nested class)
 - [ ] Resource provider returns embedded BinaryData
 - [ ] All relays registered with `.withOptionsFrom()`
 

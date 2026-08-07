@@ -25,13 +25,13 @@ JavaScript trigger button and all native function calls silently fail. No errors
 The JavaScript code used a **non-existent API** to call C++ native functions:
 
 ```javascript
-// WRONG - This method does NOT exist in JUCE 8
+// WRONG - This method does NOT exist in JUCE 9
 window.__JUCE__.backend.invokeNativeFunction('triggerNote', [60, 1.0])
 ```
 
 `invokeNativeFunction()` was hallucinated during code generation. It does not exist on the `__JUCE__.backend` object.
 
-The correct JUCE 8 API is:
+The correct JUCE 9 API is:
 
 ```javascript
 // CORRECT - getNativeFunction returns a callable

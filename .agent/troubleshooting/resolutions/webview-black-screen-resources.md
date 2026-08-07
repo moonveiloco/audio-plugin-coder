@@ -119,7 +119,7 @@ std::optional<juce::WebBrowserComponent::Resource> getResource(const juce::Strin
         mimeType = "text/javascript";
     }
 
-    // Convert to std::vector<std::byte> (JUCE 8 requirement)
+    // Convert to std::vector<std::byte> (JUCE 9 requirement)
     if (resourceData != nullptr && resourceSize > 0)
     {
         std::vector<std::byte> data(resourceSize);
@@ -289,7 +289,7 @@ else
 ## Related Issues
 
 - **webview-001:** WebView path errors (different issue - serving wrong path)
-- **webview-005:** JUCE 8 API changes (affects Resource type)
+- **webview-005:** JUCE 9 API changes (affects Resource type)
 - **webview-006:** Resource type must be std::vector<std::byte>
 
 ---

@@ -80,7 +80,7 @@ The tests are isolated (use a throwaway `XDG_CONFIG_HOME`) and never touch your 
 
 APC uses the following technologies:
 
-- **JUCE 8** - Cross-platform audio plugin framework
+- **JUCE 9** - Cross-platform audio plugin framework
 - **Visage** - Planned native C++ UI framework (not yet implemented)
 - **WebView2** - HTML5 Canvas-based UI framework
 - **CMake** - Build system

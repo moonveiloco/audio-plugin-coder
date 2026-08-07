@@ -1,13 +1,13 @@
 ---
 name: juce-webview-windows
-description: Complete guide for building JUCE 8 audio plugins with WebView2 UIs on Windows. Use when working with JUCE WebBrowserComponent, WebView2, web-based plugin UIs, React/Vue/HTML frontends for VST/AU plugins, parameter attachments, JavaScript-C++ communication, hot reloading, or debugging WebView plugins. Covers CMake configuration, frontend-backend communication patterns, performance optimization, and Windows-specific WebView2 setup.
+description: Complete guide for building JUCE 9 audio plugins with WebView2 UIs on Windows. Use when working with JUCE WebBrowserComponent, WebView2, web-based plugin UIs, React/Vue/HTML frontends for VST/AU plugins, parameter attachments, JavaScript-C++ communication, hot reloading, or debugging WebView plugins. Covers CMake configuration, frontend-backend communication patterns, performance optimization, and Windows-specific WebView2 setup.
 ---
 
-# JUCE 8 WebView UIs - Complete Windows Guide
+# JUCE 9 WebView UIs - Complete Windows Guide
 
 ## Overview
 
-JUCE 8 enables building audio plugin and application UIs using web technologies (React, Vue, Svelte, or plain HTML/CSS/JavaScript) via Microsoft's WebView2 component on Windows 11.
+JUCE 9 enables building audio plugin and application UIs using web technologies (React, Vue, Svelte, or plain HTML/CSS/JavaScript) via Microsoft's WebView2 component on Windows 11.
 
 ### Traditional vs WebView Plugin UI
 
@@ -275,7 +275,7 @@ CMakeLists.txt
 2. Download CPM.cmake (if not present)
         │
         ▼
-3. Download JUCE 8.0.6 framework → libs/juce/
+3. Download JUCE 9.0 framework → libs/juce/
         │
         ▼
 4. Execute DownloadWebView2.ps1

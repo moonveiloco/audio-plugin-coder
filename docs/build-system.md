@@ -4,7 +4,7 @@ Complete guide to the APC build system, including CMake configuration, PowerShel
 
 ## Overview
 
-APC uses a CMake-based build system with JUCE 8 as the audio plugin framework. The build process is orchestrated through PowerShell scripts to ensure consistency and proper error handling.
+APC uses a CMake-based build system with JUCE 9 as the audio plugin framework. The build process is orchestrated through PowerShell scripts to ensure consistency and proper error handling.
 
 **Key Principles:**
 - Never run cmake/msbuild directly - always use scripts
@@ -191,7 +191,7 @@ target_compile_definitions(${PLUGIN_NAME}
 
 ### **CRITICAL: Platform-Specific WebView Requirements**
 
-JUCE 8 has **two separate flags** for WebView plugins:
+JUCE 9 has **two separate flags** for WebView plugins:
 
 | Platform | Flag | Purpose |
 |----------|------|---------|

@@ -403,7 +403,7 @@ window.Juce = {
 
 - **webview-001:** HTML not loading (different - path issue)
 - **webview-007:** Black screen (different - BinaryData issue)
-- **build-004:** JuceHeader.h not found (JUCE 8 migration)
+- **build-004:** JuceHeader.h not found (JUCE 9 migration)
 
 ---
 

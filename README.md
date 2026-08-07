@@ -4,7 +4,7 @@
 > AI-powered open-source framework for vibe-coding audio plugins from concept to shipped product
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![JUCE](https://img.shields.io/badge/JUCE-8.0-blue.svg)](https://juce.com/)
+[![JUCE](https://img.shields.io/badge/JUCE-9.0-blue.svg)](https://juce.com/)
 [![Platform](https://img.shields.io/badge/Platform-Windows%2011%20%7C%20macOS-0078D4.svg)](https://github.com/Noizefield/audio-plugin-coder)
 [![Sponsor](https://img.shields.io/badge/Sponsor-Project-pink.svg?style=social&logo=heart)](https://github.com/sponsors/Noizefield) 
 
@@ -41,7 +41,7 @@ Instead of manually juggling DSP architecture, UI frameworks, build systems, sta
 - 🎨 **Dual UI Frameworks** - Choose Visage (pure C++) or WebView (HTML5 Canvas).
 - 📊 **State Management** - Automatic progress tracking, validation, and rollback capabilities.
 - 🔧 **Self-Improving** - Auto-capture troubleshooting knowledge; the system gets smarter over time.
-- 🏗️ **Production Ready** - JUCE 8 integration with CMake build system.
+- 🏗️ **Production Ready** - JUCE 9 integration with CMake build system.
 - 📚 **Comprehensive Skills** - Pre-built domain knowledge for DSP, UI design, testing, and packaging.
 - 🎬 **Bridge Templates** - FFGL visual plugins and Max/MSP externals support.
 
@@ -98,7 +98,7 @@ If you are specifically interested in building **FFGL Visual Plugins** or **Max 
 
 This script will:
 1.  Check for CMake and Git.
-2.  Automatically download JUCE 8 (if missing).
+2.  Automatically download JUCE 9 (if missing).
 3.  Configure the Visual Studio solution for your chosen bridge.
 4.  Open the project ready for compilation.
 
@@ -329,7 +329,7 @@ APC works with any LLM-based coding agent that supports:
 
 ## 🛠️ Technology Stack
 
-- **JUCE 8** - Audio plugin framework (includes DSP, GUI, etc.)
+- **JUCE 9** - Audio plugin framework (includes DSP, GUI, etc.)
 - **CMake** - Build system (Visual Studio on Windows, Xcode on macOS)
 - **PowerShell / Bash** - Automation scripting (platform-specific)
 - **WebView2 / WKWebView** - Web UI (Windows / macOS)
@@ -411,9 +411,9 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 This project is licensed under the MIT License - see the [LICENSE](LICENCE.md) file for details.
 
-### ⚠️ Important: JUCE 8 Licensing Notice
+### ⚠️ Important: JUCE 9 Licensing Notice
 
-APC uses **JUCE 8** as its audio plugin framework. JUCE 8 is dual-licensed:
+APC uses **JUCE 9** as its audio plugin framework. JUCE 9 is dual-licensed:
 
 | License | Use Case | Requirements |
 |---------|----------|--------------|
@@ -427,7 +427,7 @@ APC uses **JUCE 8** as its audio plugin framework. JUCE 8 is dual-licensed:
 - If you open-source your plugin under AGPLv3, you can use JUCE for free
 
 **Official JUCE Resources:**
-- [JUCE 8 End User Licence Agreement](https://juce.com/legal/juce-8-licence/)
+- [JUCE 9 End User Licence Agreement](https://juce.com/legal/juce-9-licence/)
 - [JUCE Pricing](https://juce.com/pricing/)
 - [JUCE Privacy Policy](https://juce.com/legal/juce-privacy-policy/)
 

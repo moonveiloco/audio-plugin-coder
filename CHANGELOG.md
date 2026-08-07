@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **JUCE 9 migration** - Updated the JUCE submodule from v8.0.12 to **v9.0.0**.
+  - `templates/max-external/Source/JuceBridge.h`: replaced `AudioProcessor::createEditor()` with `createEditorAndMakeActive()` (createEditor is now private in JUCE 9).
+  - Linux OpenGL now uses **EGL** instead of GLX (requires `libegl-dev`/`libglvnd`).
+  - Updated agent skills, troubleshooting docs, README and top-level docs to reference JUCE 9.
+
 ---
 
 ## [0.3.0] - 2026-03-23

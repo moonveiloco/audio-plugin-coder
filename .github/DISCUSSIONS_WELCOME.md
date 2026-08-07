@@ -12,7 +12,7 @@ Welcome to the APC community! This is a space for audio developers, AI enthusias
 - 🎨 **Dual UI Frameworks** - Choose between Visage (pure C++) or WebView (HTML5 Canvas)
 - 📊 **State Management** - Automatic progress tracking and validation
 - 🔧 **Self-Improving** - Auto-captures troubleshooting knowledge
-- 🏗️ **Production Ready** - JUCE 8 integration with CMake build system
+- 🏗️ **Production Ready** - JUCE 9 integration with CMake build system
 
 ---
 

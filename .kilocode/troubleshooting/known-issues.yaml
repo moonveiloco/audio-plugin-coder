@@ -149,7 +149,7 @@ issues:
       - "gtk/gtk.h: No such file"
       - "fatal error: gtk"
       - "webkit2gtk installed but headers not found"
-    root_cause: "JUCE 8 has TWO separate WebView flags: NEEDS_WEBVIEW2 (Windows) and NEEDS_WEB_BROWSER (Linux). Plugin only sets NEEDS_WEBVIEW2=FALSE on Linux, never sets NEEDS_WEB_BROWSER=TRUE. Without it, JUCE doesn't link webkit2gtk/GTK pkgconfig target, so include paths never get added."
+    root_cause: "JUCE 9 has TWO separate WebView flags: NEEDS_WEBVIEW2 (Windows) and NEEDS_WEB_BROWSER (Linux). Plugin only sets NEEDS_WEBVIEW2=FALSE on Linux, never sets NEEDS_WEB_BROWSER=TRUE. Without it, JUCE doesn't link webkit2gtk/GTK pkgconfig target, so include paths never get added."
     resolution_status: solved
     resolution_file: resolutions/linux-webview-needs-web-browser.md
     frequency: 1

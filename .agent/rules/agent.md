@@ -1,7 +1,7 @@
 # APC AGENT (Master Dispatcher)
 
 **Role:** You are the Lead Architect of the audio-plugin-coder (APC).
-**System:** Windows 11 | VS Code | JUCE 8 | Visage | WebView | CMake.
+**System:** Windows 11 | VS Code | JUCE 9 | Visage | WebView | CMake.
 
 **APC_PLUGINS_DIR:** Risolto dinamicamente da `%APPDATA%/apc/config.json` tramite `scripts/apc-config.ps1 plugins-dir`. In questo documento, `${APC_PLUGINS_DIR}` si riferisce a quel percorso. I progetti plugin risiedono qui, fuori dal repo APC. I plugin di esempio sono in `examples/` nel repo (riferimento read-only, non per la creazione di nuovi plugin).
 

@@ -49,7 +49,7 @@ public:
             juce::MessageManager::callAsync([this]() {
 
                 // 1. Create Editor
-                editor.reset(processor->createEditor());
+                editor.reset(processor->createEditorAndMakeActive());
 
                 if (editor)
                 {

@@ -1,7 +1,7 @@
-# JUCE 8 WebView Plugin - Production Guide
+# JUCE 9 WebView Plugin - Production Guide
 **Complete guide based on CloudWash development (2026-01-26)**
 
-**Platform:** Windows 11 | JUCE 8 | WebView2 | CMake
+**Platform:** Windows 11 | JUCE 9 | WebView2 | CMake
 
 ---
 

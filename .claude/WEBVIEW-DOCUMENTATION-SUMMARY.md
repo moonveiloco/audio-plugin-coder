@@ -1,7 +1,7 @@
 # WebView Documentation Summary
 **Complete documentation created: 2026-01-26**
 
-**Purpose:** Guide for future AI developers working on JUCE 8 WebView plugins in APC system.
+**Purpose:** Guide for future AI developers working on JUCE 9 WebView plugins in APC system.
 
 ---
 
@@ -143,7 +143,7 @@
 2. **Knob Glitches** - Fixed (no CSS transitions)
 3. **Black Screen** - Documented (BinaryData solution)
 4. **Member Order** - Documented (crash prevention)
-5. **JUCE 8 API** - Documented (correct patterns)
+5. **JUCE 9 API** - Documented (correct patterns)
 
 ### Documented (Pending Implementation) ⚠️
 1. **Meter Connection** - Instructions provided, C++ implementation pending

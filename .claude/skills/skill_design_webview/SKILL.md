@@ -1,11 +1,11 @@
 ---
 name: juce-webview-windows
-description: Quick-start guide for building JUCE 8 audio plugins with WebView2 UIs on Windows. Covers essential setup, critical member ordering, and step-by-step implementation workflow.
+description: Quick-start guide for building JUCE 9 audio plugins with WebView2 UIs on Windows. Covers essential setup, critical member ordering, and step-by-step implementation workflow.
 ---
 
-# JUCE 8 WebView Plugin - Quick Start Guide
+# JUCE 9 WebView Plugin - Quick Start Guide
 
-**Platform:** Windows 11 | JUCE 8 | WebView2 | CMake
+**Platform:** Windows 11 | JUCE 9 | WebView2 | CMake
 
 ---
 
@@ -444,7 +444,7 @@ juce_add_binary_data(Plugin_WebUI
 
 For detailed technical information, see the reference documents:
 
-- **[Technical Details](reference/webview-technical-details.md)** - WebView2 internals, JUCE 8 changes, architecture
+- **[Technical Details](reference/webview-technical-details.md)** - WebView2 internals, JUCE 9 changes, architecture
 - **[Communication Guide](reference/webview-communication-guide.md)** - Frontend-backend events, native functions
 - **[Resource Providers](reference/webview-resource-providers.md)** - Detailed resource serving patterns
 - **[Parameter Synchronization](reference/webview-parameter-sync.md)** - Advanced parameter binding patterns
