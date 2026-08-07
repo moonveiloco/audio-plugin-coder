@@ -16,14 +16,18 @@
 # Import state management module
 . "$PSScriptRoot\..\scripts\state-management.ps1"
 
+# Resolve plugin dir from config (plugins live outside the repo)
+$PluginsDir = & "$PSScriptRoot\apc-config.ps1" plugins-dir
+$PluginPath = Join-Path $PluginsDir "[Name]"
+
 # Validate prerequisites
-if (-not (Test-PluginState -PluginPath "plugins\[Name]" -RequiredPhase "design_complete" -RequiredFiles @(".ideas/architecture.md", ".ideas/plan.md"))) {
+if (-not (Test-PluginState -PluginPath $PluginPath -RequiredPhase "design_complete" -RequiredFiles @(".ideas/architecture.md", ".ideas/plan.md"))) {
     Write-Error "Prerequisites not met. Complete design phase first."
     exit 1
 }
 
 # Check framework selection
-$state = Get-PluginState -PluginPath "plugins\[Name]"
+$state = Get-PluginState -PluginPath $PluginPath
 if ($state.ui_framework -eq "pending") {
     Write-Error "UI framework not selected. Cannot proceed with implementation."
     exit 1
@@ -697,19 +701,23 @@ After implementation complete:
 
 **Step 1: Validate JUCE/CMake setup**
 ```powershell
-# Import state management module
-. "$PSScriptRoot\..\scripts\state-management.ps1"
+# Resolve plugin dir + APC tools dir from config
+$PluginsDir   = & "$PSScriptRoot\apc-config.ps1" plugins-dir
+$PluginPath   = Join-Path $PluginsDir "[Name]"
+$ApcToolsDir  = & "$PSScriptRoot\apc-config.ps1" tools-dir
+if (-not $ApcToolsDir) { $ApcToolsDir = (Resolve-Path "$PSScriptRoot\..").Path }
 
 # Validate prerequisites using standardized function
-if (-not (Validate-PhasePrerequisites -PluginPath "plugins\[Name]" -CurrentPhase "code" -RequiredPhase "design_complete" -RequiredFiles @(".ideas/architecture.md", ".ideas/plan.md"))) {
+if (-not (Validate-PhasePrerequisites -PluginPath $PluginPath -CurrentPhase "code" -RequiredPhase "design_complete" -RequiredFiles @(".ideas/architecture.md", ".ideas/plan.md"))) {
     Write-Host "ERROR: Prerequisites not met. Complete design phase first." -ForegroundColor Red
     exit 1
 }
 
-# Check JUCE installation
-if (-not (Test-Path "C:\JUCE")) {
-    Write-Host "ERROR: JUCE not found at C:\JUCE" -ForegroundColor Red
-    Write-Host "Please install JUCE 8 and set up the project correctly" -ForegroundColor Yellow
+# Check JUCE in the APC repo's _tools/JUCE submodule (NOT C:\JUCE or ~/JUCE)
+$JuceDir = Join-Path $ApcToolsDir "_tools/JUCE"
+if (-not (Test-Path (Join-Path $JuceDir "CMakeLists.txt"))) {
+    Write-Host "ERROR: JUCE not found at $JuceDir" -ForegroundColor Red
+    Write-Host "Run: git -C `"$ApcToolsDir`" submodule update --init --recursive" -ForegroundColor Yellow
     exit 1
 }
 
@@ -720,15 +728,15 @@ if (-not (Get-Command cmake -ErrorAction SilentlyContinue)) {
     exit 1
 }
 
-# Validate project structure
-if (-not (Test-Path "CMakeLists.txt")) {
-    Write-Host "ERROR: CMakeLists.txt not found in project root" -ForegroundColor Red
+# Validate project structure (plugin CMakeLists is self-contained)
+if (-not (Test-Path (Join-Path $PluginPath "CMakeLists.txt"))) {
+    Write-Host "ERROR: CMakeLists.txt not found in $PluginPath" -ForegroundColor Red
     exit 1
 }
 
 # Validate canvas implementation for WebView framework
 if ($state.ui_framework -eq "webview") {
-    if (-not (Test-CanvasImplementation -PluginPath "plugins\[Name]")) {
+    if (-not (Test-CanvasImplementation -PluginPath $PluginPath)) {
         Write-Host "ERROR: Canvas implementation required for WebView framework" -ForegroundColor Red
         Write-Host "WebView plugins must use HTML5 Canvas API with JUCE frontend library" -ForegroundColor Yellow
         Write-Host "Please ensure Design/index.html uses canvas-based rendering" -ForegroundColor Yellow
@@ -861,7 +869,7 @@ void setStateInformation(const void* data, int sizeInBytes) override
 **Git commit after each phase:**
 ```powershell
 # Backup state before commit
-Backup-PluginState -PluginPath "plugins\[Name]"
+Backup-PluginState -PluginPath $PluginPath
 
 git add ${APC_PLUGINS_DIR}/[Name]/Source/
 git add ${APC_PLUGINS_DIR}/[Name]/.ideas/plan.md
@@ -877,7 +885,7 @@ Generated with Kilo Code"
 **For single-pass:**
 ```powershell
 # Backup state before final commit
-Backup-PluginState -PluginPath "plugins\[Name]"
+Backup-PluginState -PluginPath $PluginPath
 
 git commit -m "feat([Name]): Phase 4 CODE complete
 
@@ -891,7 +899,7 @@ Generated with Kilo Code"
 **Update state after implementation:**
 ```powershell
 # Mark implementation complete using standardized function
-Complete-Phase -PluginPath "plugins\[Name]" -Phase "code" -Updates @{
+Complete-Phase -PluginPath $PluginPath -Phase "code" -Updates @{
   "validation.code_complete" = $true
   "validation.tests_passed" = $false  # Will be set after testing
 }

@@ -20,13 +20,15 @@ Carica `.claude/skills/impl/SKILL.md`
 4. Integrazione parametri → UI
 5. Build e verifica
 
-## CMake JUCE 9
-`juce_add_plugin` flags invariati: `NEEDS_WEBVIEW2`, `NEEDS_WEB_BROWSER`.
-Non chiamare `juce_add_modules`.
-`JUCE_DIR = ~/JUCE` (JUCE 9) — leggere da env var.
+## CMake / JUCE
+- JUCE è un submodule APC in `_tools/JUCE` (JUCE 8.0.12). **Non** usare `~/JUCE` o JUCE 9.
+- I template plugin sono self-contained: bootstrap `APC_TOOLS_DIR` + `add_subdirectory(${APC_TOOLS_DIR}/_tools/JUCE)`.
+- Non passare `JUCE_DIR` come env var — il build script inietta `APC_TOOLS_DIR` (chiave config `tools_dir`).
+- `juce_add_plugin` flags: `NEEDS_WEBVIEW2` (Windows), `NEEDS_WEB_BROWSER` (Linux/macOS).
+- JUCE 8 ha rimosso `JuceHeader.h` auto-generato: i template chiamano `juce_generate_juce_header()` esplicitamente.
 
 ## Output
-- Plugin compilato in `build/`
+- Plugin compilato in `<plugins_dir>/[Name]/build/` (per-plugin, non nella root del repo)
 - `status.json` → `code_complete`
 
 ## Completamento
