@@ -983,9 +983,17 @@ for (int sample = 0; sample < numSamples; ++sample)
 
 ## 🐛 TROUBLESHOOTING
 
+> **Known-fix skills:** before guessing at a solution, check the `fix_*` skills —
+> they encode previously-solved real bugs with their exact root cause + fix.
+> Full list in `.claude/skills/README.md` (section "Skill fix"). Load the matching
+> one when the symptom hits its triggers.
+
 **Build errors:**
 - Verify JUCE module includes
 - Check parameter ID typos
+
+**UI WebView wrong size / vertical scroll (Linux Wayland fractional scaling):**
+- Load the `fix_windowsize` skill (`.claude/skills/fix_windowsize/SKILL.md`).
 
 **No audio output:**
 - Verify processBlock() called
