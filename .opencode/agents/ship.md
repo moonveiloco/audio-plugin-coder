@@ -12,7 +12,7 @@ Crea installer professionali multipiattaforma.
 - Tests superati
 
 ## Esecuzione
-Carica `.claude/skills/ship/SKILL.md`
+Carica `agents/skills/ship/SKILL.md`
 
 ## Workflow
 1. **Rileva ambiente**: Identifica OS e build locali

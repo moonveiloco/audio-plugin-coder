@@ -15,7 +15,7 @@ Crea mockup UI basati sul framework selezionato.
 - **Visage**: Genera scaffold Visage preview
 
 ## Esecuzione
-Carica `.claude/skills/design/SKILL.md`
+Carica `agents/skills/design/SKILL.md`
 Nessuna generazione di codice di produzione — solo iterazione creativa.
 
 ## Output

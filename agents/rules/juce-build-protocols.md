@@ -10,6 +10,7 @@
 ### B. Monorepo & Path Logic
 - **Root Context:** All build operations must happen from the Repository Root.
 - **Subdirectories:** NEVER run commands inside ${APC_PLUGINS_DIR}/[Name]/.
+- **JUCE Location (single source of truth):** JUCE 9.0.0 lives in the git submodule `_tools/JUCE`, resolved via `APC_TOOLS_DIR` (config key `tools_dir` from `~/.config/apc/config.json`, injected by the build scripts). **NEVER** use `~/JUCE`, `C:\JUCE` or external JUCE installations. Plugin templates bootstrap `APC_TOOLS_DIR` + `add_subdirectory(${APC_TOOLS_DIR}/_tools/JUCE)`.
 - **Environment (Windows):**
   - OS: **Windows 11**
   - Shell: **PowerShell**

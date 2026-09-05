@@ -18,7 +18,7 @@ Avvia il processo di ideazione per un nuovo plugin audio.
 Verifica che `${APC_PLUGINS_DIR}/[Name]` non esista già. Se esiste, usa `/resume`.
 
 ## Esecuzione
-Carica ed esegui la skill `.claude/skills/dream/SKILL.md`
+Carica ed esegui la skill `agents/skills/dream/SKILL.md`
 
 ## Output
 - `${APC_PLUGINS_DIR}/[Name]/.ideas/creative-brief.md`

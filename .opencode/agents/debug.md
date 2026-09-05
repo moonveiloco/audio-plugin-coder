@@ -10,7 +10,7 @@ Debugging autonomo con VS Code.
 - Implementation completata (`code_complete`) o test falliti (`test_failed`)
 
 ## Esecuzione
-Carica la skill `.claude/skills/debug/SKILL.md`
+Carica la skill `agents/skills/debug/SKILL.md`
 
 ## Responsabilità
 - Ispezione full codebase

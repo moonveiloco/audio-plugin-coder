@@ -11,7 +11,7 @@ Definisce l'architettura DSP e seleziona il framework UI.
 - `${APC_PLUGINS_DIR}/[Name]/.ideas/creative-brief.md` e `parameter-spec.md` esistenti
 
 ## Esecuzione
-Carica la skill `.claude/skills/plan/SKILL.md`
+Carica la skill `agents/skills/plan/SKILL.md`
 
 ## Decisione Critica
 Determina e imposta `ui_framework` in status.json:

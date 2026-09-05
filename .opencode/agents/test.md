@@ -10,7 +10,7 @@ Esegue validazione e test sul plugin.
 - Implementation completata o design completata
 
 ## Esecuzione
-Carica `.claude/skills/test/SKILL.md`
+Carica `agents/skills/test/SKILL.md`
 
 ## Test Effettuati
 - Build verification
