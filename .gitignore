@@ -1,11 +1,5 @@
 # --- APC IGNORES ---
 
-# plugin example folders (build artifacts / org code)
-examples/AngelGrain
-examples/gainknob
-examples/CloudWash/Org_Code
-examples/XENON
-
 # _tools folder
 _tools/DebugView/
 
