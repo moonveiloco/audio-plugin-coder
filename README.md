@@ -94,14 +94,16 @@ This script will:
 
 2. **Initialize your LLM agent:**
 
-For **Kilo**:
-```powershell
-# Workflows are automatically discovered from .agent/workflows/
-```
+Skill, rules and workflows live in [`agents/`](agents/README.md) (single source of truth). Each supported agent reads them through its own shell:
 
-For **Claude Code**:
-```powershell
-# The agent will discover workflows from .agent/workflows/
+- **Claude Code**: reads `CLAUDE.md` (imports `AGENTS.md` + `agents/rules/`), discovers skills from `.claude/skills/`
+- **opencode**: reads `AGENTS.md` + `opencode.jsonc`, discovers skills from `.claude/skills/`, phase agents selectable with TAB in the TUI
+- **Kilo Code**: reads `.kilocode/rules|skills|workflows/` (pointers to `agents/`)
+
+After editing anything under `agents/`, regenerate the shells with:
+
+```bash
+bash scripts/sync-agent-pointers.sh && bash scripts/validate-agent-config.sh
 ```
 
 3. **First Run Configuration:**
@@ -109,8 +111,7 @@ For **Claude Code**:
 When you start the AI agent for the first time (e.g., type `/dream MyReverb`), the agent will detect that APC is not yet configured and will guide you through a short setup:
 
 1. Choose a folder name for your plugins (e.g., `AudioPlugins` — will be created in your home directory)
-2. Specify where JUCE is installed (e.g., `~/JUCE`)
-3. The configuration is saved to `~/.config/apc/config.json` (Linux/macOS) or `%APPDATA%/apc/config.json` (Windows)
+2. The configuration is saved to `~/.config/apc/config.json` (Linux/macOS) or `%APPDATA%/apc/config.json` (Windows)
 
 You can also manually trigger setup at any time:
 ```
@@ -192,27 +193,24 @@ APC uses a unique State Management system (status.json) to track development acr
 
 ```
 audio-plugin-coder/
-├── .[Agent]/                    # AI agent configuration
-│   ├── workflows/               # Slash command orchestrators
-│   │   ├── dream.md
-│   │   ├── plan.md
-│   │   ├── design.md
-│   │   ├── impl.md
-│   │   └── ship.md
-│   ├── skills/                  # Domain knowledge modules
-│   │   ├── skill_ideation/
-│   │   ├── skill_planning/
-│   │   ├── skill_design/
-│   │   ├── skill_implementation/
-│   │   └── skill_packaging/
+├── AGENTS.md                    # Universal entry point for every coding agent
+├── CLAUDE.md                    # Claude Code entry (imports AGENTS.md + agents/rules/)
+├── opencode.jsonc               # opencode config (loads AGENTS.md + agents/rules/)
+├── agents/                      # ★ SINGLE SOURCE OF TRUTH (skill, rules, workflows)
+│   ├── rules/                   # System constraints (agent.md, naming, JUCE build protocols)
+│   ├── skills/                  # 12 skills with YAML frontmatter
+│   │   ├── dream/  plan/  design/  impl/  ship/  test/
+│   │   ├── debug/  setup/  testing/  troubleshooting/
+│   │   ├── fix_windowsize/  skill_design_webview/
+│   │   └── README.md            # Skills index
+│   ├── workflows/               # Phase orchestrators (/dream /plan /design ...)
 │   ├── guides/                  # Reference documentation
-│   │   └── state-management-guide.md
-│   ├── rules/                   # System constraints
-│   │   ├── agent.md
-│   │   └── file-naming-conventions.md
 │   └── troubleshooting/         # Auto-captured issues
 │       ├── known-issues.yaml
 │       └── resolutions/
+├── .claude/                     # Claude Code shell (pointers -> agents/)
+├── .kilocode/                   # Kilo Code shell (pointers -> agents/)
+├── .opencode/                   # opencode agents (TAB-select in TUI)
 ├── templates/                   # Plugin templates (consolidated)
 │   ├── visage/                  # Visage (C++) UI templates
 │   ├── webview/                 # WebView (HTML5) UI templates
@@ -220,12 +218,16 @@ audio-plugin-coder/
 │   ├── max-external/            # Max/MSP external templates
 │   └── status-template.json     # Plugin state template
 ├── docs/                        # Comprehensive documentation
-├── examples/                   # Read-only reference plugins (CloudWash, gnarly2, ...)
-├── scripts/                     # Build automation
+├── examples/                    # Read-only reference plugins (CloudWash, gnarly2, ...)
+├── scripts/                     # Build automation + agent config tooling
 │   ├── build-and-install.ps1    # Windows build script
-│   ├── build-and-install.sh     # macOS build script
+│   ├── build-and-install.sh     # macOS/Linux build script
 │   ├── state-management.ps1     # Windows state management
-│   ├── state-management.sh      # macOS state management
+│   ├── state-management.sh      # macOS/Linux state management
+│   ├── agent-homes.json         # Which agent shells exist (extensibility)
+│   ├── sync-agent-pointers.sh   # Regenerate agent shells from agents/
+│   ├── sync-agent-pointers.ps1  # Windows counterpart
+│   ├── validate-agent-config.sh # Contract tests for agent config
 │   └── installer/               # Platform-specific installers
 ```
 
@@ -300,7 +302,7 @@ APC includes an **auto-capture system** that learns from problems:
 4. **After 3 attempts** → Auto-creates issue entry
 5. **When solved** → Documents solution for future use
 
-**Location:** `.agent/troubleshooting/`
+**Location:** `agents/troubleshooting/`
 
 **Result:** The system gets smarter with every issue encountered!
 
@@ -313,9 +315,15 @@ APC works with any LLM-based coding agent that supports:
 
 **Tested with:**
 - ✅ Claude Code (Anthropic)
+- ✅ opencode
 - ✅ Kilo (kilo.ai)
 - [ ] Cursor
 - [ ] Others welcome!
+
+> **Agent config architecture:** skill, rules, workflows and the troubleshooting
+> knowledge base live in [`agents/`](agents/README.md). The hidden folders
+> (`.claude/`, `.kilocode/`) contain only generated pointers — add a new agent by
+> extending `scripts/agent-homes.json` and running `scripts/sync-agent-pointers.sh`.
 
 ## 🛠️ Technology Stack
 

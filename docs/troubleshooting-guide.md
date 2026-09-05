@@ -17,7 +17,7 @@ APC includes an auto-capture system that learns from problems. This guide covers
 ### Location
 
 ```
-.agent/troubleshooting/
+agents/troubleshooting/
 ├── known-issues.yaml           # Issue registry
 ├── _template.md                # Resolution template
 └── resolutions/                # Solution documents
@@ -87,7 +87,7 @@ Auto-capture triggers after:
 ```powershell
 # Generate unique issue ID
 $category = "build"  # or webview, packaging, etc.
-$existingIssues = (Get-Content .agent/troubleshooting/known-issues.yaml | 
+$existingIssues = (Get-Content agents/troubleshooting/known-issues.yaml | 
     Select-String -Pattern "id: $category-" | Measure-Object).Count
 $newId = "$category-$(($existingIssues + 1).ToString('000'))"
 
@@ -111,7 +111,7 @@ $newIssue = @"
 "@
 
 # Append to known-issues.yaml
-Add-Content -Path .agent/troubleshooting/known-issues.yaml -Value $newIssue
+Add-Content -Path agents/troubleshooting/known-issues.yaml -Value $newIssue
 ```
 
 ---
@@ -220,7 +220,7 @@ private:
 
 **Prevention:** Always declare members in order: Relays → WebView → Attachments.
 
-**See:** [webview-member-order-crash.md](.agent/troubleshooting/resolutions/webview-member-order-crash.md)
+**See:** [webview-member-order-crash.md](agents/troubleshooting/resolutions/webview-member-order-crash.md)
 
 ---
 
@@ -270,7 +270,7 @@ YourPluginEditor::YourPluginEditor(YourAudioProcessor& p)
 
 **Prevention:** Always create ALL parameter attachments BEFORE calling `addAndMakeVisible(webView)`.
 
-**See:** [webview-attachment-order-crash.md](.agent/troubleshooting/resolutions/webview-attachment-order-crash.md)
+**See:** [webview-attachment-order-crash.md](agents/troubleshooting/resolutions/webview-attachment-order-crash.md)
 
 ---
 
@@ -628,7 +628,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\build-and-install.ps1 -Plugin
 
 1. **Check known issues:**
    ```powershell
-   Get-Content .agent/troubleshooting/known-issues.yaml | Select-String "your error"
+   Get-Content agents/troubleshooting/known-issues.yaml | Select-String "your error"
    ```
 
 2. **Run validation:**
@@ -679,7 +679,7 @@ When reporting an issue:
 
 ## Related Documentation
 
-- [Known Issues](.agent/troubleshooting/known-issues.yaml) - Full issue database
+- [Known Issues](agents/troubleshooting/known-issues.yaml) - Full issue database
 - [WebView Framework](webview-framework.md) - WebView-specific troubleshooting
 - [Build System](build-system.md) - Build troubleshooting
 - [State Management](state-management-deep-dive.md) - State recovery

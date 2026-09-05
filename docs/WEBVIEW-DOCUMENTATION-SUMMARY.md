@@ -10,7 +10,7 @@
 ### **Primary Guides** (Start Here)
 
 #### 1. **WEBVIEW-PRODUCTION-GUIDE.md** ⭐⭐⭐
-**Location:** `.claude/skills/skill_design_webview/WEBVIEW-PRODUCTION-GUIDE.md`
+**Location:** `agents/skills/skill_design_webview/WEBVIEW-PRODUCTION-GUIDE.md`
 
 **Contents:**
 - ES6 modules issue (CRITICAL)
@@ -26,7 +26,7 @@
 ---
 
 #### 2. **KNOWN-ISSUES-AND-SOLUTIONS.md** ⭐⭐
-**Location:** `.claude/skills/skill_design_webview/KNOWN-ISSUES-AND-SOLUTIONS.md`
+**Location:** `agents/skills/skill_design_webview/KNOWN-ISSUES-AND-SOLUTIONS.md`
 
 **Contents:**
 - Quick reference for 8 documented issues
@@ -42,7 +42,7 @@
 ### **Troubleshooting Database**
 
 #### 3. **known-issues.yaml**
-**Location:** `.claude/troubleshooting/known-issues.yaml`
+**Location:** `agents/troubleshooting/known-issues.yaml`
 
 **New Entry Added:**
 ```yaml
@@ -60,7 +60,7 @@
 ---
 
 #### 4. **webview-es6-modules-fail.md** ⭐
-**Location:** `.claude/troubleshooting/resolutions/webview-es6-modules-fail.md`
+**Location:** `agents/troubleshooting/resolutions/webview-es6-modules-fail.md`
 
 **Contents:**
 - Detailed explanation of ES6 module issue
@@ -259,11 +259,11 @@ cp examples/CloudWash/Source/ui/public/index.html ${APC_PLUGINS_DIR}/YourPlugin/
 
 ### When Troubleshooting
 1. `KNOWN-ISSUES-AND-SOLUTIONS.md` (quick reference)
-2. `.claude/troubleshooting/known-issues.yaml` (search)
-3. `.claude/troubleshooting/resolutions/webview-*.md` (details)
+2. `agents/troubleshooting/known-issues.yaml` (search)
+3. `agents/troubleshooting/resolutions/webview-*.md` (details)
 
 ### Legacy Documentation (May Be Outdated)
-- `.claude/skills/skill_design_webview/SKILL.md` (old guide)
+- `agents/skills/skill_design_webview/SKILL.md` (old guide)
 - Use `WEBVIEW-PRODUCTION-GUIDE.md` instead
 
 ---

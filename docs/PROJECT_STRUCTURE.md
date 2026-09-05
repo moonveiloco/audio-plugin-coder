@@ -8,7 +8,7 @@ APC follows a monorepo architecture with clear separation between framework code
 
 ```
 audio-plugin-coder/
-├── .agent/              # AI agent configuration and skills
+├── agents/              # AI agent configuration and skills
 ├── _tools/                 # External dependencies (JUCE, pluginval)
 ├── build/                  # Build artifacts (gitignored)
 ├── dist/                   # Distribution packages (gitignored)
@@ -24,31 +24,34 @@ audio-plugin-coder/
 
 ## Core Directories
 
-### `.agent/` - AI Agent Configuration
+### `agents/` - AI Agent Configuration
 
-Contains all configuration, skills, and knowledge base for AI agents.
+**Single source of truth** for all agent configuration. The hidden folders
+(`.claude/`, `.kilocode/`) contain only generated pointers to these files —
+regenerate them with `scripts/sync-agent-pointers.sh|.ps1` (see `scripts/agent-homes.json`).
 
 ```
-.agent/
+agents/
 ├── guides/                 # Reference documentation
+│   ├── documentation-system.md
 │   └── state-management-guide.md
 ├── rules/                  # System constraints and protocols
-│   ├── agent.md            # Main agent rules
+│   ├── agent.md            # Main agent rules (Master Dispatcher)
 │   ├── file-naming-conventions.md
 │   └── juce-build-protocols.md
-├── skills/                 # Domain knowledge modules
-│   ├── skill_debug/
-│   ├── skill_design/
+├── skills/                 # Domain knowledge modules (frontmatter name == folder)
+│   ├── debug/
+│   ├── design/
+│   ├── dream/
+│   ├── fix_windowsize/
+│   ├── impl/
+│   ├── setup/
+│   ├── ship/
+│   ├── plan/
 │   ├── skill_design_webview/
-│   ├── skill_ideation/
-│   ├── skill_implementation/
-│   ├── skill_packaging/
-│   ├── skill_planning/
-│   ├── skill_testing/
-│   └── skill_troubleshooting/
-├── templates/              # Code templates
-│   ├── status-template.json
-│   └── webview/            # WebView plugin templates
+│   ├── test/
+│   ├── testing/
+│   └── troubleshooting/
 ├── troubleshooting/        # Auto-captured issues
 │   ├── known-issues.yaml
 │   └── resolutions/
@@ -65,10 +68,13 @@ Contains all configuration, skills, and knowledge base for AI agents.
     └── test.md
 ```
 
+Note: plugin code templates live at the repo root in `templates/`
+(`visage/`, `webview/`, `ffgl/`, `max-external/`, `status-template.json`).
+
 **Key Files:**
-- [`agent.md`](.agent/rules/agent.md) - Critical rules for AI agents
-- [`known-issues.yaml`](.agent/troubleshooting/known-issues.yaml) - Database of known issues
-- [`status-template.json`](.agent/templates/status-template.json) - Plugin state schema
+- [`agent.md`](agents/rules/agent.md) - Critical rules for AI agents
+- [`known-issues.yaml`](agents/troubleshooting/known-issues.yaml) - Database of known issues
+- [`status-template.json`](templates/status-template.json) - Plugin state schema
 
 ---
 
@@ -147,8 +153,11 @@ PowerShell scripts for building, testing, and packaging.
 scripts/
 ├── add-icon-to-exe.ps1
 ├── backup.ps1
+├── agent-homes.json           # Agent shells manifest (extensibility)
+├── sync-agent-pointers.sh     # Regenerate agent shells from agents/
+├── sync-agent-pointers.ps1    # Windows counterpart
+├── validate-agent-config.sh   # Contract tests for agent config
 ├── build-and-install.ps1      # Main build script
-├── copy-agent-folders.ps1
 ├── error-detection.ps1
 ├── list-folder-structure.ps1
 ├── pluginval-integration.ps1
@@ -396,4 +405,4 @@ _tools/pluginval
 - [State Management Guide](state-management-deep-dive.md) - Deep dive into state tracking
 - [Build System](build-system.md) - Detailed build documentation
 - [WebView Framework](webview-framework.md) - WebView-specific paths
-- [File Naming Conventions](.agent/rules/file-naming-conventions.md) - Complete naming rules
+- [File Naming Conventions](agents/rules/file-naming-conventions.md) - Complete naming rules

@@ -324,7 +324,7 @@ document.addEventListener('mouseup', () => {
 
 ### Priority 4: Add Pre-Implementation Check ⭐
 
-**In skill_implementation/SKILL.md:**
+**In impl/SKILL.md:**
 
 Before generating code, the AI should:
 1. Read `templates/webview/index.html.template`
@@ -381,7 +381,7 @@ Before generating code, the AI should:
 - [ ] Add parameter config template system
 - [ ] Update `skill_design_webview/SKILL.md` with bridge code requirements
 - [ ] Create `scripts/validate-webview-html.ps1`
-- [ ] Add pre-implementation check to skill_implementation
+- [ ] Add pre-implementation check to impl
 - [ ] Test with nf_gnarly plugin
 - [ ] Document in troubleshooting database
 - [ ] Update README with template usage

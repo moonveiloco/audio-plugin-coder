@@ -568,7 +568,7 @@ gh run download <run-id> --dir dist/github-artifacts
 .\scripts\validate-plugin-status.ps1 -PluginName MyPlugin
 
 # Check for known issues
-Get-Content .agent/troubleshooting/known-issues.yaml | Select-String "error pattern"
+Get-Content agents/troubleshooting/known-issues.yaml | Select-String "error pattern"
 
 # Debug
 /debug MyPlugin

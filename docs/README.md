@@ -44,17 +44,17 @@ New to APC? Start here:
 | Document | Description |
 |----------|-------------|
 | [Troubleshooting Guide](troubleshooting-guide.md) | Common issues and solutions |
-| [Known Issues](../.agent/troubleshooting/known-issues.yaml) | Database of known problems |
+| [Known Issues](../agents/troubleshooting/known-issues.yaml) | Database of known problems |
 
 ### Reference
 
 | Document | Location | Description |
 |----------|----------|-------------|
-| Agent Rules | [.agent/rules/agent.md](../.agent/rules/agent.md) | Critical rules for AI agents |
-| File Naming | [.agent/rules/file-naming-conventions.md](../.agent/rules/file-naming-conventions.md) | Naming conventions |
-| JUCE Protocols | [.agent/rules/juce-build-protocols.md](../.agent/rules/juce-build-protocols.md) | Build system rules |
-| State Guide | [.agent/guides/state-management-guide.md](../.agent/guides/state-management-guide.md) | State management guide |
-| WebView Templates | [.agent/templates/webview/](../.agent/templates/webview/) | Starter templates |
+| Agent Rules | [agents/rules/agent.md](../agents/rules/agent.md) | Critical rules for AI agents |
+| File Naming | [agents/rules/file-naming-conventions.md](../agents/rules/file-naming-conventions.md) | Naming conventions |
+| JUCE Protocols | [agents/rules/juce-build-protocols.md](../agents/rules/juce-build-protocols.md) | Build system rules |
+| State Guide | [agents/guides/state-management-guide.md](../agents/guides/state-management-guide.md) | State management guide |
+| WebView Templates | [templates/webview/](../templates/webview/) | Starter templates |
 
 ## The Five-Phase Workflow
 
@@ -137,7 +137,7 @@ Learn more: [WebView Framework Guide](webview-framework.md)
 
 ```
 audio-plugin-coder/
-├── .agent/              # AI agent configuration
+├── agents/              # AI agent configuration
 │   ├── skills/             # Domain knowledge
 │   ├── workflows/          # Slash commands
 │   ├── rules/              # System constraints
@@ -172,7 +172,7 @@ Learn more: [State Management Deep Dive](state-management-deep-dive.md)
 Having issues? Check these resources:
 
 1. **[Troubleshooting Guide](troubleshooting-guide.md)** - Common problems and solutions
-2. **[Known Issues](../.agent/troubleshooting/known-issues.yaml)** - Database of known problems
+2. **[Known Issues](../agents/troubleshooting/known-issues.yaml)** - Database of known problems
 3. **Validation Scripts:**
    ```powershell
    .\scripts\validate-plugin-status.ps1 -PluginName MyPlugin
