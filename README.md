@@ -97,7 +97,7 @@ This script will:
 Skill, rules and workflows live in [`agents/`](agents/README.md) (single source of truth). Each supported agent reads them through its own shell:
 
 - **Claude Code**: reads `CLAUDE.md` (imports `AGENTS.md` + `agents/rules/`), discovers skills from `.claude/skills/`
-- **opencode**: reads `AGENTS.md` + `opencode.jsonc`, discovers skills from `.claude/skills/`, phase agents selectable with TAB in the TUI
+- **opencode**: reads `AGENTS.md` + `opencode.jsonc`, invokes skills from `.claude/skills/` with `/`, orchestration via native commands (`/status` `/resume` `/new`), stock agents `plan`/`build` for mode switching
 - **Kilo Code**: reads `.kilocode/rules|skills|workflows/` (pointers to `agents/`)
 
 After editing anything under `agents/`, regenerate the shells with:
@@ -210,7 +210,7 @@ audio-plugin-coder/
 │       └── resolutions/
 ├── .claude/                     # Claude Code shell (pointers -> agents/)
 ├── .kilocode/                   # Kilo Code shell (pointers -> agents/)
-├── .opencode/                   # opencode agents (TAB-select in TUI)
+├── .opencode/commands/          # opencode native slash commands (/status /resume /new)
 ├── templates/                   # Plugin templates (consolidated)
 │   ├── visage/                  # Visage (C++) UI templates
 │   ├── webview/                 # WebView (HTML5) UI templates

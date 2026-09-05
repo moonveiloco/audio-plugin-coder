@@ -79,8 +79,8 @@ foreach ($scope in $Scopes.Keys) {
 
 # ---------- 5. puntatori risolti ----------
 $AgentRef = [regex]"agents/(?:skills/[\w.-]+/SKILL\.md|workflows/[\w.-]+\.md|rules/[\w.-]+\.md|troubleshooting/[\w./-]+|guides/[\w.-]+\.md)"
-foreach ($home in @(".claude", ".kilocode")) {
-    foreach ($sub in @("skills", "workflows", "rules")) {
+foreach ($home in @(".claude", ".kilocode", ".opencode")) {
+    foreach ($sub in @("skills", "workflows", "rules", "commands")) {
         $base = Join-Path $Root ($home + "\" + $sub)
         if (-not (Test-Path $base)) { continue }
         foreach ($f in (Get-ChildItem $base -Recurse -Filter "*.md")) {

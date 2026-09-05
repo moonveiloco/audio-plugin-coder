@@ -106,12 +106,12 @@ for scope_home, scope_dirs in home_scope.items():
 
 # ---------- 5. puntatori risolti ----------
 AGENT_REF = re.compile(r"agents/(?:skills/[\w.-]+/SKILL\.md|workflows/[\w.-]+\.md|rules/[\w.-]+\.md|troubleshooting/[\w./-]+|guides/[\w.-]+\.md)")
-home_dirs = [".claude", ".kilocode"]
+home_dirs = [".claude", ".kilocode", ".opencode"]
 pointer_count = 0
 for home in home_dirs:
     if not os.path.isdir(os.path.join(root, home)):
         continue
-    for sub in ("skills", "workflows", "rules"):
+    for sub in ("skills", "workflows", "rules", "commands"):
         base = os.path.join(root, home, sub)
         if not os.path.isdir(base):
             continue

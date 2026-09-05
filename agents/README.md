@@ -27,7 +27,7 @@ agents/
 | Agent | Rules | Skills | Workflows |
 |---|---|---|---|
 | Claude Code | `CLAUDE.md` → `@agents/rules/*.md` | `.claude/skills/<n>/SKILL.md` (puntatore) | `.claude/workflows/*.md` (puntatore) |
-| opencode | `AGENTS.md` + `instructions[]` in `opencode.jsonc` | `.claude/skills/` (discovery nativa dei puntatori) | `.opencode/agents/*.md` (TAB-select TUI) |
+| opencode | `AGENTS.md` + `instructions[]` in `opencode.jsonc` | `.claude/skills/` (discovery nativa dei puntatori) | `.opencode/commands/*.md` (`/status` `/resume` `/new`) + agent stock `plan`/`build` |
 | Kilo Code | `.kilocode/rules/*.md` (puntatore) | `.kilocode/skills/<n>/SKILL.md` (puntatore) | `.kilocode/workflows/*.md` (puntatore) |
 
 ## Aggiungere una nuova skill
