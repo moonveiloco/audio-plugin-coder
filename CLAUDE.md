@@ -8,6 +8,8 @@
 
 @agents/rules/juce-build-protocols.md
 
+@agents/rules/gin-integration.md
+
 ## Note Claude Code
 
 - Le skill sono in `.claude/skills/<nome>/SKILL.md` (puntatori generati a
