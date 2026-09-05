@@ -92,6 +92,10 @@ if [[ -f "$STATUS_JSON" ]] && command -v jq &>/dev/null; then
     fi
 fi
 
+# --- APPLY SUBMODULE PATCHES (e.g. JIVE JUCE 9 compat) ---
+# Idempotent: safe to run on every build. See agents/rules/jive-integration.md.
+bash "$SCRIPT_DIR/apply-submodule-patches.sh"
+
 # --- 1. CONFIGURE ---
 echo "Configuring build..."
 VISAGE_FLAG=""

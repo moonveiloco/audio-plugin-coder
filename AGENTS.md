@@ -22,6 +22,7 @@ Prima di rispondere a QUALSIASI messaggio (comando, saluto, domanda) verifica ch
 - **Build:** SEMPRE `scripts/build-and-install.sh|.ps1 -PluginName <Name>` — mai `cmake`/`msbuild`/`xcodebuild` manuale, mai copie manuali di VST3/AU.
 - **CMake plugin:** NON chiamare `juce_add_modules` (duplicate target error); flag WebView: `NEEDS_WEBVIEW2` (Windows) / `NEEDS_WEB_BROWSER` (Linux/macOS).
 - **Gin:** submodule `_tools/Gin` pinnato (no tag upstream). Limitazioni vincolanti (C++20, API instabili, incompatibile UI Visage) in `agents/rules/gin-integration.md` — leggerle PRIMA di usarlo.
+- **JIVE:** submodule `_tools/JIVE` pinnato + **patch JUCE 9 obbligatoria** (`patches/JIVE/`, applicata automaticamente da build-and-install). UI dichiarativa = terzo percorso UI (né Visage né WebView): limitazioni in `agents/rules/jive-integration.md` — leggerle PRIMA di usarlo.
 - **OS protocol:** Bash/Zsh su macOS/Linux (script `.sh`), PowerShell su Windows (script `.ps1`). Mai mescolare le shell.
 
 ## 🗺️ Fasi (state machine su `status.json`)
@@ -48,3 +49,4 @@ Quando l'agente supporta il caricamento di file di regole, includi:
 - `agents/rules/file-naming-conventions.md` — struttura e versioning dei progetti plugin
 - `agents/rules/juce-build-protocols.md` — vincoli build JUCE 9/CMake/CI
 - `agents/rules/gin-integration.md` — limitazioni e protocollo d'uso Gin ( submodule `_tools/Gin`)
+- `agents/rules/jive-integration.md` — limitazioni, patch JUCE 9 e protocollo d'uso JIVE (submodule `_tools/JIVE`)

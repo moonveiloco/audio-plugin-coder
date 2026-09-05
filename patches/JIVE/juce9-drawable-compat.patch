@@ -1,0 +1,83 @@
+diff --git i/jive_layouts/layout/gui-items/content/jive_Image.cpp w/jive_layouts/layout/gui-items/content/jive_Image.cpp
+index 4fe6245..fa3dcdc 100644
+--- i/jive_layouts/layout/gui-items/content/jive_Image.cpp
++++ w/jive_layouts/layout/gui-items/content/jive_Image.cpp
+@@ -70,7 +70,7 @@ namespace jive
+         {
+             childComponent->setBounds(getComponent()->getLocalBounds());
+ 
+-            if (auto* drawable = dynamic_cast<juce::Drawable*>(childComponent.get()))
++            if (auto* drawable = dynamic_cast<juce::DrawableComponent*>(childComponent.get()))
+             {
+                 drawable->setTransformToFit(getComponent()->getLocalBounds().toFloat(),
+                                             placement.get());
+@@ -100,7 +100,7 @@ namespace jive
+ 
+                 childComponent->setBounds(getComponent()->getLocalBounds());
+ 
+-                if (auto* drawable = dynamic_cast<juce::Drawable*>(childComponent.get()))
++                if (auto* drawable = dynamic_cast<juce::DrawableComponent*>(childComponent.get()))
+                 {
+                     drawable->setTransformToFit(getComponent()->getLocalBounds().toFloat(),
+                                                 placement.get());
+@@ -135,8 +135,8 @@ namespace jive
+ 
+     float Image::calculateRequiredWidth() const
+     {
+-        if (auto* drawable = dynamic_cast<juce::Drawable*>(childComponent.get()))
+-            return calculateRequiredWidth(*drawable);
++        if (auto* drawable = dynamic_cast<juce::DrawableComponent*>(childComponent.get()))
++            return calculateRequiredWidth(drawable->getDrawable());
+ 
+         if (auto* image = dynamic_cast<juce::ImageComponent*>(childComponent.get()))
+             return calculateRequiredWidth(*image);
+@@ -165,8 +165,8 @@ namespace jive
+ 
+     float Image::calculateRequiredHeight() const
+     {
+-        if (auto* drawable = dynamic_cast<juce::Drawable*>(childComponent.get()))
+-            return calculateRequiredHeight(*drawable);
++        if (auto* drawable = dynamic_cast<juce::DrawableComponent*>(childComponent.get()))
++            return calculateRequiredHeight(drawable->getDrawable());
+ 
+         if (auto* image = dynamic_cast<juce::ImageComponent*>(childComponent.get()))
+             return calculateRequiredHeight(*image);
+@@ -184,10 +184,9 @@ namespace jive
+         return imageComponent;
+     }
+ 
+-    std::unique_ptr<juce::Drawable> Image::createSVG(const juce::String& svgString) const
++    std::unique_ptr<juce::Component> Image::createSVG(const juce::String& svgString) const
+     {
+-        const auto xml = juce::parseXML(svgString);
+-        return juce::Drawable::createFromSVG(*xml);
++        return juce::OwningDrawableComponent::createFromSVGString(svgString);
+     }
+ 
+     std::unique_ptr<juce::Component> Image::createChildComponent() const
+diff --git i/jive_layouts/layout/gui-items/content/jive_Image.h w/jive_layouts/layout/gui-items/content/jive_Image.h
+index 5a6dc03..ed1e220 100644
+--- i/jive_layouts/layout/gui-items/content/jive_Image.h
++++ w/jive_layouts/layout/gui-items/content/jive_Image.h
+@@ -35,7 +35,7 @@ namespace jive
+         float calculateRequiredHeight() const;
+ 
+         std::unique_ptr<juce::ImageComponent> createImageComponent(const juce::Image& image) const;
+-        std::unique_ptr<juce::Drawable> createSVG(const juce::String& svgString) const;
++        std::unique_ptr<juce::Component> createSVG(const juce::String& svgString) const;
+         std::unique_ptr<juce::Component> createChildComponent() const;
+         void setChildComponent(std::unique_ptr<juce::Component> newComponent);
+ 
+diff --git i/jive_layouts/utilities/jive_Drawable.cpp w/jive_layouts/utilities/jive_Drawable.cpp
+index 8653851..1665833 100644
+--- i/jive_layouts/utilities/jive_Drawable.cpp
++++ w/jive_layouts/utilities/jive_Drawable.cpp
+@@ -74,7 +74,7 @@ namespace jive
+         if (svgSource.isEmpty())
+             svgSource = svgElement.toString();
+ 
+-        drawable = juce::Drawable::createFromSVG(svgElement);
++        drawable = juce::Drawable::createFromSVGString(svgElement.toString());
+         return *this;
+     }
+ 

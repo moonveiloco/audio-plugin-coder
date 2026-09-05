@@ -73,6 +73,10 @@ if ($state.current_phase -ne "code_complete" -and -not $SkipTests) {
     Write-Warning "Plugin implementation not marked as complete. Use -SkipTests to override."
 }
 
+# Apply submodule patches (e.g. JIVE JUCE 9 compat). Idempotent: safe on every build.
+# See agents/rules/jive-integration.md.
+& (Join-Path $PSScriptRoot "apply-submodule-patches.ps1")
+
 # 1. Configure with error monitoring
 Write-Host "Configuring build..." -ForegroundColor Yellow
 $visageFlag = if ($UseVisage) { "-DAPC_ENABLE_VISAGE:BOOL=ON" } else { "" }

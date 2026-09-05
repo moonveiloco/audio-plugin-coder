@@ -14,6 +14,7 @@ agents/
 │   ├── agent.md            # Master Dispatcher: FIRST RUN GATE, phase gating, OS protocol
 │   ├── file-naming-conventions.md
 │   ├── gin-integration.md        # FigBug/Gin submodule: limitazioni + protocollo d'uso
+│   ├── jive-integration.md       # ImJimmi/JIVE submodule: patch JUCE 9 + protocollo d'uso
 │   └── juce-build-protocols.md   # JUCE 9 = _tools/JUCE submodule via APC_TOOLS_DIR
 ├── skills/                 # 12 skill con frontmatter YAML (name == nome cartella)
 ├── workflows/              # Orchestrazioni delle fasi (/dream /plan /design /impl /test /ship ...)

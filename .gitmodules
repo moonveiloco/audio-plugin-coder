@@ -10,3 +10,7 @@
 [submodule "_tools/Gin"]
 	path = _tools/Gin
 	url = https://github.com/FigBug/Gin.git
+[submodule "_tools/JIVE"]
+	path = _tools/JIVE
+	url = https://github.com/ImJimmi/JIVE.git
+	ignore = dirty
