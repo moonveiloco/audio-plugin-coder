@@ -1,11 +1,11 @@
 # Audio Plugin Coder (APC)
-![Audio Plugin Coder Logo](https://github.com/Noizefield/audio-plugin-coder/blob/main/assets/APC_Logo.gif)
+![Audio Plugin Coder Logo](https://github.com/moonveiloco/audio-plugin-coder/blob/main/assets/APC_Logo.gif)
 
 > AI-powered open-source framework for vibe-coding audio plugins from concept to shipped product
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![JUCE](https://img.shields.io/badge/JUCE-9.0-blue.svg)](https://juce.com/)
-[![Platform](https://img.shields.io/badge/Platform-Windows%2011%20%7C%20macOS-0078D4.svg)](https://github.com/Noizefield/audio-plugin-coder)
+[![Platform](https://img.shields.io/badge/Platform-Windows%2011%20%7C%20macOS-0078D4.svg)](https://github.com/moonveiloco/audio-plugin-coder)
 [![Sponsor](https://img.shields.io/badge/Sponsor-Project-pink.svg?style=social&logo=heart)](https://github.com/sponsors/Noizefield) 
 
 ## About Audio Plugin Coder 
@@ -49,34 +49,24 @@ Instead of manually juggling DSP architecture, UI frameworks, build systems, sta
 
 ### One-command setup
 
-The fastest way to get started — paste this into any terminal:
+No npm, no Node.js — just Git. Paste this into any terminal:
 
-```bash
-npx github:Noizefield/audio-plugin-coder
-```
-
-This will clone the repo, check your tools, and print exactly what to do next for your platform (Windows, macOS, or Linux). Requires [Node.js 18+](https://nodejs.org) and [Git](https://git-scm.com).
-
-> Always pulls the latest version directly from GitHub — no install, no package manager.
-
----
-
-### Manual setup
-
-If you prefer to clone manually:
-
-**Windows:**
+**Windows (PowerShell):**
 ```powershell
-git clone --recurse-submodules https://github.com/Noizefield/audio-plugin-coder.git
+git clone --recurse-submodules https://github.com/moonveiloco/audio-plugin-coder.git
 cd audio-plugin-coder
 ```
 
 **macOS / Linux:**
 ```bash
-git clone --recurse-submodules https://github.com/Noizefield/audio-plugin-coder.git
+git clone --recurse-submodules https://github.com/moonveiloco/audio-plugin-coder.git
 cd audio-plugin-coder
 bash scripts/system-check.sh   # verify your environment
 ```
+
+> `--recurse-submodules` is mandatory: it pulls the JUCE 9 framework into `_tools/JUCE`. Without it the framework is missing and `/setup` will fail.
+
+Then open the project in your AI coding agent and run `/setup` — it will ask where your plugins should live, verify the tools, and save `~/.config/apc/config.json`. Afterwards start your first plugin with `/dream MyPlugin`.
 
 ### Prerequisites
 
@@ -86,7 +76,7 @@ bash scripts/system-check.sh   # verify your environment
 
 **Linux:** CMake 3.22+, GCC/Clang, Git
 
-**All platforms:** An LLM coding agent (Claude Code, Antigravity, Kilo, Cursor)
+**All platforms:** An LLM coding agent (Claude Code, Kilo, opencode)
 
 ### Bridge Templates (FFGL & Max/MSP)
 
@@ -386,7 +376,7 @@ If APC saves you time, helps you learn JUCE, or helps you ship a plugin, please 
 
 ## 🤝 Contributing & Community
 
-Contributions are welcome! Join our [GitHub Discussions](https://github.com/Noizefield/audio-plugin-coder/discussions) to connect with the community.
+Contributions are welcome! Join our [GitHub Discussions](https://github.com/moonveiloco/audio-plugin-coder/discussions) to connect with the community.
 
 - **Add Skills:** Create new domain knowledge modules
 - **Test Platforms:** Verify compatibility with different AI agents

@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- **npx one-command installer** (`scripts/install.js`, `package.json`)
+  - APC is agent configuration + templates: there is nothing to build or install via npm, so the npx wrapper only added a Node.js requirement, a double clone (wrapper repo → real repo) and stale "next steps" that drifted from the actual `/setup` flow.
+  - Quick Start is now a plain `git clone --recurse-submodules` (see README) — Git only, no Node.js prerequisite.
+- **Upstream URL redirects** — README clone links now point to the project's active repository (`moonveiloco/audio-plugin-coder`) instead of `Noizefield/audio-plugin-coder`.
+
 ### Changed
 
 - **JUCE 9 migration** - Updated the JUCE submodule from v8.0.12 to **v9.0.0**.

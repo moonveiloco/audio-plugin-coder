@@ -129,7 +129,7 @@ Get help with errors, bugs, and technical issues.
 2. **Set Up Your Environment**
    ```powershell
    # Clone with submodules
-   git clone --recursive https://github.com/Noizefield/audio-plugin-coder.git
+   git clone --recursive https://github.com/moonveiloco/audio-plugin-coder.git
    cd audio-plugin-coder
    ```
 

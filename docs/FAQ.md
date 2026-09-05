@@ -41,11 +41,11 @@ APC is designed for:
 
 ```powershell
 # Clone with submodules
-git clone --recursive https://github.com/Noizefield/audio-plugin-coder.git
+git clone --recursive https://github.com/moonveiloco/audio-plugin-coder.git
 cd audio-plugin-coder
 
 # Or clone and initialize separately
-git clone https://github.com/Noizefield/audio-plugin-coder.git
+git clone https://github.com/moonveiloco/audio-plugin-coder.git
 cd audio-plugin-coder
 git submodule update --init --recursive
 ```

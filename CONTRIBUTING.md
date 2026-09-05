@@ -10,8 +10,8 @@ We welcome contributions from the community! Whether you're fixing bugs, adding 
 
 ### Ways to Contribute
 
-1. **Report Issues** - Found a bug? [Open an issue](https://github.com/Noizefield/audio-plugin-coder/issues) with details.
-2. **Suggest Features** - Have an idea? [Start a discussion](https://github.com/Noizefield/audio-plugin-coder/discussions).
+1. **Report Issues** - Found a bug? [Open an issue](https://github.com/moonveiloco/audio-plugin-coder/issues) with details.
+2. **Suggest Features** - Have an idea? [Start a discussion](https://github.com/moonveiloco/audio-plugin-coder/discussions).
 3. **Submit Pull Requests** - Fix bugs or add features.
 4. **Improve Documentation** - Help make APC easier to use.
 5. **Test and Provide Feedback** - Try APC and share your experience.
@@ -20,7 +20,7 @@ We welcome contributions from the community! Whether you're fixing bugs, adding 
 
 1. Clone the repository with submodules:
    ```bash
-   git clone --recursive https://github.com/Noizefield/audio-plugin-coder.git
+   git clone --recursive https://github.com/moonveiloco/audio-plugin-coder.git
    cd audio-plugin-coder
    ```
 
@@ -98,7 +98,7 @@ By contributing, you agree that your contributions will be licensed under the sa
 
 ## Contact
 
-- **Issues:** [GitHub Issues](https://github.com/Noizefield/audio-plugin-coder/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/Noizefield/audio-plugin-coder/discussions)
+- **Issues:** [GitHub Issues](https://github.com/moonveiloco/audio-plugin-coder/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/moonveiloco/audio-plugin-coder/discussions)
 
 Thank you for contributing to Audio Plugin Coder! 🎵
