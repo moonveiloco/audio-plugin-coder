@@ -54,12 +54,58 @@ Uso runtime tipico (editor di plugin):
 
 ```cpp
 item = jive::Interpreter{}.interpret(R"JIVE(
-<Window width="480" height="320" background-colour="0xff1a1a1a">
+<Window width="480" height="320" display="flex"
+        style='{"background": "#1a1a1a", "foreground": "#e8ecf1"}'>
     <Text text="Hello" font-size="18" justify="centred"/>
 </Window>
 )JIVE", processorPointer);
 setContentNonOwned(item->getComponent().get(), true);   // item: std::unique_ptr<jive::GuiItem>, tenere vivo
 ```
+
+### Sintassi markup verificata sul pin `89d5787` (⚠️ gli esempi upstream e i vecchi documenti usano proprietà non più valide)
+
+| Regola | Dettaglio |
+|---|---|
+| **`display` obbligatoria** | Ogni elemento con figli da disporre DEVE avere `display="flex"|"grid"|"block"`: senza, i figli vengono **distrutti in silenzio** (`decorateWithHereditaryBehaviour` ritorna nullptr) |
+| **Stili in `style` (JSON)** | Colori/font/bordi vivono nell'attributo `style='{"background": "#16181D", "font-size": 11}'` (stringa JSON → `jive::Object` via `parseJSON`); **NON** esistono attributi inline tipo `background-colour`/`colour` |
+| **Colori** | `#RRGGBB` (o `rgb()`, nomi CSS). **NON** `0xAARRGGBB` (silenziosamente trasparente) |
+| **Nomi style validi** | `background`, `foreground`, `border`, `border-radius`, `font-family`, `font-size`, `font-stretch`, `font-style`, `font-weight`, `letter-spacing`, `text-decoration` |
+| **Nessun `Panel`** | Tipi validi: `Button, Checkbox, ComboBox, Component, Editor, Hyperlink, Image, Knob, Label, ProgressBar, Slider, Spinner, svg, Text, Window` — per un contenitore generico usare `Component` |
+| **`gap` solo per grid** | `gap`/`grid-template-*` esistono solo con `display="grid"`; per flex usare padding/margini |
+| **Slider** | `value`, `min`, `max`, `interval`, `orientation="vertical"|"horizontal"` |
+| **ComboBox** | Figli `<Item text="..."/>` + attributo `selected="<indice>"` |
+| **Flex items** | `flex-grow`, `flex-shrink`, `flex-basis`, `align-self` sui figli di un flex container |
+| **Stile ereditato** | Il `style` del Window si propaga ai discendenti; selettori `#id` dentro lo `style` per targeting |
+
+**Preview senza build del plugin:** usare il tool `jive-preview` (sezione sotto) — errore tipico senza questi vincoli: rendering vuoto/trasparente senza alcun warning.
+
+## 🔍 Preview tool: `jive-preview` (APC)
+
+Standalone GUI app in `tools/jive-preview/` (progetto CMake separato, bootstrap JUCE+JIVE da `APC_TOOLS_DIR`; **non** tocca la build dei plugin):
+
+```bash
+# Interactive con live-reload (aggiorna a ogni salvataggio del file):
+bash scripts/preview-jive.sh <PluginName> [v<N>]
+
+# Headless (render off-screen a PNG, ideale per CI e verifica agenti):
+build/jive-preview/jive-preview_artefacts/jive-preview Design/v1-layout.xml --screenshot out.png
+```
+
+- Modalità default: interpreta il markup e apre una finestra host nativa (close→quit), live-reload con poll mtime ~500 ms.
+- `--screenshot out.png`: **nessuna finestra** (immune dal tiling del WM), render deterministico alla size del markup.
+- `--raw`: interpreta il markup *intatto* (jive gestisce la propria `Window`); utile per debug, ma la chiusura via titlebar non esce (limitazione upstream `closeButtonPressed`).
+- Il tool riscrive la root `<Window>` → `<Component>` e fornisce la finestra host: evita il window-in-window e dà chiusura pulita.
+- Load fallito durante il live-reload → mantiene l'ultima UI valida e logga su stderr.
+
+**Build standalone (cache in `build/jive-preview/`, non influisce sui plugin):**
+```bash
+cmake -S tools/jive-preview -B build/jive-preview -DAPC_TOOLS_DIR="$(pwd)" -DCMAKE_BUILD_TYPE=Release
+cmake --build build/jive-preview --config Release --target jive-preview
+```
+
+**Limitazione nota (Hyprland/tiling):** le finestre JUCE sotto tiling WM vengono ridimensionate dal WM ignorando la size richiesta — per il preview interattivo affiancare/floattare la finestra; per verifiche deterministiche usare `--screenshot`.
+
+**Nota runners upstream:** `JIVE_BUILD_DEMO_RUNNER`/`JIVE_BUILD_TEST_RUNNER` non sono utilizzabili dentro un progetto che include già JUCE (il demo-runner tenta CPM con un secondo JUCE) — da qui il tool dedicato.
 
 **Nota `--fresh`:** `build-and-install.sh|.ps1` configura con `--fresh`, quindi la working tree del submodule deve essere **già patchata** quando parte la configure — è esattamente ciò che fa l'hook (idempotente) inserito prima della configure.
 

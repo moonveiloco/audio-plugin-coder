@@ -16,7 +16,7 @@ $Script:StateSchema = @{
         'validation', 'framework_selection', 'error_recovery'
     )
     phases = @('ideation', 'plan', 'design', 'code', 'ship', 'complete')
-    frameworks = @('visage', 'webview', 'pending')
+    frameworks = @('visage', 'webview', 'jive', 'pending')
     validation_fields = @(
         'creative_brief_exists', 'parameter_spec_exists', 'architecture_defined',
         'ui_framework_selected', 'design_complete', 'code_complete', 

@@ -353,6 +353,22 @@ If yes, generate:
 
 These files are **preview-only** and will be refined during `/impl`.
 
+### If `ui_framework == jive`
+**Do NOT generate HTML or Visage scaffolds.** JIVE is a dedicated declarative-UI path (see `agents/rules/jive-integration.md` — read the "Sintassi markup verificata" table BEFORE writing markup: `style` JSON attribute, mandatory `display`, `#RRGGBB` colours, no `Panel` type, `gap` grid-only).
+
+Generate:
+- `${APC_PLUGINS_DIR}/[Name]/Design/v1-ui-spec.md` + `v1-style-guide.md` (as usual)
+- `${APC_PLUGINS_DIR}/[Name]/Design/v1-layout.xml` — the **JIVE markup mockup** (the preview artifact; element `id`s MUST match the parameter IDs from `parameter-spec.md`)
+
+Preview (opt-in, no build of the plugin required):
+```
+bash scripts/preview-jive.sh [Name]        # interactive window with live-reload
+# headless deterministic render:
+build/jive-preview/jive-preview_artefacts/jive-preview ${APC_PLUGINS_DIR}/[Name]/Design/v1-layout.xml --screenshot preview.png
+```
+
+Iterate by editing `v1-layout.xml` — the preview window live-reloads on save (or re-run `--screenshot`).
+
 **Present decision menu:**
 ```
 🎨 Design specification v1 created
@@ -361,13 +377,14 @@ Files:
    - ${APC_PLUGINS_DIR}/[Name]/Design/v1-style-guide.md
    - WebView: ${APC_PLUGINS_DIR}/[Name]/Design/v1-test.html (preview in browser)
    - Visage: Source/VisageControls.h + PluginEditor.* (preview via preview-design.ps1)
+   - JIVE: Design/v1-layout.xml (preview via scripts/preview-jive.sh or --screenshot)
 
 ⚠️ STOP HERE - Do NOT create Source/ files yet!
 What would you like to do?
 1. Iterate - Refine layout or style (creates v2)
 2  Implement - Generate production code in Source/
 3. Save as template - Add to design library
-4. Preview - WebView: open v1-test.html in browser; Visage: run preview-design.ps1
+4. Preview - WebView: open v1-test.html in browser; Visage: run preview-design.ps1; JIVE: run preview-jive.sh
 Choose (1-4): _
 ```
 

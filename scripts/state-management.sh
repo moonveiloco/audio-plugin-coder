@@ -11,7 +11,7 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # --- SCHEMA CONSTANTS ---
 STATE_PHASES=("ideation" "plan" "design" "code" "ship" "complete")
-STATE_FRAMEWORKS=("visage" "webview" "pending")
+STATE_FRAMEWORKS=("visage" "webview" "jive" "pending")
 STATE_REQUIRED_FIELDS=("plugin_name" "version" "current_phase" "ui_framework" "complexity_score" "created_at" "last_modified" "phase_history" "validation" "framework_selection" "error_recovery")
 STATE_VALIDATION_FIELDS=("creative_brief_exists" "parameter_spec_exists" "architecture_defined" "ui_framework_selected" "design_complete" "code_complete" "tests_passed" "ship_ready")
 
