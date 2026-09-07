@@ -182,12 +182,17 @@ if ! $NO_INSTALL; then
     echo "Installing plugins..."
 
     # Find and install VST3
-    VST3_BUNDLE="$(find "$BUILD_DIR" -name "${PLUGIN_NAME}.vst3" -type d | head -1)"
+    # -iname: JUCE names artifacts after PRODUCT_NAME, which may differ in
+    # case from the plugin/target name on case-sensitive filesystems.
+    VST3_BUNDLE="$(find "$BUILD_DIR" -iname "${PLUGIN_NAME}.vst3" -type d | head -1)"
     if [[ -n "$VST3_BUNDLE" ]]; then
+        # Preserve the found bundle's actual name (never rename on install:
+        # DAWs identify VST3 by bundle name matching the module description).
+        VST3_ARTIFACT_NAME="$(basename "$VST3_BUNDLE")"
         if $IS_MACOS; then
-            VST3_DEST="$HOME/Library/Audio/Plug-Ins/VST3/${PLUGIN_NAME}.vst3"
+            VST3_DEST="$HOME/Library/Audio/Plug-Ins/VST3/${VST3_ARTIFACT_NAME}"
         else
-            VST3_DEST="$HOME/.vst3/${PLUGIN_NAME}.vst3"
+            VST3_DEST="$HOME/.vst3/${VST3_ARTIFACT_NAME}"
         fi
         if [[ -d "$VST3_DEST" ]]; then
             rm -rf "$VST3_DEST"
@@ -201,9 +206,9 @@ if ! $NO_INSTALL; then
 
     if $IS_MACOS; then
         # Find and install AU
-        AU_BUNDLE="$(find "$BUILD_DIR" -name "${PLUGIN_NAME}.component" -type d 2>/dev/null | head -1 || true)"
+        AU_BUNDLE="$(find "$BUILD_DIR" -iname "${PLUGIN_NAME}.component" -type d 2>/dev/null | head -1 || true)"
         if [[ -n "$AU_BUNDLE" ]]; then
-            AU_DEST="$HOME/Library/Audio/Plug-Ins/Components/${PLUGIN_NAME}.component"
+            AU_DEST="$HOME/Library/Audio/Plug-Ins/Components/$(basename "$AU_BUNDLE")"
             if [[ -d "$AU_DEST" ]]; then
                 rm -rf "$AU_DEST"
             fi
@@ -212,7 +217,7 @@ if ! $NO_INSTALL; then
         fi
 
         # Report Standalone location
-        STANDALONE_APP="$(find "$BUILD_DIR" -name "${PLUGIN_NAME}.app" -type d 2>/dev/null | head -1 || true)"
+        STANDALONE_APP="$(find "$BUILD_DIR" -iname "${PLUGIN_NAME}.app" -type d 2>/dev/null | head -1 || true)"
         if [[ -n "$STANDALONE_APP" ]]; then
             echo "STANDALONE built at: $STANDALONE_APP"
             echo "Tip: Copy to /Applications/ if desired."
@@ -230,8 +235,8 @@ STAGE_DIR="$PLUGIN_DIR/build"
 rm -rf "$STAGE_DIR/VST3" "$STAGE_DIR/AU" "$STAGE_DIR/Standalone" "$STAGE_DIR/LV2"
 mkdir -p "$STAGE_DIR/VST3" "$STAGE_DIR/AU" "$STAGE_DIR/Standalone"
 
-# VST3
-VST3_SRC="$(find "$BUILD_DIR" -path "*artefacts/Release/VST3/${PLUGIN_NAME}.vst3" -type d 2>/dev/null | head -1 || true)"
+# VST3 (-iname: artifact named after PRODUCT_NAME, see install section)
+VST3_SRC="$(find "$BUILD_DIR" -iname "${PLUGIN_NAME}.vst3" -type d 2>/dev/null | head -1 || true)"
 if [[ -n "$VST3_SRC" ]]; then
     cp -R "$VST3_SRC" "$STAGE_DIR/VST3/"
     STAGED_COUNT=$((STAGED_COUNT + 1))
@@ -240,7 +245,7 @@ fi
 
 # AU (macOS only)
 if $IS_MACOS; then
-    AU_SRC="$(find "$BUILD_DIR" -path "*artefacts/Release/AU/${PLUGIN_NAME}.component" -type d 2>/dev/null | head -1 || true)"
+    AU_SRC="$(find "$BUILD_DIR" -iname "${PLUGIN_NAME}.component" -type d 2>/dev/null | head -1 || true)"
     if [[ -n "$AU_SRC" ]]; then
         cp -R "$AU_SRC" "$STAGE_DIR/AU/"
         STAGED_COUNT=$((STAGED_COUNT + 1))
@@ -251,9 +256,12 @@ fi
 # Standalone (macOS: .app bundle; Linux: executable ELF)
 SA_SRC=""
 if $IS_MACOS; then
-    SA_SRC="$(find "$BUILD_DIR" -path "*artefacts/Release/Standalone/${PLUGIN_NAME}.app" -type d 2>/dev/null | head -1 || true)"
+    SA_SRC="$(find "$BUILD_DIR" -iname "${PLUGIN_NAME}.app" -type d 2>/dev/null | head -1 || true)"
 else
-    SA_SRC="$(find "$BUILD_DIR" -path "*artefacts/Release/Standalone/${PLUGIN_NAME}" -type f -executable 2>/dev/null | head -1 || true)"
+    # -ipath (GNU find): path context is REQUIRED here — the VST3 bundle
+    # contains an executable named after PRODUCT_NAME too; -iname alone
+    # could match it instead of the Standalone ELF.
+    SA_SRC="$(find "$BUILD_DIR" -ipath "*artefacts/Release/Standalone/${PLUGIN_NAME}" -type f -executable 2>/dev/null | head -1 || true)"
 fi
 if [[ -n "$SA_SRC" ]]; then
     cp -R "$SA_SRC" "$STAGE_DIR/Standalone/"
@@ -262,7 +270,7 @@ if [[ -n "$SA_SRC" ]]; then
 fi
 
 # LV2 (Linux)
-LV2_SRC="$(find "$BUILD_DIR" -path "*artefacts/Release/LV2/${PLUGIN_NAME}.lv2" -type d 2>/dev/null | head -1 || true)"
+LV2_SRC="$(find "$BUILD_DIR" -iname "${PLUGIN_NAME}.lv2" -type d 2>/dev/null | head -1 || true)"
 if [[ -n "$LV2_SRC" ]]; then
     mkdir -p "$STAGE_DIR/LV2"
     cp -R "$LV2_SRC" "$STAGE_DIR/LV2/"
