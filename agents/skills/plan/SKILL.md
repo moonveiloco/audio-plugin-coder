@@ -208,7 +208,7 @@ Complete-Phase -PluginPath "plugins\[Name]" -Phase "plan" -Updates @{
   "plugin_name": "[Name]",
   "version": "v0.0.0",
   "current_phase": "plan_complete",
-  "ui_framework": "[visage/webview]",
+  "ui_framework": "[visage/webview/jive]",
   "complexity_score": [1-10],
   "created_at": "2026-01-04T20:20:00Z",
   "last_modified": "2026-01-04T20:20:00Z",
@@ -221,7 +221,7 @@ Complete-Phase -PluginPath "plugins\[Name]" -Phase "plan" -Updates @{
     {
       "phase": "plan_complete",
       "completed_at": "2026-01-04T20:20:00Z",
-      "framework_selected": "[visage/webview]"
+      "framework_selected": "[visage/webview/jive]"
     }
   ],
   "validation": {
@@ -235,7 +235,7 @@ Complete-Phase -PluginPath "plugins\[Name]" -Phase "plan" -Updates @{
     "ship_ready": false
   },
   "framework_selection": {
-    "decision": "[visage/webview]",
+    "decision": "[visage/webview/jive]",
     "rationale": "[Framework choice explanation]",
     "implementation_strategy": "phased"
   },

@@ -5,7 +5,7 @@
     and re-interprets it on every change (live reload).
 
     Usage:
-        jive-preview <file.xml> [--width N] [--height N]
+        jive-preview <file.xml> [--width N] [--height N] [--screenshot out.png] [--raw] [--laf <name>]
 
     Notes:
         - The markup root <Window> is rewritten to <Component> before
@@ -16,11 +16,19 @@
           via CLI flags.
         - A failed re-load (mid-save parse error, bad property, ...) keeps
           the last good UI on screen and reports the problem on stderr.
+        - --laf <name> applies a design-library LookAndFeel (widget chrome,
+          which JIVE markup cannot style). Compiled in only when the header
+          exists in ${APC_TOOLS_DIR}/design_library/JIVE/<name>-style dirs;
+          currently: "modnetic" (JIVE/modnetic-amber/ModneticLookAndFeel.h).
 */
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
 #include <jive_layouts/jive_layouts.h>
+
+#if JIVE_PREVIEW_HAS_MODNETIC_LAF
+    #include "ModneticLookAndFeel.h"
+#endif
 
 
 namespace
@@ -40,6 +48,7 @@ namespace
         int width = 0;
         int height = 0;
         bool raw = false;
+        juce::String laf;
     };
 
     [[nodiscard]] juce::File resolvePath(const juce::String& raw)
@@ -86,6 +95,10 @@ namespace
             {
                 spec.screenshotOut = juce::File::getCurrentWorkingDirectory().getChildFile(args[++i]);
             }
+            else if (token == "--laf" && i + 1 < args.size())
+            {
+                spec.laf = args[++i];
+            }
             else if (!token.startsWith("-") && spec.file == juce::File{})
             {
                 spec.file = resolvePath(token);
@@ -100,9 +113,10 @@ namespace
 
     [[nodiscard]] juce::String usageText()
     {
-        return "Usage: jive-preview <file.xml> [--width N] [--height N] [--screenshot out.png] [--raw]\n"
+        return "Usage: jive-preview <file.xml> [--width N] [--height N] [--screenshot out.png] [--raw] [--laf <name>]\n"
                "Renders a JIVE XML markup file and live-reloads it on change.\n"
-               "--screenshot renders off-screen once to out.png and exits (headless/CI friendly).\n";
+               "--screenshot renders off-screen once to out.png and exits (headless/CI friendly).\n"
+               "--laf <name> applies a design-library LookAndFeel (currently: modnetic).\n";
     }
 
     // Extracts window size / title from the markup root and rewrites the
@@ -170,6 +184,8 @@ public:
             return;
         }
 
+        applyLookAndFeel(*spec);
+
         host = std::make_unique<HostWindow>();
         currentSpec = *spec;
 
@@ -195,6 +211,8 @@ public:
         stopTimer();
         currentItem = nullptr;
         host = nullptr;
+        juce::LookAndFeel::setDefaultLookAndFeel(nullptr);
+        designLaf = nullptr;
     }
 
     void timerCallback() final
@@ -214,6 +232,31 @@ public:
     }
 
 private:
+    // Applies a design-library LookAndFeel before any component is created
+    // (widget chrome is not stylable from JIVE markup). The L&F must outlive
+    // every component, hence the app-lifetime unique_ptr.
+    void applyLookAndFeel(const Spec& spec)
+    {
+        if (spec.laf.isEmpty())
+            return;
+
+        if (spec.laf != "modnetic")
+        {
+            std::cerr << "jive-preview: unknown --laf '" << spec.laf
+                      << "' (available: modnetic) — using default look\n";
+            return;
+        }
+
+      #if JIVE_PREVIEW_HAS_MODNETIC_LAF
+        designLaf = std::make_unique<ModneticLookAndFeel>();
+        juce::LookAndFeel::setDefaultLookAndFeel(designLaf.get());
+        std::cerr << "jive-preview: using ModneticLookAndFeel\n";
+      #else
+        std::cerr << "jive-preview: --laf modnetic requested but the design header"
+                     " was not compiled in (missing design_library/JIVE/modnetic-amber)\n";
+      #endif
+    }
+
     class HostWindow final : public juce::DocumentWindow
     {
     public:
@@ -400,6 +443,7 @@ private:
     jive::Interpreter interpreter;
     std::unique_ptr<jive::GuiItem> currentItem;
     std::unique_ptr<HostWindow> host;
+    std::unique_ptr<juce::LookAndFeel> designLaf;
     juce::Time lastModified;
     Spec currentSpec;
     juce::String lastError;

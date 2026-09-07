@@ -73,7 +73,8 @@ setContentNonOwned(item->getComponent().get(), true);   // item: std::unique_ptr
 | **No `Panel`** | Valid types: `Button, Checkbox, ComboBox, Component, Editor, Hyperlink, Image, Knob, Label, ProgressBar, Slider, Spinner, svg, Text, Window` — use `Component` for a generic container |
 | **`gap` only for grid** | `gap`/`grid-template-*` exist only with `display="grid"`; use padding/margins for flex |
 | **Slider** | `value`, `min`, `max`, `interval`, `orientation="vertical"\|"horizontal"` |
-| **ComboBox** | Children `<Item text="..."/>` + `selected="<index>"` attribute |
+| **ComboBox** | Children `<Option text="..."/>` (attrs: `selected`, `enabled`) and section headings `<Header text="..."/>` + `selected="<index>"` attribute |
+| **Widget text invisible** | On pin `89d5787` the `text` attr of `Button`/`Hyperlink` sets only the accessible title (`setTitle`), `Label` ignores it, `Checkbox` has no decorator: **visible text requires a `<Text>` child** (`Text`/`Image`/`svg` are `isContent()` and attach inside any widget). Keep the `text` attr for a11y. See `troubleshooting/resolutions/ui-001-jive-widget-text.md` |
 | **Flex items** | `flex-grow`, `flex-shrink`, `flex-basis`, `align-self` on children of a flex container |
 | **Inherited style** | The Window `style` propagates to descendants; `#id` selectors inside the `style` for targeting |
 
@@ -89,6 +90,11 @@ bash scripts/preview-jive.sh <PluginName> [v<N>]
 
 # Headless (render offscreen to PNG, ideal for CI and agent verification):
 _tools/jive-preview/build/jive-preview_artefacts/Release/jive-preview Design/v1-layout.xml --screenshot out.png
+
+# With a design-library LookAndFeel (widget chrome is not stylable from markup):
+# the L&F is compiled in only when its header exists in the repo.
+_tools/jive-preview/build/jive-preview_artefacts/Release/jive-preview Design/v1-layout.xml --laf modnetic --screenshot out.png
+APC_JIVE_PREVIEW_ARGS="--laf modnetic" bash scripts/preview-jive.sh <PluginName> [v<N>]
 ```
 
 - Default mode: interprets the markup and opens a native host window (close→quit), live-reload with ~500 ms mtime polling.

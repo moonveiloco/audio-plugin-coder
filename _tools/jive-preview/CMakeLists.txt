@@ -32,6 +32,16 @@ target_sources(jive-preview
         Source/Main.cpp
 )
 
+# Design-library LookAndFeels: compiled in when present in the repo, selected
+# at runtime via `--laf <name>`. Single source of truth stays in the design
+# folder (no copies inside the tool).
+set(APC_DESIGN_JIVE_DIR "${APC_TOOLS_DIR}/design_library/JIVE")
+
+if(EXISTS "${APC_DESIGN_JIVE_DIR}/modnetic-amber/ModneticLookAndFeel.h")
+    target_include_directories(jive-preview PRIVATE "${APC_DESIGN_JIVE_DIR}/modnetic-amber")
+    target_compile_definitions(jive-preview PRIVATE JIVE_PREVIEW_HAS_MODNETIC_LAF=1)
+endif()
+
 target_compile_definitions(jive-preview
     PRIVATE
         JIVE_GUI_ITEMS_HAVE_STYLE_SHEETS=1

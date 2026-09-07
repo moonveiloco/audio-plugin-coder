@@ -293,3 +293,24 @@ issues:
     attempts_before_resolution: 4
     prevention: "After prepare(): set filter coefficients, set gain to 1.0, init SmoothedValues with setCurrentAndTargetValue()"
     critical_fix: "*filter.state = *Coefficients::makeLowPass(); gain.setGainLinear(1.0f); smoothed.setCurrentAndTargetValue(value)"
+  - id: ui-001
+    title: "[Auto] JIVE widget text invisible (Button/Checkbox/Hyperlink/Label render empty)"
+    category: ui
+    severity: high
+    symptoms:
+      - "JIVE Button/Checkbox/Hyperlink/Label show as empty boxes"
+      - "text=\"...\" attribute on JIVE widgets produces no visible label"
+      - "Text children of knobs render fine but widget labels do not"
+    error_patterns:
+      - "jive button text invisible"
+      - "jive checkbox empty"
+      - "jive hyperlink invisible"
+      - "jive label empty"
+    root_cause: "On pin 89d5787, jive::Button applies the markup 'text' attr via juce::Component::setTitle() (accessible title only) - TextButton draws getButtonText() which stays empty. Label decorator never applies 'text' (only border-width); Hyperlink inherits the same Button behaviour. Fix: visible text requires a <Text> child (Text/Image/svg are isContent()==true, inserted into any parent per jive_Interpreter.cpp:302)."
+    resolution_status: solved
+    resolution_file: resolutions/ui-001-jive-widget-text.md
+    frequency: 1
+    last_occurred: 2026-09-07
+    attempts_before_resolution: 1
+    prevention: "In JIVE markup ALWAYS give Button/Checkbox/Hyperlink/Label a <Text> child for visible text; keep the text attr for accessibility only."
+    critical_fix: "<Button width=\"80\" height=\"26\" display=\"flex\" align-items=\"centre\" justify-content=\"centre\"><Text text=\"OK\"/></Button>"
