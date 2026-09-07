@@ -3,6 +3,6 @@ name: debug
 description: "Autonomous Debugging Instructions for Visual Studio Code: for [plugin]."
 ---
 
-# Skill: debug (puntatore)
+# Skill: debug (pointer)
 
-Carica ed esegui **esattamente** `agents/skills/debug/SKILL.md` (single source of truth). Non improvisare il contenuto della skill.
+Load and run **exactly** `agents/skills/debug/SKILL.md` (single source of truth). Do not improvise the skill content.

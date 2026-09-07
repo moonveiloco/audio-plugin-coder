@@ -2,4 +2,4 @@
 description: "PHASE 3: Design - Create UI mockups based on selected framework"
 ---
 
-Carica ed esegui **esattamente** `agents/workflows/design.md` (single source of truth). Non improvisare il contenuto del workflow.
+Load and run **exactly** `agents/workflows/design.md` (single source of truth). Do not improvise the workflow content.

@@ -1,7 +1,7 @@
 ---
-description: "APC: mostra stato e prossimo passo del plugin"
+description: "APC: shows plugin status and next step"
 ---
-Carica ed esegui **esattamente** `agents/workflows/status.md` (single source of truth).
-Se il nome plugin non è indicato in $ARGUMENTS, chiedilo all'utente prima di procedere.
+Load and run **exactly** `agents/workflows/status.md` (single source of truth).
+If the plugin name is not given in $ARGUMENTS, ask the user before proceeding.
 
 Plugin: $ARGUMENTS

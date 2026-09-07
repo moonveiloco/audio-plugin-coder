@@ -1,67 +1,67 @@
 # Gin Integration Protocol (FigBug/Gin)
 
-**Libreria:** [FigBug/Gin](https://github.com/FigBug/Gin) — "a few extras for JUCE" (parametri con modulazione, ModMatrix, componenti UI synth, DSP).
-**Posizione:** submodule `_tools/Gin`, pinnato (Gin **non pubblica tag/release** — `master` è il canale stable; il pin al commit garantisce riproducibilità).
-**Licenza:** BSD-3-Clause. **Prerequisiti:** C++20, CMake 3.15+. **Compatibilità:** CI di Gin testa contro `develop` di JUCE (9.x).
+**Library:** [FigBug/Gin](https://github.com/FigBug/Gin) — "a few extras for JUCE" (parameters with modulation, ModMatrix, synth UI components, DSP).
+**Location:** submodule `_tools/Gin`, pinned (Gin **publishes no tags/releases** — `master` is the stable channel; pinning to a commit guarantees reproducibility).
+**License:** BSD-3-Clause. **Prerequisites:** C++20, CMake 3.15+. **Compatibility:** Gin's CI tests against JUCE `develop` (9.x).
 
 ---
 
-## ✅ A cosa serve (perché è stato integrato)
+## ✅ What it is for (why it was integrated)
 
-| Modulo | Valore |
+| Module | Value |
 |---|---|
-| `gin_plugin` | `gin::Processor`, parametri con modulazione/smoothing, ModMatrix, patch browser |
-| `gin_dsp` | Wavetable oscillators band-limited, `BandLimitedLookupTables`, DelayLine, AudioFifo, Perlin noise |
-| `gin_gui` / `gin_graphics` | Knob, ADSR, LFO, MSEG editor, layout JSON (solo UI JUCE-native) |
-| `gin` (core) | Utilities comuni richieste dagli altri moduli |
+| `gin_plugin` | `gin::Processor`, parameters with modulation/smoothing, ModMatrix, patch browser |
+| `gin_dsp` | Band-limited wavetable oscillators, `BandLimitedLookupTables`, DelayLine, AudioFifo, Perlin noise |
+| `gin_gui` / `gin_graphics` | Knob, ADSR, LFO, MSEG editor, JSON layout (JUCE-native UI only) |
+| `gin` (core) | Common utilities required by the other modules |
 
-Linkare **solo i moduli necessari** — gli altri 9 (`gin_3d`, `gin_controllers`, `gin_location`, `gin_metadata`, `gin_network`, `gin_simd`, `gin_svg`, `gin_webp`, …) aggiungono dipendenze e tempi di build.
+Link **only the modules you need** — the other 9 (`gin_3d`, `gin_controllers`, `gin_location`, `gin_metadata`, `gin_network`, `gin_simd`, `gin_svg`, `gin_webp`, …) add dependencies and build time.
 
 ---
 
-## ⚠️ LIMITAZIONI NOTE (leggere PRIMA di scegliere Gin)
+## ⚠️ KNOWN LIMITATIONS (read BEFORE choosing Gin)
 
-Questi punti sono **vincolanti**, non suggestioni. Verificarli in fase `/plan` e annotare la decisione in `.ideas/architecture.md`.
+These points are **binding**, not suggestions. Verify them during `/plan` and record the decision in `.ideas/architecture.md`.
 
-| # | Limitazione | Impatto | Mitigazione obbligatoria |
+| # | Limitation | Impact | Mandatory mitigation |
 |---|---|---|---|
-| 1 | **Richiede C++20** | I template APC non impostano `CMAKE_CXX_STANDARD` | Aggiungere `set(CMAKE_CXX_STANDARD 20)` nel CMake del plugin prima di aggiungere Gin |
-| 2 | **API instabili** | Breaking changes frequenti (es. `textFunction` → `ConversionFunction`, wavetable +6 dB) — vedi `BREAKING_CHANGES.md` nel repo Gin | **Mai** aggiornare il pin senza leggere `_tools/Gin/BREAKING_CHANGES.md`; mai passare a `master` mobile |
-| 3 | **`gin::Processor` diverge dal pattern APC** | Vuole essere base class al posto di `juce::AudioProcessor` dei template | Decisione architetturale da esplicitare in `/plan`; non mescolare `gin::Processor` e parametri JUCE vanilla nello stesso plugin |
-| 4 | **Widget gin = `juce::Component`** | **Inutilizzabili sul percorso Visage (PATH A)**: il protocollo Visage vieta componenti JUCE per la UI | Su PATH A usare solo `gin_dsp` + parametri `gin_plugin` come layer backend; UI resta 100% Visage |
-| 5 | **Moduli con dipendenze piattaforma** | `gin_network`→curl, `gin_location`→mappe, `gin_webp`→codec | Non linkarli se non necessari; su Linux verificare le dipendenze di sistema prima del build |
-| 6 | **Tempo di build / binario** | I moduli Gin compilano per intero | Linkare il set minimo (di solito `gin_plugin` + `gin_dsp`) |
+| 1 | **Requires C++20** | The APC templates do not set `CMAKE_CXX_STANDARD` | Add `set(CMAKE_CXX_STANDARD 20)` to the plugin CMake before adding Gin |
+| 2 | **Unstable API** | Frequent breaking changes (e.g. `textFunction` → `ConversionFunction`, wavetable +6 dB) — see `BREAKING_CHANGES.md` in the Gin repo | **Never** update the pin without reading `_tools/Gin/BREAKING_CHANGES.md`; never switch to a moving `master` |
+| 3 | **`gin::Processor` diverges from the APC pattern** | It wants to be the base class instead of the templates' `juce::AudioProcessor` | Architectural decision to be made explicit in `/plan`; do not mix `gin::Processor` and vanilla JUCE parameters in the same plugin |
+| 4 | **Gin widgets = `juce::Component`** | **Unusable on the Visage path (PATH A)**: the Visage protocol forbids JUCE components for the UI | On PATH A use only `gin_dsp` + `gin_plugin` parameters as a backend layer; the UI stays 100% Visage |
+| 5 | **Modules with platform dependencies** | `gin_network`→curl, `gin_location`→maps, `gin_webp`→codec | Do not link them unless needed; on Linux verify the system dependencies before building |
+| 6 | **Build time / binary size** | The Gin modules compile in full | Link the minimal set (usually `gin_plugin` + `gin_dsp`) |
 
 ---
 
-## 🔧 Protocollo d'uso (CMake)
+## 🔧 Usage protocol (CMake)
 
-Nel `CMakeLists.txt` del plugin, **dopo** il bootstrap JUCE:
+In the plugin `CMakeLists.txt` **after** the JUCE bootstrap:
 
 ```cmake
-# Gin (dopo add_subdirectory di JUCE)
+# Gin (after add_subdirectory of JUCE)
 set(CMAKE_CXX_STANDARD 20)
 add_subdirectory("${APC_TOOLS_DIR}/_tools/Gin/modules" "${CMAKE_BINARY_DIR}/_tools/Gin/modules")
 
 target_link_libraries({PLUGIN_NAME} PRIVATE
     gin          # core
-    gin_plugin   # parametri + ModMatrix
-    # gin_dsp / gin_gui solo se effettivamente usati
+    gin_plugin   # parameters + ModMatrix
+    # gin_dsp / gin_gui only if actually used
 )
 ```
 
-**Regole hard:**
+**Hard rules:**
 
-1. Aggiungere **SOLO** `${APC_TOOLS_DIR}/_tools/Gin/modules` — **MAI** la root di Gin (aggiungerebbe esempi/unit test e si aspetta un checkout `juce/` locale inesistente).
-2. Il `juce_add_module()` dei moduli gin è eseguito dal CMake **di Gin** (una sola volta) — rispetta la regola APC "mai `juce_add_modules` manuale nel plugin": nessun duplicate target.
-3. Usare il pattern out-of-tree con binary dir esplicita (come per JUCE nel template).
+1. Add **ONLY** `${APC_TOOLS_DIR}/_tools/Gin/modules` — **NEVER** the Gin root (it would add examples/unit tests and expects a local `juce/` checkout that doesn't exist).
+2. The `juce_add_module()` of the gin modules is executed by the **Gin** CMake (once) — it respects the APC rule "never manual `juce_add_modules` in the plugin": no duplicate targets.
+3. Use the out-of-tree pattern with an explicit binary dir (as for JUCE in the template).
 
 ---
 
-## 🔄 Protocollo di aggiornamento del pin
+## 🔄 Pin update protocol
 
-1. Leggere `_tools/Gin/BREAKING_CHANGES.md` upstream e valutare l'impatto sui plugin esistenti.
+1. Read the upstream `_tools/Gin/BREAKING_CHANGES.md` and assess the impact on existing plugins.
 2. `cd _tools/Gin && git fetch && git checkout <commit> && cd ../..`
 3. `git add _tools/Gin && git commit -m "chore(tools): update Gin pin to <sha>"`
-4. Build + test di un plugin che usa Gin (`scripts/build-and-install.sh <Name>`) prima di considerare l'aggiornamento valido.
-5. Aggiornare la riga "pinnato a" in cima a questo file.
+4. Build + test a plugin that uses Gin (`scripts/build-and-install.sh <Name>`) before considering the update valid.
+5. Update the "pinned to" line at the top of this file.

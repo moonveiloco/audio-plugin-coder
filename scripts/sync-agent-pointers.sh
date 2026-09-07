@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# sync-agent-pointers.sh — rigenera le case nascoste degli agent partendo da agents/
-# (single source of truth). Le case contengono SOLO puntatori: mai modificare i file
-# puntatore a mano — modifica agents/ e rilancia questo script.
+# sync-agent-pointers.sh — regenerates the agent hidden homes from agents/
+# (single source of truth). The homes contain ONLY pointers: never edit the
+# pointer files by hand — edit agents/ and re-run this script.
 #
 # Usage:
-#   bash scripts/sync-agent-pointers.sh            # rigenera i puntatori
-#   bash scripts/sync-agent-pointers.sh --dry-run  # mostra cosa farebbe, non scrive
+#   bash scripts/sync-agent-pointers.sh            # regenerates the pointers
+#   bash scripts/sync-agent-pointers.sh --dry-run  # shows what it would do, without writing
 #
-# Configurazione case: scripts/agent-homes.json
+# Home configuration: scripts/agent-homes.json
 
 set -euo pipefail
 
@@ -18,7 +18,7 @@ DRY_RUN=0
 [[ "${1:-}" == "--dry-run" ]] && DRY_RUN=1
 
 if [[ ! -f "$MANIFEST" ]]; then
-    echo "ERRORE: manifest non trovato: $MANIFEST" >&2
+    echo "ERROR: manifest not found: $MANIFEST" >&2
     exit 1
 fi
 
@@ -36,7 +36,7 @@ with open(manifest_path, encoding="utf-8") as f:
 
 canonical = os.path.join(root, manifest["canonical_dir"])
 if not os.path.isdir(canonical):
-    print(f"ERRORE: cartella canonica mancante: {canonical}", file=sys.stderr)
+    print(f"ERROR: canonical folder missing: {canonical}", file=sys.stderr)
     sys.exit(1)
 
 
@@ -93,9 +93,9 @@ for home in manifest["homes"]:
             desc = fm.get("description", "")
             body = (
                 f"---\nname: {name}\ndescription: {yaml_quote(desc)}\n---\n\n"
-                f"# Skill: {name} (puntatore)\n\n"
-                f"Carica ed esegui **esattamente** `agents/skills/{s}/SKILL.md` "
-                f"(single source of truth). Non improvisare il contenuto della skill.\n"
+                f"# Skill: {name} (pointer)\n\n"
+                f"Load and run **exactly** `agents/skills/{s}/SKILL.md` "
+                f"(single source of truth). Do not improvise the skill content.\n"
             )
             print(f"  skill: {home['dir']}/skills/{s}/SKILL.md")
             if not dry:
@@ -109,8 +109,8 @@ for home in manifest["homes"]:
             desc = fm.get("description", "")
             body = (
                 f"---\ndescription: {yaml_quote(desc)}\n---\n\n"
-                f"Carica ed esegui **esattamente** `agents/workflows/{wf}` "
-                f"(single source of truth). Non improvisare il contenuto del workflow.\n"
+                f"Load and run **exactly** `agents/workflows/{wf}` "
+                f"(single source of truth). Do not improvise the workflow content.\n"
             )
             print(f"  workflow: {home['dir']}/workflows/{wf}")
             if not dry:
@@ -121,13 +121,13 @@ for home in manifest["homes"]:
         wipe(rdir)
         for rf in rules:
             body = (
-                f"# {rf} (puntatore)\n\n"
-                f"**Single source of truth:** leggi e segui `agents/rules/{rf}` "
-                f"prima di procedere con qualsiasi operazione.\n"
+                f"# {rf} (pointer)\n\n"
+                f"**Single source of truth:** read and follow `agents/rules/{rf}` "
+                f"before proceeding with any operation.\n"
             )
             print(f"  rule: {home['dir']}/rules/{rf}")
             if not dry:
                 write(os.path.join(rdir, rf), body)
 
-print("DRY RUN (nessun file scritto)" if dry else "OK")
+print("DRY RUN (no file written)" if dry else "OK")
 PYEOF

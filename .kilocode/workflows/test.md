@@ -2,4 +2,4 @@
 description: "Run tests on the plugin"
 ---
 
-Carica ed esegui **esattamente** `agents/workflows/test.md` (single source of truth). Non improvisare il contenuto del workflow.
+Load and run **exactly** `agents/workflows/test.md` (single source of truth). Do not improvise the workflow content.

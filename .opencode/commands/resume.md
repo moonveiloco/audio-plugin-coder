@@ -1,7 +1,7 @@
 ---
-description: "APC: riprende lo sviluppo del plugin dalla fase corrente"
+description: "APC: resumes plugin development from the current phase"
 ---
-Carica ed esegui **esattamente** `agents/workflows/resume.md` (single source of truth).
-Se il nome plugin non è indicato in $ARGUMENTS, chiedilo all'utente prima di procedere.
+Load and run **exactly** `agents/workflows/resume.md` (single source of truth).
+If the plugin name is not given in $ARGUMENTS, ask the user before proceeding.
 
 Plugin: $ARGUMENTS

@@ -1,44 +1,44 @@
 # JIVE Integration Protocol (ImJimmi/JIVE)
 
-**Libreria:** [ImJimmi/JIVE](https://github.com/ImJimmi/JIVE) — UI dichiarativa per JUCE ispirata al web: markup ValueTree/XML (stile HTML) + style sheets via `juce::var` (stile CSS).
-**Posizione:** submodule `_tools/JIVE`, pinnato a `main` @ `89d5787` (2026-06-26).
-**Licenza:** MIT. **Compatibilità:** compilato e testato contro JUCE 9 (`_tools/JUCE`) su Linux — build, link e runtime OK **con patch obbligatoria** (vedi sotto).
+**Library:** [ImJimmi/JIVE](https://github.com/ImJimmi/JIVE) — declarative UI for JUCE inspired by the web: ValueTree/XML markup (HTML-style) + style sheets via `juce::var` (CSS-style).
+**Location:** submodule `_tools/JIVE`, pinned to `main` @ `89d5787` (2026-06-26).
+**License:** MIT. **Compatibility:** compiled and tested against JUCE 9 (`_tools/JUCE`) on Linux — build, link and runtime OK **with the mandatory patch** (see below).
 
-> **Nota sul pin:** il tag `v1.3.0` (2025-01-18) è **rotto contro JUCE 9** e il fix non è stato verificato su di esso. `main` è lo stable di facto del progetto (come `master` per Gin) e include 6 mesi di fix in più — è il commit pinnato.
+> **Note on the pin:** the `v1.3.0` tag (2025-01-18) is **broken against JUCE 9** and the fix has not been verified against it. `main` is the project's de-facto stable (like `master` for Gin) and includes 6 more months of fixes — it is the pinned commit.
 
 ---
 
-## ✅ A cosa serve (perché è stato integrato)
+## ✅ What it is for (why it was integrated)
 
-| Modulo | Valore |
+| Module | Value |
 |---|---|
-| `jive::jive_layouts` | UI dichiarativa: `jive::Interpreter{}.interpret(xmlString)` → albero di `GuiItem`; layout flexbox/grid via proprietà; `interpret(tree, AudioProcessor*)` per plugin |
-| `jive::jive_style_sheets` | Style sheets CSS-like (`background-colour`, `font-size`, …) con `JIVE_GUI_ITEMS_HAVE_STYLE_SHEETS=1` |
-| `jive::jive_components` / `jive_core` | Widget e core, tirati dentro dalle dipendenze dei moduli sopra |
+| `jive::jive_layouts` | Declarative UI: `jive::Interpreter{}.interpret(xmlString)` → tree of `GuiItem`; flexbox/grid layout via properties; `interpret(tree, AudioProcessor*)` for plugins |
+| `jive::jive_style_sheets` | CSS-like style sheets (`background-colour`, `font-size`, …) with `JIVE_GUI_ITEMS_HAVE_STYLE_SHEETS=1` |
+| `jive::jive_components` / `jive_core` | Widgets and core, pulled in by the dependencies of the modules above |
 
 ---
 
-## ⚠️ LIMITAZIONI NOTE (leggere PRIMA di scegliere JIVE)
+## ⚠️ KNOWN LIMITATIONS (read BEFORE choosing JIVE)
 
-Questi punti sono **vincolanti**, non suggestioni. Verificarli in fase `/plan` e annotare la decisione in `.ideas/architecture.md`.
+These points are **binding**, not suggestions. Verify them in the `/plan` phase and record the decision in `.ideas/architecture.md`.
 
-| # | Limitazione | Impatto | Mitigazione obbligatoria |
+| # | Limitation | Impact | Mandatory mitigation |
 |---|---|---|---|
-| 1 | **Rotto contro JUCE 9 upstream** (sia `v1.3.0` che `main`): `Drawable::setTransformToFit` e `createFromSVG(XmlElement&)` rimossi in JUCE 9 | Compilazione fallisce in `jive_Image.cpp` e `jive_Drawable.cpp` | **Patch obbligatoria** `patches/JIVE/juce9-drawable-compat.patch`, applicata idempotentemente da `scripts/apply-submodule-patches.sh\|.ps1` e dall'hook in `build-and-install.sh\|.ps1`. Se una build fallisce con `setTransformToFit` / `createFromSVG is not a member` → patch non applicata: eseguire lo script |
-| 2 | **Attività upstream ridotta** | Ultimo commit su `main` 2026-06-26 (solo manutenzione renovate); CI rossa (issue #196 aperta); branch `v2` = riscrittura, non stabile | Non aspettarsi fix rapidi upstream; ogni aggiornamento pin va testato con build reale |
-| 3 | **Terzo percorso UI (non PATH A, non PATH B)** | JIVE sostituisce l'intero layer Component: incompatibile con Visage, concorrenziale con WebView | È una **decisione architetturale** da esplicitare in `/plan` (`ui_framework`): trattarla come percorso UI dedicato, mai mischiata alle altre due |
-| 4 | **Integrazione plugin incompleta** | Issue #162 aperta (`interpret` non ritorna `AudioProcessorEditor`), #171 (demo-plugin richiede `juce_audio_plugin_client`) | Per plugin: usare `interpret(tree, pluginProcessor)` e verificare il titolo/owner dell'editor; testare in host DAW reale in fase `/test` |
-| 5 | **Widget mancanti** | `TextEditor` (#59), `PopupMenu` (#60), alert windows (#63), tooltips stilizzati (#64), `Browser` (#62), `Video` (#61) | Se il plugin richiede questi widget, JIVE non è adatto (o servono componenti JUCE custom innestati — non documentato upstream) |
-| 6 | **Interop con Gin non garantito** | I widget `gin_gui` sono `juce::Component` piani; l'embedding nell'albero dichiarativo JIVE non è supportato upstream | **Non combinare** UI Gin e UI JIVE nello stesso plugin. Solo layer non-UI (es. `gin_dsp`) sotto un'UI JIVE |
+| 1 | **Broken against JUCE 9 upstream** (both `v1.3.0` and `main`): `Drawable::setTransformToFit` and `createFromSVG(XmlElement&)` removed in JUCE 9 | Compilation fails in `jive_Image.cpp` and `jive_Drawable.cpp` | **Mandatory patch** `patches/JIVE/juce9-drawable-compat.patch`, applied idempotently by `scripts/apply-submodule-patches.sh\|.ps1` and the hook in `build-and-install.sh\|.ps1`. If a build fails with `setTransformToFit` / `createFromSVG is not a member` → patch not applied: run the script |
+| 2 | **Reduced upstream activity** | Last commit on `main` 2026-06-26 (renovate maintenance only); red CI (issue #196 open); `v2` branch = rewrite, not stable | Don't expect quick upstream fixes; test every pin update with a real build |
+| 3 | **Third UI path (neither PATH A nor PATH B)** | JIVE replaces the entire Component layer: incompatible with Visage, concurrent with WebView | This is an **architectural decision** to state in `/plan` (`ui_framework`): treat it as a dedicated UI path, never mix it with the other two |
+| 4 | **Incomplete plugin integration** | Issue #162 open (`interpret` does not return `AudioProcessorEditor`), #171 (demo plugin requires `juce_audio_plugin_client`) | For plugins use `interpret(tree, processor)` and verify the editor title/owner; test in a real DAW host in the `/test` phase |
+| 5 | **Missing widgets** | `TextEditor` (#59), `PopupMenu` (#60), alert windows (#63), styled tooltips (#64), `Browser` (#62), `Video` (#61) | If the plugin needs these widgets, JIVE is not suitable (or you need custom nested JUCE components — not documented upstream) |
+| 6 | **Gin interop not guaranteed** | `gin_gui` widgets are plain `juce::Component`; embedding them in the JIVE declarative tree is not supported upstream | **Do not combine** Gin UI and JIVE UI in the same plugin. Only non-UI layers (e.g. `gin_dsp`) under a JIVE UI |
 
 ---
 
-## 🔧 Protocollo d'uso (CMake)
+## 🔧 Usage protocol (CMake)
 
-Nel `CMakeLists.txt` del plugin, **dopo** il bootstrap JUCE:
+In the plugin `CMakeLists.txt` **after** the JUCE bootstrap:
 
 ```cmake
-# JIVE (root: le opzioni runner/demo/example sono OFF di default, quindi sicuro)
+# JIVE (root: the runner/demo/example options are OFF by default, so safe)
 add_subdirectory("${APC_TOOLS_DIR}/_tools/JIVE" "${CMAKE_BINARY_DIR}/_tools/JIVE")
 
 target_link_libraries({PLUGIN_NAME} PRIVATE
@@ -50,7 +50,7 @@ target_compile_definitions({PLUGIN_NAME} PRIVATE
 )
 ```
 
-Uso runtime tipico (editor di plugin):
+Typical runtime usage (plugin editor):
 
 ```cpp
 item = jive::Interpreter{}.interpret(R"JIVE(
@@ -58,89 +58,89 @@ item = jive::Interpreter{}.interpret(R"JIVE(
         style='{"background": "#1a1a1a", "foreground": "#e8ecf1"}'>
     <Text text="Hello" font-size="18" justify="centred"/>
 </Window>
-)JIVE", processorPointer);
-setContentNonOwned(item->getComponent().get(), true);   // item: std::unique_ptr<jive::GuiItem>, tenere vivo
+)JIVE", processor);
+setContentNonOwned(item->getComponent().get(), true);   // item: std::unique_ptr<jive::GuiItem>, keep alive
 ```
 
-### Sintassi markup verificata sul pin `89d5787` (⚠️ gli esempi upstream e i vecchi documenti usano proprietà non più valide)
+### Markup syntax verified on pin `89d5787` (⚠️ upstream examples and old documents use no-longer-valid properties)
 
-| Regola | Dettaglio |
+| Rule | Details |
 |---|---|
-| **`display` obbligatoria** | Ogni elemento con figli da disporre DEVE avere `display="flex"|"grid"|"block"`: senza, i figli vengono **distrutti in silenzio** (`decorateWithHereditaryBehaviour` ritorna nullptr) |
-| **Stili in `style` (JSON)** | Colori/font/bordi vivono nell'attributo `style='{"background": "#16181D", "font-size": 11}'` (stringa JSON → `jive::Object` via `parseJSON`); **NON** esistono attributi inline tipo `background-colour`/`colour` |
-| **Colori** | `#RRGGBB` (o `rgb()`, nomi CSS). **NON** `0xAARRGGBB` (silenziosamente trasparente) |
-| **Nomi style validi** | `background`, `foreground`, `border`, `border-radius`, `font-family`, `font-size`, `font-stretch`, `font-style`, `font-weight`, `letter-spacing`, `text-decoration` |
-| **Nessun `Panel`** | Tipi validi: `Button, Checkbox, ComboBox, Component, Editor, Hyperlink, Image, Knob, Label, ProgressBar, Slider, Spinner, svg, Text, Window` — per un contenitore generico usare `Component` |
-| **`gap` solo per grid** | `gap`/`grid-template-*` esistono solo con `display="grid"`; per flex usare padding/margini |
-| **Slider** | `value`, `min`, `max`, `interval`, `orientation="vertical"|"horizontal"` |
-| **ComboBox** | Figli `<Item text="..."/>` + attributo `selected="<indice>"` |
-| **Flex items** | `flex-grow`, `flex-shrink`, `flex-basis`, `align-self` sui figli di un flex container |
-| **Stile ereditato** | Il `style` del Window si propaga ai discendenti; selettori `#id` dentro lo `style` per targeting |
+| **`display` required** | Every element with children to arrange MUST have `display="flex"\|"grid"\|"block"`: without it, children are **silently destroyed** (`decorateWithHereditaryBehaviour` returns nullptr) |
+| **Styles in `style` (JSON)** | Colors/fonts/borders live in the `style='{"background": "#16181D", "font-size": 11}'` attribute (JSON string → `jive::Object` via `parseJSON`); **NO** inline attributes like `background-colour`/`colour` exist |
+| **Colors** | `#RRGGBB` (or `rgb()`, CSS names). **NOT** `0xAARRGGBB` (silently transparent) |
+| **Valid style names** | `background`, `foreground`, `border`, `border-radius`, `font-family`, `font-size`, `font-stretch`, `font-style`, `font-weight`, `letter-spacing`, `text-decoration` |
+| **No `Panel`** | Valid types: `Button, Checkbox, ComboBox, Component, Editor, Hyperlink, Image, Knob, Label, ProgressBar, Slider, Spinner, svg, Text, Window` — use `Component` for a generic container |
+| **`gap` only for grid** | `gap`/`grid-template-*` exist only with `display="grid"`; use padding/margins for flex |
+| **Slider** | `value`, `min`, `max`, `interval`, `orientation="vertical"\|"horizontal"` |
+| **ComboBox** | Children `<Item text="..."/>` + `selected="<index>"` attribute |
+| **Flex items** | `flex-grow`, `flex-shrink`, `flex-basis`, `align-self` on children of a flex container |
+| **Inherited style** | The Window `style` propagates to descendants; `#id` selectors inside the `style` for targeting |
 
-**Preview senza build del plugin:** usare il tool `jive-preview` (sezione sotto) — errore tipico senza questi vincoli: rendering vuoto/trasparente senza alcun warning.
+**Preview without building the plugin:** use the `jive-preview` tool (section below) — without these constraints the typical error is empty/transparent rendering with no warning.
 
 ## 🔍 Preview tool: `jive-preview` (APC)
 
-Standalone GUI app in `tools/jive-preview/` (progetto CMake separato, bootstrap JUCE+JIVE da `APC_TOOLS_DIR`; **non** tocca la build dei plugin):
+Standalone GUI app in `_tools/jive-preview/` (separate CMake project, bootstraps JUCE+JIVE from `APC_TOOLS_DIR`; does **not** touch the plugin build):
 
 ```bash
-# Interactive con live-reload (aggiorna a ogni salvataggio del file):
+# Interactive with live-reload (updates at every file save):
 bash scripts/preview-jive.sh <PluginName> [v<N>]
 
-# Headless (render off-screen a PNG, ideale per CI e verifica agenti):
-tools/jive-preview/build/jive-preview_artefacts/Release/jive-preview Design/v1-layout.xml --screenshot out.png
+# Headless (render offscreen to PNG, ideal for CI and agent verification):
+_tools/jive-preview/build/jive-preview_artefacts/Release/jive-preview Design/v1-layout.xml --screenshot out.png
 ```
 
-- Modalità default: interpreta il markup e apre una finestra host nativa (close→quit), live-reload con poll mtime ~500 ms.
-- `--screenshot out.png`: **nessuna finestra** (immune dal tiling del WM), render deterministico alla size del markup.
-- `--raw`: interpreta il markup *intatto* (jive gestisce la propria `Window`); utile per debug, ma la chiusura via titlebar non esce (limitazione upstream `closeButtonPressed`).
-- Il tool riscrive la root `<Window>` → `<Component>` e fornisce la finestra host: evita il window-in-window e dà chiusura pulita.
-- Load fallito durante il live-reload → mantiene l'ultima UI valida e logga su stderr.
+- Default mode: interprets the markup and opens a native host window (close→quit), live-reload with ~500 ms mtime polling.
+- `--screenshot out.png`: **no window** (immune to WM tiling), deterministic render at the markup size.
+- `--raw`: interprets the markup *as-is* (JIVE handles its own `Window`); useful for debugging, but closing via the titlebar doesn't quit (upstream `closeButtonPressed` limitation).
+- The tool rewrites the root `<Window>` → `<Component>` and provides the host window: avoids window-in-window and gives clean closing.
+- Load failure during live-reload → keeps the last valid UI and logs to stderr.
 
-**Build standalone (cache in `tools/jive-preview/build/`, non influisce sui plugin):**
+**Standalone build (cache in `_tools/jive-preview/build/`, doesn't affect plugins):**
 ```bash
-cmake -S tools/jive-preview -B tools/jive-preview/build -DAPC_TOOLS_DIR="$(pwd)" -DCMAKE_BUILD_TYPE=Release
-cmake --build tools/jive-preview/build --config Release --target jive-preview
+cmake -S _tools/jive-preview -B _tools/jive-preview/build -DAPC_TOOLS_DIR="$(pwd)" -DCMAKE_BUILD_TYPE=Release
+cmake --build _tools/jive-preview/build --config Release --target jive-preview
 ```
 
-**Limitazione nota (Hyprland/tiling):** le finestre JUCE sotto tiling WM vengono ridimensionate dal WM ignorando la size richiesta — per il preview interattivo affiancare/floattare la finestra; per verifiche deterministiche usare `--screenshot`.
+**Known limitation (Hyprland/tiling):** JUCE windows under tiling WMs are resized by the WM ignoring the requested size — for interactive preview, place/float the window beside it; for deterministic checks use `--screenshot`.
 
-**Nota runners upstream:** `JIVE_BUILD_DEMO_RUNNER`/`JIVE_BUILD_TEST_RUNNER` non sono utilizzabili dentro un progetto che include già JUCE (il demo-runner tenta CPM con un secondo JUCE) — da qui il tool dedicato.
+**Note on upstream runners:** `JIVE_BUILD_DEMO_RUNNER`/`JIVE_BUILD_TEST_RUNNER` cannot be used inside a project that already includes JUCE (the demo runner tries to pull a second JUCE via CPM) — hence the dedicated tool.
 
-**Nota `--fresh`:** `build-and-install.sh|.ps1` configura con `--fresh`, quindi la working tree del submodule deve essere **già patchata** quando parte la configure — è esattamente ciò che fa l'hook (idempotente) inserito prima della configure.
+**Note on `--fresh`:** `build-and-install.sh|.ps1` configures with `--fresh`, so the working tree of the submodule must be **already patched** when configure starts — that's exactly what the (idempotent) hook inserted before configure does.
 
 ---
 
-## 🩹 Protocollo patch (JUCE 9 compat)
+## 🩹 Patch protocol (JUCE 9 compat)
 
 **Fresh clone:**
 
 ```bash
 git submodule update --init --recursive
-bash scripts/apply-submodule-patches.sh        # .ps1 su Windows
+bash scripts/apply-submodule-patches.sh        # .ps1 on Windows
 ```
 
-In genere **non serve**: `build-and-install.sh|.ps1` applica le patch da solo a ogni build.
+Usually **not needed**: `build-and-install.sh|.ps1` applies the patch on its own at every build.
 
-**Contenuto della patch** (`patches/JIVE/juce9-drawable-compat.patch`, 3 file, ~10 righe):
-- `jive_Image.cpp/.h`: `dynamic_cast<juce::Drawable*>` → `juce::DrawableComponent*`; `createSVG()` usa `juce::OwningDrawableComponent::createFromSVGString()`; cast di auto-size aggiornati
+**Patch content** (`patches/JIVE/juce9-drawable-compat.patch`, 3 files, ~10 lines):
+- `jive_Image.cpp/.h`: `dynamic_cast<juce::Drawable*>` → `juce::DrawableComponent*`; `createSVG()` uses `juce::OwningDrawableComponent::createFromSVGString()`; updated auto-size casts
 - `jive_Drawable.cpp`: `createFromSVG(XmlElement&)` → `createFromSVGString(xmlElement.toString())`
 
-**Conflitto patch** (`ERROR: ... does not apply`): il pin è cambiato a monte e i file patchati sono stati toccati → rigenerare la patch (vedi protocollo di aggiornamento).
+**Patch conflict** (`ERROR: ... does not apply`): the pin changed upstream and the patched files were modified → regenerate the patch (see update protocol).
 
 ---
 
-## 🔄 Protocollo di aggiornamento del pin
+## 🔄 Pin update protocol
 
-1. Leggere i changelog/commit upstream tra il pin attuale e il nuovo target.
+1. Read the upstream changelog/commits between the current pin and the new target.
 2. `cd _tools/JIVE && git fetch && git checkout <commit> && cd ../..`
-3. `bash scripts/apply-submodule-patches.sh JIVE` — se fallisce, i file patchati sono cambiati: valutare/riportare la patch su nuova base.
-4. Build + test di un plugin con UI JIVE prima di considerare l'aggiornamento valido.
-5. `git add _tools/JIVE && git commit` (eventualmente con patch rigenerata).
+3. `bash scripts/apply-submodule-patches.sh JIVE` — if it fails, the patched files changed: evaluate/rebase the patch on the new base.
+4. Build + test a plugin with a JIVE UI before considering the update valid.
+5. `git add _tools/JIVE && git commit` (optionally with the regenerated patch).
 
-## 🪦 Protocollo di dismissione patch (quando upstream fixa JUCE 9)
+## 🪦 Patch retirement protocol (when upstream fixes JUCE 9)
 
-1. Aggiornare il pin al commit upstream che include il fix.
-2. Cancellare `patches/JIVE/juce9-drawable-compat.patch`.
-3. `git submodule update --force _tools/JIVE` (working tree pulita) + build di verifica.
-4. Aggiornare questo file (rimuovere la sezione patch) e la riga "pinnato a" in cima.
+1. Update the pin to the upstream commit that includes the fix.
+2. Delete `patches/JIVE/juce9-drawable-compat.patch`.
+3. `git submodule update --force _tools/JIVE` (clean working tree) + verification build.
+4. Update this file (remove the patch section) and the "pinned to" line at the top.

@@ -1,3 +1,3 @@
-# gin-integration.md (puntatore)
+# gin-integration.md (pointer)
 
-**Single source of truth:** leggi e segui `agents/rules/gin-integration.md` prima di procedere con qualsiasi operazione.
+**Single source of truth:** read and follow `agents/rules/gin-integration.md` before proceeding with any operation.

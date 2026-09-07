@@ -1,12 +1,12 @@
-# sync-agent-pointers.ps1 — rigenera le case nascoste degli agent partendo da agents/
-# (single source of truth). Le case contengono SOLO puntatori: mai modificare i file
-# puntatore a mano — modifica agents/ e rilancia questo script.
+# sync-agent-pointers.ps1 — regenerates the agent hidden homes from agents/
+# (single source of truth). The homes contain ONLY pointers: never edit the
+# pointer files by hand — edit agents/ and re-run this script.
 #
 # Usage:
-#   .\scripts\sync-agent-pointers.ps1            # rigenera i puntatori
-#   .\scripts\sync-agent-pointers.ps1 -DryRun    # mostra cosa farebbe, non scrive
+#   .\scripts\sync-agent-pointers.ps1            # regenerates the pointers
+#   .\scripts\sync-agent-pointers.ps1 -DryRun    # shows what it would do, without writing
 #
-# Configurazione case: scripts/agent-homes.json
+# Home configuration: scripts/agent-homes.json
 
 param(
     [switch]$DryRun
@@ -19,14 +19,14 @@ $ProjectRoot = Split-Path -Parent $ScriptDir
 $ManifestPath = Join-Path $ScriptDir "agent-homes.json"
 
 if (-not (Test-Path $ManifestPath)) {
-    Write-Error "Manifest non trovato: $ManifestPath"
+    Write-Error "Manifest not found: $ManifestPath"
 }
 
 $Manifest = Get-Content $ManifestPath -Raw | ConvertFrom-Json
 $Canonical = Join-Path $ProjectRoot $Manifest.canonical_dir
 
 if (-not (Test-Path $Canonical)) {
-    Write-Error "Cartella canonica mancante: $Canonical"
+    Write-Error "Canonical folder missing: $Canonical"
 }
 
 function Read-Frontmatter([string]$Path) {
@@ -72,9 +72,9 @@ name: $name
 description: "$escapedDesc"
 ---
 
-# Skill: $name (puntatore)
+# Skill: $name (pointer)
 
-Carica ed esegui **esattamente** ``agents/skills/$($s.Name)/SKILL.md`` (single source of truth). Non improvisare il contenuto della skill.
+Load and run **exactly** ``agents/skills/$($s.Name)/SKILL.md`` (single source of truth). Do not improvise the skill content.
 "@
             $out = Join-Path $SDir "$($s.Name)\SKILL.md"
             Write-Host "  skill: $($home_.dir)/skills/$($s.Name)/SKILL.md"
@@ -94,7 +94,7 @@ Carica ed esegui **esattamente** ``agents/skills/$($s.Name)/SKILL.md`` (single s
 description: "$escapedDesc"
 ---
 
-Carica ed esegui **esattamente** ``agents/workflows/$($wf.Name)`` (single source of truth). Non improvisare il contenuto del workflow.
+Load and run **exactly** ``agents/workflows/$($wf.Name)`` (single source of truth). Do not improvise the workflow content.
 "@
             $out = Join-Path $WDir $wf.Name
             Write-Host "  workflow: $($home_.dir)/workflows/$($wf.Name)"
@@ -107,9 +107,9 @@ Carica ed esegui **esattamente** ``agents/workflows/$($wf.Name)`` (single source
         if (Test-Path $RDir) { Remove-Item $RDir -Recurse -Force }
         foreach ($rf in $Rules) {
             $body = @"
-# $($rf.Name) (puntatore)
+# $($rf.Name) (pointer)
 
-**Single source of truth:** leggi e segui ``agents/rules/$($rf.Name)`` prima di procedere con qualsiasi operazione.
+**Single source of truth:** read and follow ``agents/rules/$($rf.Name)`` before proceeding with any operation.
 "@
             $out = Join-Path $RDir $rf.Name
             Write-Host "  rule: $($home_.dir)/rules/$($rf.Name)"
@@ -118,4 +118,4 @@ Carica ed esegui **esattamente** ``agents/workflows/$($wf.Name)`` (single source
     }
 }
 
-if ($DryRun) { Write-Host "DRY RUN (nessun file scritto)" } else { Write-Host "OK" }
+if ($DryRun) { Write-Host "DRY RUN (no file written)" } else { Write-Host "OK" }

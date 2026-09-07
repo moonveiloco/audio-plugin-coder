@@ -2,4 +2,4 @@
 description: "Complete plugin development from idea to shipped product"
 ---
 
-Carica ed esegui **esattamente** `agents/workflows/new.md` (single source of truth). Non improvisare il contenuto del workflow.
+Load and run **exactly** `agents/workflows/new.md` (single source of truth). Do not improvise the workflow content.

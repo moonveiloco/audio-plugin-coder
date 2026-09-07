@@ -3,6 +3,6 @@ name: fix_windowsize
 description: ">"
 ---
 
-# Skill: fix_windowsize (puntatore)
+# Skill: fix_windowsize (pointer)
 
-Carica ed esegui **esattamente** `agents/skills/fix_windowsize/SKILL.md` (single source of truth). Non improvisare il contenuto della skill.
+Load and run **exactly** `agents/skills/fix_windowsize/SKILL.md` (single source of truth). Do not improvise the skill content.

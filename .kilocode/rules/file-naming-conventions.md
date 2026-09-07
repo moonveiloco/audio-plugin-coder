@@ -1,3 +1,3 @@
-# file-naming-conventions.md (puntatore)
+# file-naming-conventions.md (pointer)
 
-**Single source of truth:** leggi e segui `agents/rules/file-naming-conventions.md` prima di procedere con qualsiasi operazione.
+**Single source of truth:** read and follow `agents/rules/file-naming-conventions.md` before proceeding with any operation.
