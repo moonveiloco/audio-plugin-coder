@@ -66,13 +66,14 @@ if (-not $Layout -or -not (Test-Path $Layout)) {
 Write-Host "--- APC JIVE PREVIEW: $PluginName ---"
 Write-Host "Layout: $Layout"
 
-# --- BUILD (cached) ---
-$BuildDir = Join-Path $RootPath "build\jive-preview"
+# --- BUILD (cached; build dir lives inside the tool, not the repo root) ---
+$BuildDir = Join-Path $RootPath "tools\jive-preview\build"
 $Cache = Join-Path $BuildDir "CMakeCache.txt"
 $NeedsConfigure = -not (Test-Path $Cache)
 
 if (-not $NeedsConfigure) {
-    $NewestSource = Get-ChildItem -Path (Join-Path $RootPath "tools\jive-preview") -Recurse -File |
+    $ScanPaths = @((Join-Path $RootPath "tools\jive-preview\CMakeLists.txt"), (Join-Path $RootPath "tools\jive-preview\Source"))
+    $NewestSource = Get-ChildItem -Path $ScanPaths -File -Recurse -ErrorAction SilentlyContinue |
         Where-Object { $_.LastWriteTime -gt (Get-Item $Cache).LastWriteTime } |
         Select-Object -First 1
     if ($NewestSource) { $NeedsConfigure = $true }

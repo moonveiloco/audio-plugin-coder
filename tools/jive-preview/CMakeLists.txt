@@ -32,11 +32,21 @@ target_sources(jive-preview
         Source/Main.cpp
 )
 
+target_compile_definitions(jive-preview
+    PRIVATE
+        JIVE_GUI_ITEMS_HAVE_STYLE_SHEETS=1
+        JUCE_WEB_BROWSER=0
+        JUCE_USE_CURL=0
+        JUCE_APPLICATION_NAME="$<TARGET_PROPERTY:jive-preview,JUCE_PRODUCT_NAME>"
+        JUCE_APPLICATION_VERSION="$<TARGET_PROPERTY:jive-preview,JUCE_VERSION>"
+)
+
+# NOTE: no LTO (juce_recommended_lto_flags) — GCC 16 (Arch) hits an LTO
+# internal compiler error linking JUCE; LTO brings nothing to a preview tool.
 target_link_libraries(jive-preview
     PRIVATE
         juce::juce_gui_basics
         jive::jive_layouts
         jive::jive_style_sheets
         juce::juce_recommended_config_flags
-        juce::juce_recommended_lto_flags
 )

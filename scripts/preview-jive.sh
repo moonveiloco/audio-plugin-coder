@@ -64,12 +64,12 @@ fi
 echo "--- APC JIVE PREVIEW: $PLUGIN_NAME ---"
 echo "Layout: $LAYOUT"
 
-# --- BUILD (cached) ---
-BUILD_DIR="$ROOT_PATH/build/jive-preview"
+# --- BUILD (cached; build dir lives inside the tool, not the repo root) ---
+BUILD_DIR="$ROOT_PATH/tools/jive-preview/build"
 NEEDS_CONFIGURE=0
 [ ! -f "$BUILD_DIR/CMakeCache.txt" ] && NEEDS_CONFIGURE=1
 if [ "$NEEDS_CONFIGURE" -eq 0 ]; then
-    NEWEST_SOURCE="$(find "$ROOT_PATH/tools/jive-preview" -type f -newer "$BUILD_DIR/CMakeCache.txt" 2>/dev/null | head -1 || true)"
+    NEWEST_SOURCE="$(find "$ROOT_PATH/tools/jive-preview/CMakeLists.txt" "$ROOT_PATH/tools/jive-preview/Source" -type f -newer "$BUILD_DIR/CMakeCache.txt" 2>/dev/null | head -1 || true)"
     [ -n "$NEWEST_SOURCE" ] && NEEDS_CONFIGURE=1
 fi
 
@@ -85,6 +85,7 @@ cmake --build "$BUILD_DIR" --config Release --target jive-preview
 
 # --- LAUNCH ---
 BIN="$(find "$BUILD_DIR" -name "jive-preview" -type f -perm -u+x 2>/dev/null | sort | tail -1 || true)"
+
 if [ -z "$BIN" ]; then
     echo "Error: jive-preview binary not found under $BUILD_DIR." >&2
     exit 1

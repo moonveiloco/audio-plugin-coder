@@ -88,7 +88,7 @@ Standalone GUI app in `tools/jive-preview/` (progetto CMake separato, bootstrap 
 bash scripts/preview-jive.sh <PluginName> [v<N>]
 
 # Headless (render off-screen a PNG, ideale per CI e verifica agenti):
-build/jive-preview/jive-preview_artefacts/jive-preview Design/v1-layout.xml --screenshot out.png
+tools/jive-preview/build/jive-preview_artefacts/Release/jive-preview Design/v1-layout.xml --screenshot out.png
 ```
 
 - Modalità default: interpreta il markup e apre una finestra host nativa (close→quit), live-reload con poll mtime ~500 ms.
@@ -97,10 +97,10 @@ build/jive-preview/jive-preview_artefacts/jive-preview Design/v1-layout.xml --sc
 - Il tool riscrive la root `<Window>` → `<Component>` e fornisce la finestra host: evita il window-in-window e dà chiusura pulita.
 - Load fallito durante il live-reload → mantiene l'ultima UI valida e logga su stderr.
 
-**Build standalone (cache in `build/jive-preview/`, non influisce sui plugin):**
+**Build standalone (cache in `tools/jive-preview/build/`, non influisce sui plugin):**
 ```bash
-cmake -S tools/jive-preview -B build/jive-preview -DAPC_TOOLS_DIR="$(pwd)" -DCMAKE_BUILD_TYPE=Release
-cmake --build build/jive-preview --config Release --target jive-preview
+cmake -S tools/jive-preview -B tools/jive-preview/build -DAPC_TOOLS_DIR="$(pwd)" -DCMAKE_BUILD_TYPE=Release
+cmake --build tools/jive-preview/build --config Release --target jive-preview
 ```
 
 **Limitazione nota (Hyprland/tiling):** le finestre JUCE sotto tiling WM vengono ridimensionate dal WM ignorando la size richiesta — per il preview interattivo affiancare/floattare la finestra; per verifiche deterministiche usare `--screenshot`.
