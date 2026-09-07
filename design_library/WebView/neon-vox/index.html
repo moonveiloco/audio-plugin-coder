@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Vox - Mockup</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app-container">
+    <div class="plugin-container">
+
+        <!-- ══════════ HEADER ══════════ -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <div class="brand">
+                    <svg class="brand-mark" viewBox="0 0 24 24" width="18" height="18">
+                        <path d="M4 4 L12 20 L20 4" fill="none" stroke="var(--acc-cyan)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="brand-name">NEON<b>VOX</b></span>
+                    <span class="brand-badge">PRO</span>
+                </div>
+                <div class="history-btns">
+                    <button class="icon-btn" title="Undo">
+                        <svg viewBox="0 0 16 16" width="13" height="13"><path d="M6 3 L2 7 L6 11 M2 7 H11 A3.5 3.5 0 0 1 11 14 H9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <button class="icon-btn" title="Redo">
+                        <svg viewBox="0 0 16 16" width="13" height="13"><path d="M10 3 L14 7 L10 11 M14 7 H5 A3.5 3.5 0 0 0 5 14 H7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="preset-browser">
+                <button class="preset-arrow" title="Previous preset">
+                    <svg viewBox="0 0 10 10" width="9" height="9"><polygon points="7,1 7,9 2,5" fill="currentColor"/></svg>
+                </button>
+                <div class="preset-name">Clear Lead Vocals <span class="preset-dirty">*</span></div>
+                <button class="preset-arrow" title="Next preset">
+                    <svg viewBox="0 0 10 10" width="9" height="9"><polygon points="3,1 3,9 8,5" fill="currentColor"/></svg>
+                </button>
+                <button class="preset-add" title="New preset">+</button>
+            </div>
+
+            <div class="topbar-right">
+                <button class="icon-btn" title="Settings">
+                    <svg viewBox="0 0 16 16" width="13" height="13"><circle cx="8" cy="8" r="2.2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5 V3.5 M8 12.5 V14.5 M1.5 8 H3.5 M12.5 8 H14.5 M3.4 3.4 L4.8 4.8 M11.2 11.2 L12.6 12.6 M12.6 3.4 L11.2 4.8 M4.8 11.2 L3.4 12.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </button>
+                <button class="bypass-btn" id="bypass-btn">BYPASS</button>
+            </div>
+        </header>
+
+        <!-- ══════════ MODULE CARDS ══════════ -->
+        <section class="modules">
+
+            <!-- DYNAMICS -->
+            <div class="module-card" data-accent="pink">
+                <div class="module-head">
+                    <button class="power-btn on" title="Power"></button>
+                    <span class="module-title">DYNAMICS</span>
+                    <span class="module-menu">↻</span>
+                </div>
+                <div class="module-icon-row">
+                    <button class="module-arrow"><svg viewBox="0 0 10 10" width="8" height="8"><polygon points="7,1 7,9 2,5" fill="currentColor"/></svg></button>
+                    <svg class="module-icon" viewBox="0 0 64 64" width="58" height="58">
+                        <polyline points="6,32 11,24 15,40 19,16 23,48 27,26 31,38 35,20 39,44 43,28 47,36 51,22 55,30 58,32"
+                                  fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <button class="module-arrow"><svg viewBox="0 0 10 10" width="8" height="8"><polygon points="3,1 3,9 8,5" fill="currentColor"/></svg></button>
+                </div>
+                <div class="module-foot">
+                    <span class="module-preset">SMOOTH</span>
+                    <span class="module-dots"><i class="on"></i><i></i><i></i><i></i></span>
+                    <span class="module-trim">+0.0</span>
+                </div>
+            </div>
+
+            <!-- TONE -->
+            <div class="module-card" data-accent="cyan">
+                <div class="module-head">
+                    <button class="power-btn on" title="Power"></button>
+                    <span class="module-title">TONE</span>
+                    <span class="module-menu">↻</span>
+                </div>
+                <div class="module-icon-row">
+                    <button class="module-arrow"><svg viewBox="0 0 10 10" width="8" height="8"><polygon points="7,1 7,9 2,5" fill="currentColor"/></svg></button>
+                    <svg class="module-icon" viewBox="0 0 64 64" width="58" height="58">
+                        <circle cx="32" cy="32" r="15" fill="none" stroke="currentColor" stroke-width="2.4"/>
+                        <circle cx="32" cy="32" r="8" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.55"/>
+                        <circle cx="32" cy="14" r="3.2" fill="currentColor"/>
+                        <path d="M32 18 L32 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <button class="module-arrow"><svg viewBox="0 0 10 10" width="8" height="8"><polygon points="3,1 3,9 8,5" fill="currentColor"/></svg></button>
+                </div>
+                <div class="module-foot">
+                    <span class="module-preset">NYC</span>
+                    <span class="module-dots"><i class="on"></i><i class="on"></i><i></i><i></i></span>
+                    <span class="module-trim">+0.0</span>
+                </div>
+            </div>
+
+            <!-- SPACE -->
+            <div class="module-card" data-accent="purple">
+                <div class="module-head">
+                    <button class="power-btn on" title="Power"></button>
+                    <span class="module-title">SPACE</span>
+                    <span class="module-menu">↻</span>
+                </div>
+                <div class="module-icon-row">
+                    <button class="module-arrow"><svg viewBox="0 0 10 10" width="8" height="8"><polygon points="7,1 7,9 2,5" fill="currentColor"/></svg></button>
+                    <svg class="module-icon" viewBox="0 0 64 64" width="58" height="58">
+                        <path d="M32 32 C32 29.5 34.5 28.5 36 30 C38 32 36 36 32.5 36 C27.5 36 25.5 30.5 29 26.5 C33.5 21.5 41 24 42.5 30.5 C44 38 37 44 29.5 42.5 C21 40.5 17.5 31.5 23 24 C29 15.5 41 16.5 46.5 25 C52 33.5 47 45 36 48 C25 51 14.5 42.5 15 31.5"
+                              fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                    </svg>
+                    <button class="module-arrow"><svg viewBox="0 0 10 10" width="8" height="8"><polygon points="3,1 3,9 8,5" fill="currentColor"/></svg></button>
+                </div>
+                <div class="module-foot">
+                    <span class="module-preset">VIBRANT</span>
+                    <span class="module-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>
+                    <span class="module-trim">+0.0</span>
+                </div>
+            </div>
+
+            <!-- SFX -->
+            <div class="module-card" data-accent="amber">
+                <div class="module-head">
+                    <button class="power-btn on" title="Power"></button>
+                    <span class="module-title">SFX</span>
+                    <span class="module-menu">↻</span>
+                </div>
+                <div class="module-icon-row">
+                    <button class="module-arrow"><svg viewBox="0 0 10 10" width="8" height="8"><polygon points="7,1 7,9 2,5" fill="currentColor"/></svg></button>
+                    <svg class="module-icon" viewBox="0 0 64 64" width="58" height="58">
+                        <rect x="8" y="18" width="48" height="28" rx="4" fill="none" stroke="currentColor" stroke-width="2.4"/>
+                        <circle cx="23" cy="32" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <circle cx="41" cy="32" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <path d="M28 32 H36 M14 40 L50 40" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity="0.7"/>
+                    </svg>
+                    <button class="module-arrow"><svg viewBox="0 0 10 10" width="8" height="8"><polygon points="3,1 3,9 8,5" fill="currentColor"/></svg></button>
+                </div>
+                <div class="module-foot">
+                    <span class="module-preset">TAPE SAT</span>
+                    <span class="module-dots"><i class="on"></i><i></i><i></i><i></i></span>
+                    <span class="module-trim">+0.0</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════ MAIN AREA ══════════ -->
+        <main class="main-area">
+
+            <!-- ── COL 1 · DYNAMICS DETAIL ── -->
+            <section class="panel" data-accent="pink">
+                <div class="dyn-top">
+                    <div class="mini-meters">
+                        <div class="mini-meter" data-value="0.55" data-color="var(--acc-cyan)"><span class="mini-meter-label">GATE</span></div>
+                        <div class="mini-meter gr" data-value="0.35" data-color="var(--acc-pink)"><span class="mini-meter-label">GR</span></div>
+                        <div class="mini-meter" data-value="0.62" data-color="var(--acc-cyan)"><span class="mini-meter-label">DS</span></div>
+                    </div>
+                    <div class="dyn-knob">
+                        <div class="knob" data-value="0.64" data-size="76" data-color="var(--acc-pink)" data-format="percent"></div>
+                        <span class="knob-label">COMP</span>
+                        <span class="value-chip">COLOR&nbsp;&nbsp;<b>127%</b></span>
+                    </div>
+                </div>
+                <div class="dyn-bottom">
+                    <div class="dyn-knob">
+                        <div class="knob" data-value="0.38" data-size="76" data-color="var(--acc-pink)" data-format="khz"></div>
+                        <span class="knob-label">DE-ESS</span>
+                        <span class="value-chip">FOCUS&nbsp;&nbsp;<b>5.2 kHz</b></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── COL 2 · TONE DETAIL ── -->
+            <section class="panel" data-accent="cyan">
+                <div class="analyzer-wrap">
+                    <canvas id="eq-canvas" width="330" height="150"></canvas>
+                    <div class="analyzer-scale">
+                        <span>+12 dB</span><span>-12 dB</span>
+                    </div>
+                    <div class="analyzer-footer">
+                        <span class="analyzer-tag">ANALYZER</span>
+                        <span>180 Hz</span><span>1 kHz</span><span>8 kHz</span>
+                    </div>
+                </div>
+                <div class="eq-faders">
+                    <div class="strip-fader" data-value="0.45" data-color="var(--acc-cyan)"><span class="strip-label">LOW</span></div>
+                    <div class="strip-fader" data-value="0.60" data-color="var(--acc-cyan)"><span class="strip-label">MID</span></div>
+                    <div class="strip-fader" data-value="0.52" data-color="var(--acc-cyan)"><span class="strip-label">HIGH</span></div>
+                    <div class="strip-fader" data-value="0.70" data-color="var(--acc-cyan)"><span class="strip-label">AIR+</span></div>
+                </div>
+                <div class="h-slider" data-value="0.62" data-color="var(--acc-cyan)"></div>
+            </section>
+
+            <!-- ── COL 3 · SPACE DETAIL ── -->
+            <section class="panel" data-accent="purple">
+                <div class="duck-row">
+                    <div class="duck-box">
+                        <span class="duck-title">REVERB</span>
+                        <div class="duck-bars" data-color="var(--acc-purple)">
+                            <i style="--h:.8"></i><i style="--h:.55"></i><i style="--h:.9"></i><i style="--h:.4"></i><i style="--h:.65"></i>
+                        </div>
+                        <span class="duck-value">VRB DUCK&nbsp;&nbsp;<b>32%</b></span>
+                    </div>
+                    <div class="duck-box">
+                        <span class="duck-title">DELAY</span>
+                        <div class="duck-bars" data-color="var(--acc-purple)">
+                            <i style="--h:.5"></i><i style="--h:.85"></i><i style="--h:.35"></i><i style="--h:.7"></i><i style="--h:.55"></i>
+                        </div>
+                        <span class="duck-value">DLY DUCK&nbsp;&nbsp;<b>17%</b></span>
+                    </div>
+                </div>
+                <div class="space-knobs">
+                    <div class="space-knob">
+                        <div class="knob" data-value="0.55" data-size="72" data-color="var(--acc-purple)" data-format="sec"></div>
+                        <span class="knob-label">REVERB</span>
+                        <span class="value-chip">TIME&nbsp;&nbsp;<b>2.3 s</b></span>
+                    </div>
+                    <div class="space-knob">
+                        <div class="knob" data-value="0.40" data-size="72" data-color="var(--acc-purple)" data-format="rate"></div>
+                        <span class="knob-label">DELAY</span>
+                        <span class="value-chip">RATE&nbsp;&nbsp;<b>1/8d</b></span>
+                    </div>
+                </div>
+                <div class="h-slider" data-value="0.48" data-color="var(--acc-purple)"></div>
+            </section>
+
+            <!-- ── COL 4 · SFX DETAIL ── -->
+            <section class="panel sfx-panel" data-accent="amber">
+                <div class="sfx-knob-wrap">
+                    <div class="knob big" data-value="0.72" data-size="132" data-color="var(--acc-amber)" data-format="percent" data-glow="true"></div>
+                    <span class="knob-label">SFX</span>
+                </div>
+                <div class="sfx-routing">
+                    <span class="routing-label">SFX ROUTING</span>
+                    <div class="routing-btns">
+                        <button class="routing-btn on" data-accent="purple"><i></i>SPACE POST</button>
+                        <button class="routing-btn" data-accent="cyan"><i></i>FLT POST</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- ══════════ FOOTER ══════════ -->
+        <footer class="bottombar">
+            <div class="io-group">
+                <span class="io-value">+0.0 dB</span>
+                <span class="io-label">INPUT</span>
+                <div class="io-meter" id="meter-in" data-value="0.58"></div>
+            </div>
+            <div class="bottombar-brand">⌁ APC AUDIO</div>
+            <div class="io-group">
+                <div class="io-meter" id="meter-out" data-value="0.72"></div>
+                <span class="io-label">OUTPUT</span>
+                <span class="io-value">+0.0 dB</span>
+            </div>
+        </footer>
+    </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

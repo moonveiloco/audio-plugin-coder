@@ -1,0 +1,109 @@
+<!--
+  JIVE Minimal Dark - Design Library Example (APC)
+  Framework: JIVE (declarative UI for JUCE), submodule _tools/JIVE pin 89d5787
+  Preview:   copy as Design/v1-layout.xml, then: bash scripts/preview-jive.sh PluginName [vN]
+  Headless:  jive-preview binary with the screenshot flag renders layout.xml to PNG
+
+  Contains ALL 15 component types registered in jive::ComponentFactory:
+  Window, Component, Editor, Text, Label, Button, Checkbox, ComboBox,
+  Slider, Knob, Spinner, ProgressBar, Hyperlink, Image, svg
+  (plus ComboBox children: Option, Header)
+
+  Rules applied (see agents/rules/jive-integration.md):
+  - every element with children has display="flex"|"grid"|"block"
+  - styling ONLY via style JSON attribute (no inline colour attrs)
+  - colors are #RRGGBB (never 0xAARRGGBB)
+  - gap is grid-only: flex spacing uses justify-content / padding
+-->
+<Window width="540" height="430" display="flex"
+        style='{"background": "#16181D", "foreground": "#E8ECF1", "font-size": 12, "border-radius": 6}'>
+
+    <!-- ===== Header: Text + Component (spacer) + Hyperlink ===== -->
+    <Component id="header" display="flex" flex-direction="row" align-items="centre" padding="16" height="56"
+               style='{"background": "#1E2128", "border": "1px solid #2E3440"}'>
+        <Text text="Minimal Dark" style='{"font-size": 18, "font-weight": "bold", "letter-spacing": 1.5}'/>
+        <Component id="header-spacer" display="block" flex-grow="1"/>
+        <Hyperlink text="jive docs" url="https://github.com/ImJimmi/JIVE" width="90" height="24" display="flex" align-items="centre"
+                   style='{"foreground": "#4BB1D9", "font-size": 11}'>
+            <!-- widget text is NOT drawn from the "text" attr on this pin (Button uses setTitle = a11y only):
+                 visible text requires a <Text> child (isContent) -->
+            <Text text="jive docs" style='{"foreground": "#4BB1D9", "font-size": 11}'/>
+        </Hyperlink>
+    </Component>
+
+    <!-- ===== Knob row: Knob x3 + Spinner ===== -->
+    <Component id="knob-row" display="flex" flex-direction="row" justify-content="space-evenly" align-items="centre" padding="12">
+        <Knob id="cutoff" value="0.62" min="0" max="1" interval="0.01" width="80" height="80" display="flex" flex-direction="column" align-items="centre">
+            <Text text="Cutoff" style='{"foreground": "#8B93A1", "font-size": 10, "letter-spacing": 1}'/>
+        </Knob>
+        <Knob id="resonance" value="0.35" min="0" max="1" interval="0.01" width="80" height="80" display="flex" flex-direction="column" align-items="centre">
+            <Text text="Resonance" style='{"foreground": "#8B93A1", "font-size": 10, "letter-spacing": 1}'/>
+        </Knob>
+        <Knob id="drive" value="0.5" min="0" max="1" interval="0.01" width="80" height="80" display="flex" flex-direction="column" align-items="centre">
+            <Text text="Drive" style='{"foreground": "#8B93A1", "font-size": 10, "letter-spacing": 1}'/>
+        </Knob>
+        <Spinner id="spin" value="2" min="0" max="10" interval="1" width="72" height="48" display="flex" flex-direction="column" align-items="centre">
+            <Text text="Voices" style='{"foreground": "#8B93A1", "font-size": 10, "letter-spacing": 1}'/>
+        </Spinner>
+    </Component>
+
+    <!-- ===== Middle: vertical Slider + control column ===== -->
+    <Component id="middle" display="flex" flex-direction="row" padding="12">
+        <Component id="mix-panel" display="flex" flex-direction="column" align-items="centre" padding="8"
+                   style='{"background": "#1E2128", "border": "1px solid #2E3440", "border-radius": 6}'>
+            <Slider id="mix" value="0.5" min="0" max="1" interval="0.01" orientation="vertical" width="36" height="140"/>
+            <Text text="Mix" style='{"foreground": "#8B93A1", "font-size": 10, "letter-spacing": 1}'/>
+        </Component>
+
+        <Component id="controls" display="flex" flex-direction="column" flex-grow="1" padding="8">
+            <!-- ProgressBar (normalised 0-1) -->
+            <ProgressBar id="output" value="0.62" width="240" height="10"/>
+            <Text text="Output" style='{"foreground": "#8B93A1", "font-size": 10, "letter-spacing": 1}'/>
+
+            <!-- ComboBox with Option / Header children -->
+            <ComboBox id="algorithm" selected="1" width="240" height="28">
+                <Header text="Algorithms"/>
+                <Option text="Clean"/>
+                <Option text="Tape" selected="true"/>
+                <Option text="Tube"/>
+                <Option text="Bitcrush" enabled="false"/>
+            </ComboBox>
+
+            <!-- Checkbox (ToggleButton) + Buttons: visible text via <Text> children (see note above) -->
+            <Component id="toggles" display="flex" flex-direction="row" align-items="centre" padding="4">
+                <Checkbox id="auto-gain" width="120" height="24" padding="0px 0px 0px 24px" display="flex" align-items="centre">
+                    <Text text="Auto-gain" font-size="11"/>
+                </Checkbox>
+                <Button id="bypass" text="Bypass" toggleable="true" toggled="false" width="80" height="26"
+                        display="flex" align-items="centre" justify-content="centre">
+                    <Text text="Bypass" style='{"foreground": "#4BB1D9"}'/>
+                </Button>
+                <Button id="reset" text="Reset" width="72" height="26"
+                        display="flex" align-items="centre" justify-content="centre">
+                    <Text text="Reset" style='{"foreground": "#8B93A1"}'/>
+                </Button>
+            </Component>
+
+            <!-- Editor: placeholder container (upstream TextEditor missing, issue #59) -->
+            <Editor id="notes" display="flex" flex-direction="column" width="240" height="44" padding="6"
+                    style='{"background": "#12141A", "border": "1px dashed #2E3440", "border-radius": 4}'>
+                <Text text="Editor placeholder (upstream #59)"
+                      style='{"foreground": "#5C6572", "font-size": 10, "font-style": "italic"}'/>
+            </Editor>
+        </Component>
+    </Component>
+
+    <!-- ===== Footer: Label + Image (inline SVG string) + svg (inline element) ===== -->
+    <Component id="footer" display="flex" flex-direction="row" align-items="centre" padding="12" height="48"
+               style='{"background": "#1E2128", "border": "1px solid #2E3440"}'>
+        <Label id="status" width="140" height="24" display="flex" align-items="centre">
+            <Text text="Ready - 44.1 kHz" style='{"foreground": "#8B93A1", "font-size": 10}'/>
+        </Label>
+        <Image width="24" height="24"
+               source="&lt;svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'&gt;&lt;path d='M12 2 L22 20 L2 20 Z' fill='none' stroke='#4BB1D9' stroke-width='2'/&gt;&lt;/svg&gt;"/>
+        <svg width="120" height="24">
+            <polyline points="0,12 15,4 30,18 45,6 60,16 75,8 90,14 105,5 120,12"
+                      fill="none" stroke="#4BB1D9" stroke-width="1.5"/>
+        </svg>
+    </Component>
+</Window>

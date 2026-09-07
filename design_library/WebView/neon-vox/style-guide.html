@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Vox - Style Guide</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sg-container">
+        <header class="sg-header">
+            <h1 class="sg-title">Neon Vox</h1>
+            <p style="opacity: 0.7; max-width: 600px; line-height: 1.6;">A dark vocal-chain channel strip with four neon module accents, glowing glyphs, live EQ analyzer and a hero SFX knob.</p>
+        </header>
+
+        <!-- Colors -->
+        <section class="sg-section">
+            <div class="sg-section-title">Color Palette</div>
+            <div class="sg-grid">
+                <div class="sg-swatch">
+                    <div class="sg-swatch-color" style="background-color: #0B0D12"></div>
+                    <div class="sg-swatch-info"><span class="sg-swatch-name">background</span><span class="sg-swatch-hex">#0B0D12</span></div>
+                </div>
+                <div class="sg-swatch">
+                    <div class="sg-swatch-color" style="background-color: #14161D"></div>
+                    <div class="sg-swatch-info"><span class="sg-swatch-name">surface</span><span class="sg-swatch-hex">#14161D</span></div>
+                </div>
+                <div class="sg-swatch">
+                    <div class="sg-swatch-color" style="background-color: #1D2029"></div>
+                    <div class="sg-swatch-info"><span class="sg-swatch-name">surface Highlight</span><span class="sg-swatch-hex">#1D2029</span></div>
+                </div>
+                <div class="sg-swatch">
+                    <div class="sg-swatch-color" style="background-color: #FF3D71"></div>
+                    <div class="sg-swatch-info"><span class="sg-swatch-name">primary / dynamics</span><span class="sg-swatch-hex">#FF3D71</span></div>
+                </div>
+                <div class="sg-swatch">
+                    <div class="sg-swatch-color" style="background-color: #35D0F5"></div>
+                    <div class="sg-swatch-info"><span class="sg-swatch-name">secondary / tone</span><span class="sg-swatch-hex">#35D0F5</span></div>
+                </div>
+                <div class="sg-swatch">
+                    <div class="sg-swatch-color" style="background-color: #A855F7"></div>
+                    <div class="sg-swatch-info"><span class="sg-swatch-name">tertiary / space</span><span class="sg-swatch-hex">#A855F7</span></div>
+                </div>
+                <div class="sg-swatch">
+                    <div class="sg-swatch-color" style="background-color: #FFB01F"></div>
+                    <div class="sg-swatch-info"><span class="sg-swatch-name">quaternary / sfx</span><span class="sg-swatch-hex">#FFB01F</span></div>
+                </div>
+                <div class="sg-swatch">
+                    <div class="sg-swatch-color" style="background-color: #E8EAF0"></div>
+                    <div class="sg-swatch-info"><span class="sg-swatch-name">text Primary</span><span class="sg-swatch-hex">#E8EAF0</span></div>
+                </div>
+                <div class="sg-swatch">
+                    <div class="sg-swatch-color" style="background-color: #7A7F8E"></div>
+                    <div class="sg-swatch-info"><span class="sg-swatch-name">text Secondary</span><span class="sg-swatch-hex">#7A7F8E</span></div>
+                </div>
+                <div class="sg-swatch">
+                    <div class="sg-swatch-color" style="background-color: #23262F"></div>
+                    <div class="sg-swatch-info"><span class="sg-swatch-name">border</span><span class="sg-swatch-hex">#23262F</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Typography -->
+        <section class="sg-section">
+            <div class="sg-section-title">Typography</div>
+            <div class="sg-grid" style="grid-template-columns: 1fr 1fr;">
+                <div class="sg-typo-box">
+                    <div style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.5; margin-bottom: 10px;">Headings</div>
+                    <div style="font-family: var(--font-headings); font-weight: 800; font-size: 2rem; margin-bottom: 10px;">The Quick Brown Fox</div>
+                    <div style="font-family: monospace; font-size: 0.8rem; opacity: 0.5;">Inter</div>
+                </div>
+                <div class="sg-typo-box">
+                    <div style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.5; margin-bottom: 10px;">Body</div>
+                    <div style="font-family: var(--font-body); font-weight: 400; font-size: 1rem; margin-bottom: 10px;">Jumped over the lazy dog. 0123456789</div>
+                    <div style="font-family: monospace; font-size: 0.8rem; opacity: 0.5;">Inter</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Component Specs -->
+        <section class="sg-section">
+            <div class="sg-section-title">Component Specifications</div>
+            <div class="sg-spec-grid">
+                <div class="sg-spec-item">
+                    <div style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.5; margin-bottom: 5px;">knobStyle</div>
+                    <div style="font-family: monospace; color: var(--color-accent); font-size: 1.1rem;">neon-arc</div>
+                </div>
+                <div class="sg-spec-item">
+                    <div style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.5; margin-bottom: 5px;">faderStyle</div>
+                    <div style="font-family: monospace; color: var(--color-accent); font-size: 1.1rem;">line-handle</div>
+                </div>
+                <div class="sg-spec-item">
+                    <div style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.5; margin-bottom: 5px;">borderRadius</div>
+                    <div style="font-family: monospace; color: var(--color-accent); font-size: 1.1rem;">8px</div>
+                </div>
+                <div class="sg-spec-item">
+                    <div style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.5; margin-bottom: 5px;">borderWidth</div>
+                    <div style="font-family: monospace; color: var(--color-accent); font-size: 1.1rem;">1px</div>
+                </div>
+                <div class="sg-spec-item">
+                    <div style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.5; margin-bottom: 5px;">shadowIntensity</div>
+                    <div style="font-family: monospace; color: var(--color-accent); font-size: 1.1rem;">deep</div>
+                </div>
+                <div class="sg-spec-item">
+                    <div style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.5; margin-bottom: 5px;">activeGlow</div>
+                    <div style="font-family: monospace; color: var(--color-accent); font-size: 1.1rem;">true</div>
+                </div>
+                <div class="sg-spec-item">
+                    <div style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.5; margin-bottom: 5px;">moduleAccents</div>
+                    <div style="font-family: monospace; font-size: 0.85rem;">
+                        <span style="color:#FF3D71">■ dynamics</span><br>
+                        <span style="color:#35D0F5">■ tone</span><br>
+                        <span style="color:#A855F7">■ space</span><br>
+                        <span style="color:#FFB01F">■ sfx</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer style="margin-top: 80px; padding-top: 20px; border-top: 1px solid var(--color-border); opacity: 0.5; font-size: 0.8rem;">
+            Generated by VST Style Forge
+        </footer>
+    </div>
+</body>
+</html>

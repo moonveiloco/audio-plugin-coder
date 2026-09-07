@@ -1,0 +1,455 @@
+<!--
+  JIVE Modnetic Amber - Design Library (APC)
+  Framework: JIVE (declarative UI for JUCE), submodule _tools/JIVE pin 89d5787
+  Inspired by: a dark modular multi-FX rack (Modnetic-style): near-black panels,
+               amber accents, sectioned columns, big central "Echo" module.
+  Preview:   copy as Design/v1-layout.xml, then: bash scripts/preview-jive.sh PluginName [vN]
+  Headless:  jive-preview layout.xml (screenshot flag) preview.png
+
+  Rules applied (see agents/rules/jive-integration.md):
+  - every element with children has display="flex"|"grid"|"block"
+  - styling ONLY via style JSON attribute (no inline colour attrs)
+  - colors are #RRGGBB (never 0xAARRGGBB)
+  - gap is grid-only: flex spacing uses padding / spacer components
+  - widget text requires <Text> children (text attr = a11y only on this pin)
+  - knob labels are SIBLING <Text> elements, not children: on pin 89d5787 the
+    <Text> child of a Knob overlays the dial (see minimal-dark reference);
+    the sibling pattern renders below the widget (same as Slider+Mix label)
+  - ComboBox selection uses the selected="<index>" attribute on the ComboBox
+    itself (Option selected="true" is not honoured on this pin)
+  - vertical distribution: justify-content="space-evenly" distributes unevenly
+    on this pin in nested flex columns; use explicit flex-grow spacer blocks
+    (leading/trailing centring + fixed gaps) instead
+  - icons drawn as inline <svg> children (no unicode glyph dependency)
+-->
+<Window width="1200" height="760" display="flex" flex-direction="column"
+        style='{"background": "#0A0A0A", "foreground": "#F2EFE6", "font-size": 12}'>
+
+    <!-- ===== Header bar: brand + preset nav + A/B slots + Mix Lock + license + logo ===== -->
+    <Component id="header" display="flex" flex-direction="row" align-items="centre" height="54" padding="0px 16px"
+               style='{"background": "#0A0A0A", "border": "1px solid #242424"}'>
+        <Text text="Modnetic" style='{"font-size": 20, "font-weight": "bold", "foreground": "#F2EFE6", "letter-spacing": 1}'/>
+        <Component display="block" width="18" height="1"/>
+        <ComboBox id="preset" width="210" height="28">
+            <Option text="*Default"/>
+            <Option text="Dub Chamber"/>
+            <Option text="Spring Site"/>
+            <Option text="Night Drive"/>
+        </ComboBox>
+        <Component display="block" width="10" height="1"/>
+        <Button id="preset-prev" width="26" height="24" text="Previous preset"
+                display="flex" align-items="centre" justify-content="centre">
+            <svg width="10" height="10">
+                <polygon points="8,1 8,9 2,5" fill="#C8C4B8"/>
+            </svg>
+        </Button>
+        <Button id="preset-next" width="26" height="24" text="Next preset"
+                display="flex" align-items="centre" justify-content="centre">
+            <svg width="10" height="10">
+                <polygon points="2,1 2,9 8,5" fill="#C8C4B8"/>
+            </svg>
+        </Button>
+        <Component display="block" width="10" height="1"/>
+        <Button id="slot-a" width="26" height="24" toggleable="true" toggled="true" text="Preset slot A"
+                display="flex" align-items="centre" justify-content="centre">
+            <Text text="A" style='{"foreground": "#F2EFE6", "font-size": 11, "font-weight": "bold"}'/>
+        </Button>
+        <Button id="slot-b" width="26" height="24" toggleable="true" text="Preset slot B"
+                display="flex" align-items="centre" justify-content="centre">
+            <Text text="B" style='{"foreground": "#C8C4B8", "font-size": 11}'/>
+        </Button>
+        <Component display="block" width="14" height="1"/>
+        <Checkbox id="mix-lock" width="96" height="24" padding="0px 0px 0px 24px" display="flex" align-items="centre">
+            <Text text="Mix Lock" style='{"foreground": "#C8C4B8", "font-size": 11}'/>
+        </Checkbox>
+        <Component id="header-spacer" display="block" flex-grow="1" height="1"/>
+        <Text text="Licensed to King Tubby" style='{"foreground": "#6A675F", "font-size": 12}'/>
+        <Component display="block" width="16" height="1"/>
+        <svg width="22" height="22">
+            <polygon points="11,1 21,11 11,21 1,11" fill="none" stroke="#9A968A" stroke-width="2"/>
+            <polygon points="11,7 15,11 11,15 7,11" fill="#9A968A"/>
+        </svg>
+    </Component>
+
+    <!-- ===== Body: 4 module columns + vertical output strip ===== -->
+    <Component id="body" display="flex" flex-direction="row" flex-grow="1" padding="8px">
+
+        <!-- ─── Column 1: Character / Reverb ─── -->
+        <Component id="col-left" display="flex" flex-direction="column" width="215">
+            <Component id="section-character" display="flex" flex-direction="column" align-items="centre" flex-grow="1"
+                       padding="12"
+                       style='{"background": "#191919", "border": "1px solid #242424", "border-radius": 3}'>
+                <Text text="Character" style='{"foreground": "#F2EFE6", "font-size": 14, "font-weight": "bold", "letter-spacing": 1}'/>
+                <Component display="block" flex-grow="1" width="1"/>
+                <ComboBox id="character-model" width="170" height="30">
+                    <Option text="501"/>
+                    <Option text="660"/>
+                    <Option text="812"/>
+                    <Option text="Passive"/>
+                </ComboBox>
+                <Component display="block" width="1" height="14"/>
+                <Component id="character-amount-group" display="flex" flex-direction="column" align-items="centre">
+                    <Knob id="character-amount" value="0.45" min="0" max="1" interval="0.01" width="80" height="80"
+                          text="Character amount"/>
+                    <Component display="block" width="1" height="6"/>
+                    <Text text="Amount" style='{"foreground": "#9A968A", "font-size": 11, "letter-spacing": 1}'/>
+                </Component>
+                <Component display="block" flex-grow="1" width="1"/>
+            </Component>
+            <Component display="block" width="1" height="6"/>
+            <Component id="section-reverb" display="flex" flex-direction="column" align-items="centre" flex-grow="1"
+                       padding="12"
+                       style='{"background": "#191919", "border": "1px solid #242424", "border-radius": 3}'>
+                <Component id="reverb-header" display="flex" flex-direction="row" align-items="centre">
+                    <Component display="block" width="10" height="10"
+                               style='{"background": "#E8A33D", "border-radius": 2}'/>
+                    <Component display="block" width="8" height="1"/>
+                    <Text text="Reverb" style='{"foreground": "#F2EFE6", "font-size": 14, "font-weight": "bold", "letter-spacing": 1}'/>
+                </Component>
+                <Component display="block" flex-grow="1" width="1"/>
+                <Component id="reverb-type-group" display="flex" flex-direction="column" align-items="centre">
+                    <ComboBox id="reverb-type" width="170" height="30">
+                        <Option text="Stereo"/>
+                        <Option text="Mono"/>
+                        <Option text="True Stereo"/>
+                    </ComboBox>
+                    <Component display="block" width="1" height="4"/>
+                    <Text text="Spring" style='{"foreground": "#9A968A", "font-size": 11}'/>
+                </Component>
+                <Component display="block" width="1" height="14"/>
+                <Component id="reverb-level-group" display="flex" flex-direction="column" align-items="centre">
+                    <Knob id="reverb-level" value="0.5" min="0" max="1" interval="0.01" width="80" height="80"
+                          text="Reverb level"/>
+                    <Component display="block" width="1" height="6"/>
+                    <Text text="Level" style='{"foreground": "#9A968A", "font-size": 11, "letter-spacing": 1}'/>
+                </Component>
+                <Component display="block" flex-grow="1" width="1"/>
+            </Component>
+        </Component>
+
+        <Component display="block" width="4" height="1"/>
+
+        <!-- ─── Column 2: Modulation / Routing ─── -->
+        <Component id="col-mid" display="flex" flex-direction="column" width="268">
+            <Component id="section-modulation" display="flex" flex-direction="column" align-items="centre" flex-grow="1.15"
+                       padding="12"
+                       style='{"background": "#191919", "border": "1px solid #242424", "border-radius": 3}'>
+                <Component id="modulation-header" display="flex" flex-direction="row" align-items="centre">
+                    <Component display="block" width="10" height="10"
+                               style='{"background": "#E8A33D", "border-radius": 2}'/>
+                    <Component display="block" width="8" height="1"/>
+                    <Text text="Modulation" style='{"foreground": "#F2EFE6", "font-size": 14, "font-weight": "bold", "letter-spacing": 1}'/>
+                </Component>
+                <Component display="block" flex-grow="1" width="1"/>
+                <Component id="mod-type-row" display="flex" flex-direction="row" align-items="centre">
+                    <ComboBox id="mod-mode" width="110" height="28">
+                        <Option text="Chorus"/>
+                        <Option text="Flanger"/>
+                        <Option text="Phaser"/>
+                    </ComboBox>
+                    <Component display="block" width="8" height="1"/>
+                    <ComboBox id="mod-flavour" width="110" height="28">
+                        <Option text="Analog"/>
+                        <Option text="Digital"/>
+                        <Option text="Tape"/>
+                    </ComboBox>
+                </Component>
+                <Component display="block" width="1" height="12"/>
+                <Component id="mod-knob-row" display="flex" flex-direction="row" align-items="flex-start">
+                    <Component id="mod-rate-group" display="flex" flex-direction="column" align-items="centre">
+                        <Knob id="mod-rate" value="0.4" min="0" max="1" interval="0.01" width="80" height="80"
+                              text="Modulation rate"/>
+                        <Component display="block" width="1" height="6"/>
+                        <Text text="Rate" style='{"foreground": "#9A968A", "font-size": 11, "letter-spacing": 1}'/>
+                    </Component>
+                    <Component display="block" width="16" height="1"/>
+                    <Component id="mod-amount-group" display="flex" flex-direction="column" align-items="centre">
+                        <Knob id="mod-amount" value="0.45" min="0" max="1" interval="0.01" width="80" height="80"
+                              text="Modulation amount"/>
+                        <Component display="block" width="1" height="6"/>
+                        <Text text="Amount" style='{"foreground": "#9A968A", "font-size": 11, "letter-spacing": 1}'/>
+                    </Component>
+                </Component>
+                <Component display="block" width="1" height="12"/>
+                <Component id="mod-spread-group" display="flex" flex-direction="column" align-items="centre">
+                    <Slider id="mod-spread" value="0.8" min="0" max="1" interval="0.01" orientation="horizontal"
+                            width="212" height="24"/>
+                    <Component display="block" width="1" height="4"/>
+                    <Text text="Spread" style='{"foreground": "#9A968A", "font-size": 11, "letter-spacing": 1}'/>
+                </Component>
+                <Component display="block" flex-grow="1" width="1"/>
+            </Component>
+            <Component display="block" width="1" height="6"/>
+            <Component id="section-routing" display="flex" flex-direction="column" align-items="centre" flex-grow="1"
+                       padding="12"
+                       style='{"background": "#191919", "border": "1px solid #242424", "border-radius": 3}'>
+                <Component id="routing-header" display="flex" flex-direction="row" align-items="centre">
+                    <Component display="block" width="10" height="10"
+                               style='{"background": "#E8A33D", "border-radius": 2}'/>
+                    <Component display="block" width="8" height="1"/>
+                    <Text text="Routing" style='{"foreground": "#F2EFE6", "font-size": 14, "font-weight": "bold", "letter-spacing": 1}'/>
+                </Component>
+                <Component display="block" width="1" height="10"/>
+                <Component id="routing-mode-row" display="flex" flex-direction="row" align-items="flex-start">
+                    <Component id="routing-mode-reverb" display="flex" flex-direction="column" align-items="centre">
+                        <ComboBox id="routing-reverb" width="108" height="26">
+                            <Option text="Parallel"/>
+                            <Option text="Serial"/>
+                        </ComboBox>
+                        <Component display="block" width="1" height="3"/>
+                        <Text text="Reverb" style='{"foreground": "#9A968A", "font-size": 10}'/>
+                    </Component>
+                    <Component display="block" width="8" height="1"/>
+                    <Component id="routing-mode-mod" display="flex" flex-direction="column" align-items="centre">
+                        <ComboBox id="routing-mod" width="108" height="26">
+                            <Option text="Pre Wet"/>
+                            <Option text="Post Wet"/>
+                        </ComboBox>
+                        <Component display="block" width="1" height="3"/>
+                        <Text text="Modulation" style='{"foreground": "#9A968A", "font-size": 10}'/>
+                    </Component>
+                </Component>
+                <Component display="block" width="1" height="10"/>
+                <Component id="routing-diagram" display="flex" flex-direction="column" align-items="centre" flex-grow="1"
+                           width="224" padding="6px 10px 8px 10px"
+                           style='{"background": "#121212", "border": "1px solid #242424", "border-radius": 5}'>
+                    <Text text="Wet" style='{"foreground": "#E8A33D", "font-size": 12, "font-weight": "bold"}'/>
+                    <Component id="routing-graph" display="flex" flex-direction="row" align-items="centre" flex-grow="1"
+                               padding="0px 0px 0px 14px">
+                        <Component id="routing-boxes" display="flex" flex-direction="column" align-items="flex-start">
+                            <Component id="routing-row-me" display="flex" flex-direction="row" align-items="centre">
+                                <Component id="node-m" width="26" height="24" display="flex" align-items="centre"
+                                           justify-content="centre"
+                                           style='{"background": "#E8A33D", "border-radius": 4}'>
+                                    <Text text="M" style='{"foreground": "#141414", "font-size": 12, "font-weight": "bold"}'/>
+                                </Component>
+                                <svg width="18" height="12">
+                                    <line x1="0" y1="6" x2="18" y2="6" stroke="#E8A33D" stroke-width="2"/>
+                                </svg>
+                                <Component id="node-e" width="26" height="24" display="flex" align-items="centre"
+                                           justify-content="centre"
+                                           style='{"background": "#E8A33D", "border-radius": 4}'>
+                                    <Text text="E" style='{"foreground": "#141414", "font-size": 12, "font-weight": "bold"}'/>
+                                </Component>
+                            </Component>
+                            <svg width="14" height="16">
+                                <line x1="7" y1="0" x2="7" y2="16" stroke="#E8A33D" stroke-width="2"/>
+                            </svg>
+                            <Component id="routing-row-r" display="flex" flex-direction="row" align-items="centre"
+                                       padding="0px 0px 0px 14px">
+                                <Component id="node-r" width="26" height="24" display="flex" align-items="centre"
+                                           justify-content="centre"
+                                           style='{"background": "#E8A33D", "border-radius": 4}'>
+                                    <Text text="R" style='{"foreground": "#141414", "font-size": 12, "font-weight": "bold"}'/>
+                                </Component>
+                            </Component>
+                        </Component>
+                        <svg id="routing-elbow" width="54" height="64">
+                            <polyline points="0,14 36,14 36,50 54,50" fill="none" stroke="#E8A33D" stroke-width="2"/>
+                            <line x1="0" y1="50" x2="54" y2="50" stroke="#E8A33D" stroke-width="2"/>
+                            <circle cx="4" cy="14" r="2" fill="#E8A33D"/>
+                        </svg>
+                        <Component id="routing-sum" width="20" height="20" display="flex" align-items="centre"
+                                   justify-content="centre"
+                                   style='{"background": "#191919", "border": "1px solid #6A675F", "border-radius": 10}'>
+                            <Text text="x" style='{"foreground": "#9A968A", "font-size": 10, "font-weight": "bold"}'/>
+                        </Component>
+                    </Component>
+                    <Text text="Dry" style='{"foreground": "#6A675F", "font-size": 12}'/>
+                </Component>
+            </Component>
+        </Component>
+
+        <Component display="block" width="4" height="1"/>
+
+        <!-- ─── Column 3: Echo (large module) ─── -->
+        <Component id="section-echo" display="flex" flex-direction="column" flex-grow="1" padding="12"
+                   style='{"background": "#191919", "border": "1px solid #242424", "border-radius": 3}'>
+            <Component id="echo-header" display="flex" flex-direction="row" align-items="centre" justify-content="centre">
+                <Component display="block" width="10" height="10"
+                           style='{"background": "#E8A33D", "border-radius": 2}'/>
+                <Component display="block" width="8" height="1"/>
+                <Text text="Echo" style='{"foreground": "#F2EFE6", "font-size": 14, "font-weight": "bold", "letter-spacing": 1}'/>
+            </Component>
+            <Component id="echo-content" display="flex" flex-direction="row" flex-grow="1" padding="0px 0px 0px 8px">
+
+                <!-- Echo left: Repeat / Beats / Intensity / Playback -->
+                <Component id="echo-left" display="flex" flex-direction="column" align-items="centre" flex-grow="1">
+                    <Component display="block" flex-grow="1" width="1"/>
+                    <Component id="echo-repeat-group" display="flex" flex-direction="column" align-items="centre">
+                        <Knob id="echo-repeat" value="0.62" min="0" max="1" interval="0.01" width="126" height="126"
+                              text="Echo repeat"/>
+                        <Component display="block" width="1" height="6"/>
+                        <Component id="repeat-label-row" display="flex" flex-direction="row" align-items="centre">
+                            <svg width="7" height="9">
+                                <polygon points="6,1 6,8 1,4.5" fill="#9A968A"/>
+                            </svg>
+                            <Component display="block" width="5" height="1"/>
+                            <Text text="Repeat" style='{"foreground": "#9A968A", "font-size": 11, "letter-spacing": 1}'/>
+                            <Component display="block" width="5" height="1"/>
+                            <svg width="7" height="9">
+                                <polygon points="1,1 1,8 6,4.5" fill="#9A968A"/>
+                            </svg>
+                        </Component>
+                    </Component>
+                    <Component display="block" width="1" height="14"/>
+                    <Text id="repeat-value" text="2/16"
+                          style='{"foreground": "#F2EFE6", "font-size": 22, "font-weight": "bold", "letter-spacing": 1}'/>
+                    <Component display="block" width="1" height="10"/>
+                    <Component id="beats-row" display="flex" flex-direction="row" align-items="centre">
+                        <Component id="beats-chip" width="54" height="26" display="flex" align-items="centre"
+                                   justify-content="centre"
+                                   style='{"background": "#232323", "border": "1px solid #333333", "border-radius": 4}'>
+                            <Text text="Beats" style='{"foreground": "#C8C4B8", "font-size": 11}'/>
+                        </Component>
+                        <Component display="block" width="8" height="1"/>
+                        <ComboBox id="beats" selected="3" width="80" height="26">
+                            <Option text="2"/>
+                            <Option text="4"/>
+                            <Option text="8"/>
+                            <Option text="16"/>
+                            <Option text="32"/>
+                        </ComboBox>
+                    </Component>
+                    <Component display="block" width="1" height="20"/>
+                    <Component id="echo-intensity-group" display="flex" flex-direction="column" align-items="centre">
+                        <Knob id="echo-intensity" value="0.55" min="0" max="1" interval="0.01" width="106" height="106"
+                              text="Echo intensity"/>
+                        <Component display="block" width="1" height="6"/>
+                        <Text text="Intensity" style='{"foreground": "#9A968A", "font-size": 11, "letter-spacing": 1}'/>
+                    </Component>
+                    <Component display="block" width="1" height="20"/>
+                    <Component id="playback-group" display="flex" flex-direction="column" align-items="centre">
+                        <Text text="Playback" style='{"foreground": "#9A968A", "font-size": 11, "letter-spacing": 1}'/>
+                        <Component display="block" width="1" height="6"/>
+                        <Component id="playback-row" display="flex" flex-direction="row" align-items="centre">
+                            <Button id="playback-run" width="34" height="26" text="Run playback"
+                                    display="flex" align-items="centre" justify-content="centre">
+                                <svg width="14" height="10">
+                                    <line x1="0" y1="5" x2="9" y2="5" stroke="#F2EFE6" stroke-width="2"/>
+                                    <polygon points="9,1 9,9 13,5" fill="#F2EFE6"/>
+                                </svg>
+                            </Button>
+                            <Component display="block" width="4" height="1"/>
+                            <Button id="playback-tape" width="64" height="26" toggleable="true" toggled="true"
+                                    text="Tape playback" display="flex" align-items="centre" justify-content="centre">
+                                <Text text="Tape" style='{"foreground": "#F2EFE6", "font-size": 11}'/>
+                            </Button>
+                        </Component>
+                    </Component>
+                    <Component display="block" flex-grow="1" width="1"/>
+                </Component>
+
+                <!-- Echo right: Heads / Wow / Level / Hold -->
+                <Component id="echo-right" display="flex" flex-direction="column" align-items="centre" width="130">
+                    <Component display="block" flex-grow="1" width="1"/>
+                    <Component id="heads-group" display="flex" flex-direction="column" align-items="centre">
+                        <Component id="heads-leds" display="flex" flex-direction="row" align-items="centre">
+                            <Component display="block" width="6" height="6" style='{"background": "#E8A33D", "border-radius": 3}'/>
+                            <Component display="block" width="5" height="1"/>
+                            <Component display="block" width="6" height="6" style='{"background": "#E8A33D", "border-radius": 3}'/>
+                            <Component display="block" width="5" height="1"/>
+                            <Component display="block" width="6" height="6" style='{"background": "#E8A33D", "border-radius": 3}'/>
+                        </Component>
+                        <Component display="block" width="1" height="5"/>
+                        <Knob id="echo-heads" value="0.7" min="0" max="1" interval="0.01" width="80" height="80"
+                              text="Echo heads"/>
+                        <Component display="block" width="1" height="6"/>
+                        <Text text="Heads" style='{"foreground": "#9A968A", "font-size": 11, "letter-spacing": 1}'/>
+                    </Component>
+                    <Component display="block" width="1" height="24"/>
+                    <Component id="echo-wow-group" display="flex" flex-direction="column" align-items="centre">
+                        <Knob id="echo-wow" value="0.35" min="0" max="1" interval="0.01" width="80" height="80"
+                              text="Wow and flutter"/>
+                        <Component display="block" width="1" height="6"/>
+                        <Text text="Wow" style='{"foreground": "#9A968A", "font-size": 11, "letter-spacing": 1}'/>
+                    </Component>
+                    <Component display="block" width="1" height="24"/>
+                    <Component id="echo-level-group" display="flex" flex-direction="column" align-items="centre">
+                        <Knob id="echo-level" value="0.6" min="0" max="1" interval="0.01" width="80" height="80"
+                              text="Echo level"/>
+                        <Component display="block" width="1" height="6"/>
+                        <Text text="Level" style='{"foreground": "#9A968A", "font-size": 11, "letter-spacing": 1}'/>
+                    </Component>
+                    <Component display="block" width="1" height="24"/>
+                    <Component id="hold-group" display="flex" flex-direction="column" align-items="centre">
+                        <Text text="Hold" style='{"foreground": "#9A968A", "font-size": 11, "letter-spacing": 1}'/>
+                        <Component display="block" width="1" height="6"/>
+                        <Button id="hold" width="30" height="30" toggleable="true" text="Hold loop"
+                                display="flex" align-items="centre" justify-content="centre"/>
+                    </Component>
+                    <Component display="block" flex-grow="1" width="1"/>
+                </Component>
+            </Component>
+        </Component>
+
+        <Component display="block" width="4" height="1"/>
+
+        <!-- ─── Column 4: Mix ─── -->
+        <Component id="section-mix" display="flex" flex-direction="column" align-items="centre" width="206"
+                   padding="12"
+                   style='{"background": "#191919", "border": "1px solid #242424", "border-radius": 3}'>
+            <Text text="Mix" style='{"foreground": "#F2EFE6", "font-size": 14, "font-weight": "bold", "letter-spacing": 1}'/>
+            <Component display="block" flex-grow="1" width="1"/>
+            <Component id="mix-tone-row" display="flex" flex-direction="row" align-items="flex-start">
+                <Component id="mix-bass-group" display="flex" flex-direction="column" align-items="centre">
+                    <Knob id="mix-bass" value="0.5" min="0" max="1" interval="0.01" width="78" height="78"
+                          text="Bass shelf"/>
+                    <Component display="block" width="1" height="6"/>
+                    <Text text="Bass" style='{"foreground": "#9A968A", "font-size": 11, "letter-spacing": 1}'/>
+                </Component>
+                <Component display="block" width="14" height="1"/>
+                <Component id="mix-treble-group" display="flex" flex-direction="column" align-items="centre">
+                    <Knob id="mix-treble" value="0.5" min="0" max="1" interval="0.01" width="78" height="78"
+                          text="Treble shelf"/>
+                    <Component display="block" width="1" height="6"/>
+                    <Text text="Treble" style='{"foreground": "#9A968A", "font-size": 11, "letter-spacing": 1}'/>
+                </Component>
+            </Component>
+            <Component display="block" width="1" height="16"/>
+            <Component id="mix-noise-group" display="flex" flex-direction="column" align-items="centre">
+                <Slider id="mix-noise" value="0.3" min="0" max="1" interval="0.01" orientation="horizontal"
+                        width="170" height="22"/>
+                <Component display="block" width="1" height="4"/>
+                <Text text="Noise" style='{"foreground": "#9A968A", "font-size": 11, "letter-spacing": 1}'/>
+            </Component>
+            <Component display="block" width="1" height="16"/>
+            <Component id="mix-width-group" display="flex" flex-direction="column" align-items="centre">
+                <Slider id="mix-width" value="0.95" min="0" max="1" interval="0.01" orientation="horizontal"
+                        width="170" height="22"/>
+                <Component display="block" width="1" height="4"/>
+                <Text text="Width" style='{"foreground": "#9A968A", "font-size": 11, "letter-spacing": 1}'/>
+            </Component>
+            <Component display="block" width="1" height="16"/>
+            <Component id="mix-gain-row" display="flex" flex-direction="row" align-items="flex-start">
+                <Component id="mix-input-group" display="flex" flex-direction="column" align-items="centre">
+                    <Knob id="mix-input" value="0.6" min="0" max="1" interval="0.01" width="78" height="78"
+                          text="Input gain"/>
+                    <Component display="block" width="1" height="6"/>
+                    <Text text="Input" style='{"foreground": "#9A968A", "font-size": 11, "letter-spacing": 1}'/>
+                </Component>
+                <Component display="block" width="14" height="1"/>
+                <Component id="mix-blend-group" display="flex" flex-direction="column" align-items="centre">
+                    <Knob id="mix-blend" value="0.5" min="0" max="1" interval="0.01" width="78" height="78"
+                          text="Dry-wet mix"/>
+                    <Component display="block" width="1" height="6"/>
+                    <Text text="Mix" style='{"foreground": "#9A968A", "font-size": 11, "letter-spacing": 1}'/>
+                </Component>
+            </Component>
+            <Component display="block" flex-grow="1" width="1"/>
+        </Component>
+
+        <Component display="block" width="4" height="1"/>
+
+        <!-- ─── Output strip: vertical faders ─── -->
+        <Component id="output-strip" display="flex" flex-direction="row" align-items="centre" justify-content="centre"
+                   width="52"
+                   style='{"background": "#0A0A0A", "border": "1px solid #242424", "border-radius": 3}'>
+            <Slider id="output-l" value="0.75" min="0" max="1" interval="0.01" orientation="vertical"
+                    width="16" height="620"/>
+            <Component display="block" width="4" height="1"/>
+            <Slider id="output-r" value="0.75" min="0" max="1" interval="0.01" orientation="vertical"
+                    width="16" height="620"/>
+        </Component>
+    </Component>
+</Window>

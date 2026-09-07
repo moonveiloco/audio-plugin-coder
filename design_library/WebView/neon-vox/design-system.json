@@ -1,0 +1,41 @@
+{
+  "name": "Neon Vox",
+  "description": "Dark vocal-chain channel strip: near-black panels with four neon module accents (pink Dynamics, cyan Tone, purple Space, amber SFX), glowing module icons, live EQ analyzer, ducking meters and a hero SFX knob.",
+  "palette": {
+    "background": "#0B0D12",
+    "surface": "#14161D",
+    "surfaceHighlight": "#1D2029",
+    "primary": "#FF3D71",
+    "secondary": "#35D0F5",
+    "tertiary": "#A855F7",
+    "quaternary": "#FFB01F",
+    "accent": "#35D0F5",
+    "textPrimary": "#E8EAF0",
+    "textSecondary": "#7A7F8E",
+    "border": "#23262F"
+  },
+  "typography": {
+    "fontFamilyHeadings": "Inter",
+    "fontFamilyBody": "Inter",
+    "fontSizeSmall": "12px",
+    "fontSizeBase": "14px",
+    "fontSizeLarge": "18px",
+    "fontWeightLight": 300,
+    "fontWeightRegular": 500,
+    "fontWeightBold": 700
+  },
+  "components": {
+    "knobStyle": "neon-arc",
+    "faderStyle": "line-handle",
+    "borderRadius": "8px",
+    "borderWidth": "1px",
+    "shadowIntensity": "deep",
+    "activeGlow": true,
+    "moduleAccents": {
+      "dynamics": "#FF3D71",
+      "tone": "#35D0F5",
+      "space": "#A855F7",
+      "sfx": "#FFB01F"
+    }
+  }
+}

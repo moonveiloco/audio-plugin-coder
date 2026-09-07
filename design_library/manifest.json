@@ -1,22 +1,52 @@
 {
-  "version": "1.0.0",
-  "lastUpdated": "2026-08-07T12:00:00Z",
-  "totalDesigns": 4,
+  "version": "1.1.0",
+  "lastUpdated": "2026-09-07T23:10:00Z",
+  "totalDesigns": 7,
   "designs": [
+    {
+      "id": "neon-vox",
+      "name": "Neon Vox",
+      "framework": "webview",
+      "path": "WebView/neon-vox",
+      "vibe": "Dark vocal-chain strip: near-black panels, four neon module accents, glowing glyphs, live EQ analyzer, hero SFX knob",
+      "category": "modern",
+      "tags": ["dark", "neon", "vocal", "channel-strip", "multi-fx", "glow", "analyzer"],
+      "supports": {
+        "visage": false,
+        "webview": true,
+        "jive": false
+      },
+      "examples": {
+        "webview": ["index.html"],
+        "visage": [],
+        "jive": []
+      },
+      "colors": {
+        "primary": "#FF3D71",
+        "accent": "#35D0F5",
+        "background": "#0B0D12"
+      },
+      "bestFor": ["vocal-processing", "channel-strips", "multi-fx", "eq", "dynamics"],
+      "created": "2026-09-07",
+      "usageCount": 0
+    },
     {
       "id": "amber-signal",
       "name": "Amber Signal",
-      "path": "amber-signal",
+      "framework": "webview",
+      "path": "WebView/amber-signal",
       "vibe": "Warm, signal-flow, studio-oriented",
       "category": "modern",
       "tags": ["warm", "professional", "signal-flow", "studio"],
       "supports": {
         "visage": false,
-        "webview": true
+        "webview": true,
+        "jive": false
       },
       "examples": {
-        "webview": ["preview.html"],
-        "visage": []
+        "webview": ["index.html"],
+        "visage": [],
+        "jive": []
       },
       "colors": {
         "primary": "#FF9500",
@@ -30,17 +60,20 @@
     {
       "id": "neogrid-minimal",
       "name": "NeoGrid Minimal",
-      "path": "neogrid-minimal",
+      "framework": "webview",
+      "path": "WebView/neogrid-minimal",
       "vibe": "Geometric, grid-based, futuristic minimalism",
       "category": "minimal",
       "tags": ["modern", "geometric", "grid", "minimal", "futuristic"],
       "supports": {
         "visage": false,
-        "webview": true
+        "webview": true,
+        "jive": false
       },
       "examples": {
-        "webview": ["preview.html"],
-        "visage": []
+        "webview": ["index.html"],
+        "visage": [],
+        "jive": []
       },
       "colors": {
         "primary": "#00F5FF",
@@ -54,17 +87,20 @@
     {
       "id": "bright_vintage",
       "name": "Bright Vintage",
-      "path": "bright_vintage",
+      "framework": "webview",
+      "path": "WebView/bright_vintage",
       "vibe": "70s analog hardware: brushed aluminum, walnut knobs, amber LEDs",
       "category": "vintage",
       "tags": ["vintage", "analog", "warm", "retro", "hardware"],
       "supports": {
         "visage": false,
-        "webview": true
+        "webview": true,
+        "jive": false
       },
       "examples": {
-        "webview": ["preview.html"],
-        "visage": []
+        "webview": ["index.html"],
+        "visage": [],
+        "jive": []
       },
       "colors": {
         "primary": "#D97706",
@@ -78,17 +114,20 @@
     {
       "id": "skeuomorph",
       "name": "Skeuomorph",
-      "path": "skeuomorph",
+      "framework": "webview",
+      "path": "WebView/skeuomorph",
       "vibe": "Realistic, tactile high-end studio hardware",
       "category": "skeuomorphic",
       "tags": ["realistic", "tactile", "hardware", "textured", "3d", "premium"],
       "supports": {
         "visage": false,
-        "webview": true
+        "webview": true,
+        "jive": false
       },
       "examples": {
-        "webview": ["preview.html"],
-        "visage": []
+        "webview": ["index.html"],
+        "visage": [],
+        "jive": []
       },
       "colors": {
         "primary": "#E0E3E8",
@@ -97,6 +136,60 @@
       },
       "bestFor": ["effects", "eq", "dynamics", "channel-strips", "synths"],
       "created": "2026-08-07",
+      "usageCount": 0
+    },
+    {
+      "id": "minimal-dark",
+      "name": "Minimal Dark",
+      "framework": "jive",
+      "path": "JIVE/minimal-dark",
+      "vibe": "Minimalist dark: flat graphite surfaces, hairline borders, single cool-blue accent",
+      "category": "minimal",
+      "tags": ["dark", "minimal", "flat", "jive", "declarative", "reference"],
+      "supports": {
+        "visage": false,
+        "webview": false,
+        "jive": true
+      },
+      "examples": {
+        "webview": [],
+        "visage": [],
+        "jive": ["layout.xml"]
+      },
+      "colors": {
+        "primary": "#E8ECF1",
+        "accent": "#4BB1D9",
+        "background": "#16181D"
+      },
+      "bestFor": ["utility", "effects", "synths", "reference-example"],
+      "created": "2026-09-07",
+      "usageCount": 0
+    },
+    {
+      "id": "modnetic-amber",
+      "name": "Modnetic Amber",
+      "framework": "jive",
+      "path": "JIVE/modnetic-amber",
+      "vibe": "Dark modular multi-FX rack: near-black panels, amber accents, sectioned columns, tape-echo centerpiece",
+      "category": "dark",
+      "tags": ["dark", "amber", "modular", "jive", "multi-fx", "rack", "tape-echo"],
+      "supports": {
+        "visage": false,
+        "webview": false,
+        "jive": true
+      },
+      "examples": {
+        "webview": [],
+        "visage": [],
+        "jive": ["layout.xml"]
+      },
+      "colors": {
+        "primary": "#E8A33D",
+        "accent": "#F2EFE6",
+        "background": "#0D0D0D"
+      },
+      "bestFor": ["multi-fx", "delay", "reverb", "modulation"],
+      "created": "2026-09-07",
       "usageCount": 0
     }
   ]

@@ -1,0 +1,66 @@
+{
+  "name": "Modnetic Amber",
+  "framework": "jive",
+  "description": "Dark modular multi-FX rack for JIVE declarative markup: near-black panels, amber accents, sectioned columns (Character / Modulation / Routing / Echo / Mix), big central tape-echo module with beat-synced repeat, amber routing diagram and vertical output faders. Inspired by a Modnetic-style reference shot.",
+  "markup": "layout.xml",
+  "lookAndFeel": {
+    "header": "ModneticLookAndFeel.h",
+    "summary": "Header-only JUCE 9 LookAndFeel owning the widget chrome JIVE markup cannot style: grey gradient rotary dials with pale pointer, amber value arc + end-dot, tick-dot ring on dials >= 90px, hairline sliders with amber fill (bar thumb on wide sliders, round dot elsewhere), flat dark button/combo chips, dark popup with amber highlight, amber checkbox square",
+    "pluginUsage": "copy the header into the plugin, hold it as a member of the editor, setLookAndFeel(&laf) in ctor / setLookAndFeel(nullptr) in dtor",
+    "previewUsage": "jive-preview layout.xml --laf modnetic [--screenshot out.png]  |  APC_JIVE_PREVIEW_ARGS=\"--laf modnetic\" bash scripts/preview-jive.sh <Name>"
+  },
+  "preview": "bash scripts/preview-jive.sh <PluginName> [v<N>] with APC_JIVE_PREVIEW_ARGS=\"--laf modnetic\" (copy as Design/v1-layout.xml)",
+  "palette": {
+    "background": "#0D0D0D",
+    "panel": "#161616",
+    "panelInset": "#101010",
+    "primary": "#F2EFE6",
+    "secondary": "#C8C4B8",
+    "muted": "#9A968A",
+    "faint": "#6A675F",
+    "accent": "#E8A33D",
+    "accentTextOn": "#141414",
+    "border": "#262626"
+  },
+  "typography": {
+    "fontFamilyHeadings": "system default (JIVE inherits host font; override via style 'font-family')",
+    "fontFamilyBody": "system default",
+    "fontSizeSmall": 10,
+    "fontSizeBase": 12,
+    "fontSizeSectionTitle": 14,
+    "fontSizeBrand": 20,
+    "fontSizeValueReadout": 22,
+    "fontWeightBold": "bold (brand, section titles, value readouts)"
+  },
+  "components": {
+    "borderRadius": 4,
+    "borderWidth": "1px solid #262626",
+    "sectionBullet": "10x10 accent square (Component, border-radius 2) before section title",
+    "knobLabels": "sibling <Text> under each Knob (child <Text> overlays the dial on pin 89d5787)",
+    "icons": "inline <svg> children (transport triangles, playback arrow, logo) - no unicode glyphs",
+    "shadowIntensity": "none",
+    "activeGlow": false,
+    "spacing": "leading/trailing flex-grow spacers + fixed gap blocks (space-evenly is uneven on nested columns)"
+  },
+  "layout": {
+    "window": "1200x760, flex column: header bar + body row",
+    "headerBar": "brand + preset ComboBox + prev/next + A/B slots + Mix Lock checkbox + license text + svg logo",
+    "columns": [
+      "col-left 215px: Character / Reverb",
+      "col-mid 268px: Modulation / Routing (amber M-E-R diagram)",
+      "col-echo flex-grow: Repeat 122px knob, 2/16 readout, Beats combo, Intensity, Playback row | Heads/Wow/Level/Hold",
+      "col-mix 206px: Bass/Treble, Noise/Width sliders, Input/Mix",
+      "output-strip 52px: two vertical faders"
+    ]
+  },
+  "jiveNotes": {
+    "styles": "JSON only, in style='{}' attribute (background, foreground, border, border-radius, font-*, letter-spacing, text-decoration)",
+    "displayRequired": "every element with children needs display=\"flex\"|\"grid\"|\"block\"",
+    "colors": "#RRGGBB only - 0xAARRGGBB renders silently transparent",
+    "comboBoxSelection": "selected=\"<index>\" on the ComboBox; Option selected=\"true\" is ignored on pin 89d5787",
+    "knobLabelPattern": "sibling Text, not child (child overlays dial) - verified via headless screenshot",
+    "verticalDistribution": "space-evenly distributes unevenly in nested flex columns on this pin; use flex-grow spacer blocks",
+    "widgetChrome": "styled by the bundled ModneticLookAndFeel.h (jive-preview flag: --laf modnetic); without it, chrome falls back to the host LookAndFeel",
+    "componentsCovered": ["Window", "Component", "Text", "Button", "Checkbox", "ComboBox", "Slider", "Knob", "svg", "Option"]
+  }
+}

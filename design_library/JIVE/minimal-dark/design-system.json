@@ -1,0 +1,43 @@
+{
+  "name": "Minimal Dark",
+  "framework": "jive",
+  "description": "Minimalist dark UI for JIVE declarative markup: flat graphite surfaces, hairline borders, a single cool-blue accent and generous whitespace. Reference example containing every component type registered in jive::ComponentFactory on pin 89d5787.",
+  "markup": "layout.xml",
+  "preview": "bash scripts/preview-jive.sh <PluginName> [v<N>] (copy as Design/v1-layout.xml)",
+  "palette": {
+    "background": "#16181D",
+    "surface": "#1E2128",
+    "surfaceHighlight": "#262B34",
+    "primary": "#E8ECF1",
+    "secondary": "#8B93A1",
+    "accent": "#4BB1D9",
+    "textPrimary": "#E8ECF1",
+    "textSecondary": "#8B93A1",
+    "textDisabled": "#5C6572",
+    "border": "#2E3440"
+  },
+  "typography": {
+    "fontFamilyHeadings": "system default (JIVE inherits host font; override via style 'font-family')",
+    "fontFamilyBody": "system default",
+    "fontSizeSmall": 10,
+    "fontSizeBase": 12,
+    "fontSizeLarge": 18,
+    "fontWeightRegular": "normal",
+    "fontWeightBold": "bold"
+  },
+  "components": {
+    "borderRadius": 6,
+    "borderWidth": "1px solid #2E3440",
+    "shadowIntensity": "none",
+    "activeGlow": false,
+    "spacing": "flex justify-content / padding (gap is grid-only in JIVE)"
+  },
+  "jiveNotes": {
+    "styles": "JSON only, in style='{}' attribute (background, foreground, border, border-radius, font-*, letter-spacing, text-decoration)",
+    "displayRequired": "every element with children needs display=\"flex\"|\"grid\"|\"block\"",
+    "colors": "#RRGGBB only - 0xAARRGGBB renders silently transparent",
+    "editor": "<Editor> maps to IgnoredComponent upstream (TextEditor missing, issue #59)",
+    "widgetChrome": "toggle/knob/combo box chrome follows host LookAndFeel; JIVE styles control placement, size and text colours",
+    "componentsCovered": ["Window", "Component", "Editor", "Text", "Label", "Button", "Checkbox", "ComboBox", "Slider", "Knob", "Spinner", "ProgressBar", "Hyperlink", "Image", "svg", "Option", "Header"]
+  }
+}
