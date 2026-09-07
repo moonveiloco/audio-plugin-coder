@@ -242,7 +242,7 @@ Every plugin has a `status.json` file tracking development progress:
   "version": "v0.0.0",
   "current_phase": "ideation|plan|design|code|ship|complete",
   "ui_framework": "visage|webview|pending",
-  "complexity_score": 1-5,
+  "complexity_score": 1-10,
   "created_at": "2026-01-01T00:00:00Z",
   "last_modified": "2026-01-01T00:00:00Z",
   "phase_history": [],

@@ -382,7 +382,7 @@ function Set-PluginFramework {
         "ui_framework" = $Framework
         "framework_selection.decision" = $Framework
         "framework_selection.rationale" = $Rationale
-        "framework_selection.implementation_strategy" = "single-pass"
+        "framework_selection.implementation_strategy" = "phased"
     }
     
     if (Update-PluginState -PluginPath $PluginPath -Updates $updates) {

@@ -16,7 +16,7 @@ All plugins use a standardized state schema with these core sections:
   "version": "string",
   "current_phase": "ideation|plan|design|code|ship|complete",
   "ui_framework": "visage|webview|pending",
-  "complexity_score": 1-5,
+  "complexity_score": 1-10,
   "created_at": "ISO date",
   "last_modified": "ISO date",
   "phase_history": [
@@ -39,7 +39,7 @@ All plugins use a standardized state schema with these core sections:
   "framework_selection": {
     "decision": "visage|webview|pending",
     "rationale": "string",
-    "implementation_strategy": "single-pass|phased|pending"
+    "implementation_strategy": "phased|pending"
   },
   "error_recovery": {
     "last_backup": "string|null",

@@ -17,7 +17,7 @@ Write-Host "Name: $($state.plugin_name)"
 Write-Host "Version: $($state.version)"
 Write-Host "Current Phase: $($state.current_phase)"
 Write-Host "UI Framework: $($state.ui_framework)"
-Write-Host "Complexity: $($state.complexity_score)/5"
+Write-Host "Complexity: $($state.complexity_score)/10"
 Write-Host ""
 
 Write-Host "=== Completed Phases ===" -ForegroundColor Green

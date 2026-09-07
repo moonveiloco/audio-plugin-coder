@@ -217,7 +217,7 @@ function Test-StateManagementSystem {
     Write-Host "10. Testing framework selection..." -ForegroundColor Yellow
     try {
         $result = Update-PluginState -PluginPath $testPluginPath -Phase "plan_complete" -Framework "visage" -Updates @{
-            "complexity_score" = 3
+            "complexity_score" = 5
             "framework_selection.rationale" = "Test rationale"
         }
         

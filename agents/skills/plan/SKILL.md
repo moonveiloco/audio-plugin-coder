@@ -76,15 +76,15 @@ Map each parameter to DSP components:
 | Attack | Detector | Sets attack time | 0.1ms to 100ms |
 
 ## Complexity Assessment
-Rate the plugin complexity (1-5):
+Rate the plugin complexity (1-10):
 
-**Level 1 (Simple):** Basic gain, simple filter, single parameter
-**Level 2 (Moderate):** Multi-parameter, basic dynamics, simple modulation
-**Level 3 (Advanced):** Multi-band processing, complex algorithms, state management
-**Level 4 (Expert):** Synthesis engines, complex feedback, real-time analysis
-**Level 5 (Research):** Machine learning, complex modeling, advanced DSP
+**Level 1-2 (Simple):** Basic gain, simple filter, single parameter
+**Level 3-4 (Moderate):** Multi-parameter, basic dynamics, simple modulation
+**Level 5-6 (Advanced):** Multi-band processing, complex algorithms, state management
+**Level 7-8 (Expert):** Synthesis engines, complex feedback, real-time analysis
+**Level 9-10 (Research):** Machine learning, complex modeling, advanced DSP
 
-**Score: [1-5]**
+**Score: [1-10]**
 **Rationale: [Explain the complexity factors]**
 ```
 
@@ -98,22 +98,11 @@ Create `${APC_PLUGINS_DIR}/[Name]/.ideas/plan.md` with this structure:
 ```markdown
 # Implementation Plan
 
-## Complexity Score: [1-5]
+## Complexity Score: [1-10]
 
 ## Implementation Strategy
 
-### Single-Pass Implementation (Score ≤2)
-Execute all DSP components in one implementation session:
-- Core processing logic
-- Parameter binding
-- Basic optimization
-
-**Example for simple gain plugin:**
-- Implement gain calculation
-- Connect to parameter
-- Add smoothing
-
-### Phased Implementation (Score ≥3)
+### Phased Implementation (always)
 Break implementation into logical phases:
 
 **Phase 2.1.1: Core Processing**
@@ -164,7 +153,7 @@ Identify potential implementation challenges:
 Based on the architecture complexity and plugin requirements:
 
 **Visage Framework (Recommended for):**
-- Simple to moderate complexity (Score 1-3)
+- Simple to moderate complexity (Score 1-5)
 - Performance-critical plugins
 - Minimal UI requirements
 - Pure C++ development preference
@@ -206,8 +195,8 @@ Set-PluginFramework -PluginPath "plugins\[Name]" -Framework "[visage/webview]" -
 
 # Update state with planning completion
 Complete-Phase -PluginPath "plugins\[Name]" -Phase "plan" -Updates @{
-  "complexity_score" = [1-5]
-  "framework_selection.implementation_strategy" = "[single-pass/phased]"
+  "complexity_score" = [1-10]
+  "framework_selection.implementation_strategy" = "phased"
   "validation.architecture_defined" = $true
   "validation.ui_framework_selected" = $true
 }
@@ -220,7 +209,7 @@ Complete-Phase -PluginPath "plugins\[Name]" -Phase "plan" -Updates @{
   "version": "v0.0.0",
   "current_phase": "plan_complete",
   "ui_framework": "[visage/webview]",
-  "complexity_score": [1-5],
+  "complexity_score": [1-10],
   "created_at": "2026-01-04T20:20:00Z",
   "last_modified": "2026-01-04T20:20:00Z",
   "phase_history": [
@@ -248,7 +237,7 @@ Complete-Phase -PluginPath "plugins\[Name]" -Phase "plan" -Updates @{
   "framework_selection": {
     "decision": "[visage/webview]",
     "rationale": "[Framework choice explanation]",
-    "implementation_strategy": "[single-pass/phased]"
+    "implementation_strategy": "phased"
   },
   "error_recovery": {
     "last_backup": null,
@@ -276,7 +265,7 @@ Present user with next steps:
 ✓ Architecture & Planning Complete
 
 Plugin: [Name]
-Complexity: [Score]/5
+Complexity: [Score]/10
 Framework: [visage/webview]
 
 What's next?

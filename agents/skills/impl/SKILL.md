@@ -328,20 +328,14 @@ See: `agents/troubleshooting/resolutions/webview-member-order-crash.md`
 
 ## 🔧 PHASE 4.1: DSP IMPLEMENTATION
 
-Read `${APC_PLUGINS_DIR}/[Name]/.ideas/plan.md` to determine implementation approach:
+Read `${APC_PLUGINS_DIR}/[Name]/.ideas/plan.md` to determine implementation phases:
 ```
 Complexity Score: [N]
 
-If score ≤2: Single-pass implementation (all at once)
-If score ≥3: Phased implementation (multiple passes)
+Implementation is always phased (multiple passes), regardless of complexity.
 ```
 
-**Single-pass** (Simple plugins):
-- One implementation session
-- All DSP components at once
-- Example: Simple gain, filter, compressor
-
-**Phased** (Complex plugins):
+**Phased** (all plugins):
 - Multiple implementation phases
 - Break into logical chunks
 - Example: Multi-band processing, synthesis engines
@@ -352,7 +346,7 @@ If score ≥3: Phased implementation (multiple passes)
 
 **Prerequisites:** UI structure must be created (Phase 4.0) before DSP implementation begins.
 
-### FOR SINGLE-PASS (Complexity ≤2):
+### DSP IMPLEMENTATION STEPS (all plugins):
 
 **Step 1: Read contracts**
 - `.ideas/creative-brief.md` - Plugin purpose and behavior
@@ -451,7 +445,7 @@ void verifyParameterConsistency()
 
 ---
 
-### FOR PHASED (Complexity ≥3):
+### PHASED EXECUTION: PLAN-DEFINED PHASES
 
 **plan.md will define phases like:**
 ```markdown
@@ -887,7 +881,7 @@ Real-time safe: Yes
 Generated with Kilo Code"
 ```
 
-**For single-pass:**
+**Final commit:**
 ```powershell
 # Backup state before final commit
 Backup-PluginState -PluginPath $PluginPath

@@ -85,7 +85,7 @@ This phase MUST determine and set `ui_framework` in status.json:
 ✅ Plan phase complete!
 
 Framework selected: [Visage/WebView]
-Complexity score: [N]/5
+Complexity score: [N]/10
 
 Files created:
 - ${APC_PLUGINS_DIR}/[Name]/.ideas/architecture.md

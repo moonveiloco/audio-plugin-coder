@@ -51,7 +51,7 @@ ${APC_PLUGINS_DIR}/[Name]/
 1. Reads `creative-brief.md` and `parameter-spec.md`
 2. Generates `architecture.md` (DSP design)
 3. Generates `plan.md` (implementation strategy)
-4. Determines complexity score (1-5)
+4. Determines complexity score (1-10)
 5. Selects UI framework (Visage/WebView)
 6. Updates `status.json`
 
@@ -176,7 +176,7 @@ dist/
 Plugin: EchoReverb
 Current Phase: design_complete
 UI Framework: webview
-Complexity Score: 3/5
+Complexity Score: 5/10
 
 Validation Status:
 ✓ Creative brief exists

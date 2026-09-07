@@ -29,7 +29,7 @@ Load and follow `agents/skills/plan/SKILL.md` exactly.
 - If user has not explicitly chosen, ASK: "Use WebView2 (HTML/JS) or Visage (native C++)?"
 - Determine: VISAGE (pure C++) or WEBVIEW (hybrid)
 - Update status.json with framework selection
-- Set complexity score (1-5)
+- Set complexity score (1-10)
 
 **Success Criteria:**
 - `status.json` updated with `ui_framework` = "visage" or "webview"

@@ -409,7 +409,7 @@ set_plugin_framework() {
     update_plugin_state "$plugin_path" \
         --framework "$framework" \
         "framework_selection.rationale=$rationale" \
-        "framework_selection.implementation_strategy=single-pass"
+        "framework_selection.implementation_strategy=phased"
 }
 
 build_artifacts_json() {

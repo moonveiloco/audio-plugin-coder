@@ -144,7 +144,7 @@ Complete-Phase -PluginPath "plugins\MyPlugin" -Phase "plan" -Updates @{
     "validation.architecture_defined" = $true
     "validation.ui_framework_selected" = $true
     "framework_selection.decision" = "webview"
-    "complexity_score" = 3
+    "complexity_score" = 5
 }
 ```
 
@@ -235,7 +235,7 @@ Set-PluginFramework -PluginPath "plugins\MyPlugin" `
 Complete-Phase -PluginPath "plugins\MyPlugin" -Phase "plan" -Updates @{
     "validation.architecture_defined" = $true
     "validation.ui_framework_selected" = $true
-    "complexity_score" = 3
+    "complexity_score" = 5
     "framework_selection.implementation_strategy" = "phased"
 }
 ```

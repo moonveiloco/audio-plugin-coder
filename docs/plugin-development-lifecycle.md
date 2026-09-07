@@ -147,7 +147,7 @@ Design the DSP architecture and select the appropriate UI framework.
    - Map parameters to DSP
 
 2. **Complexity Assessment**
-   - Rate complexity (1-5 scale)
+   - Rate complexity (1-10 scale)
    - Determine implementation strategy
    - Identify risks
 
@@ -187,7 +187,7 @@ Input → [Component 1] → [Component 2] → Output
 | gain | Gain Stage | Input gain | -60 to 24 dB |
 
 ## Complexity Assessment
-**Score: 3/5**
+**Score: 5/10**
 **Rationale:** Multi-band processing with sidechain
 ```
 
@@ -195,7 +195,7 @@ Input → [Component 1] → [Component 2] → Output
 ```markdown
 # Implementation Plan
 
-## Complexity Score: 3
+## Complexity Score: 5
 
 ## Implementation Strategy
 Phased implementation:
@@ -215,7 +215,7 @@ Phased implementation:
 ### Validation Criteria
 - [ ] Architecture document complete
 - [ ] Plan document complete
-- [ ] Complexity score assigned (1-5)
+- [ ] Complexity score assigned (1-10)
 - [ ] UI framework selected (Visage/WebView)
 - [ ] Rationale documented
 
@@ -224,7 +224,7 @@ Phased implementation:
 {
   "current_phase": "plan_complete",
   "ui_framework": "webview",
-  "complexity_score": 3,
+  "complexity_score": 5,
   "validation": {
     "architecture_defined": true,
     "ui_framework_selected": true
@@ -241,8 +241,8 @@ Phased implementation:
 
 | Criteria | Visage | WebView |
 |----------|--------|---------|
-| Complexity 1-2 | ✅ | ⚠️ |
-| Complexity 3-5 | ⚠️ | ✅ |
+| Complexity 1-5 | ✅ | ⚠️ |
+| Complexity 6-10 | ⚠️ | ✅ |
 | Performance Critical | ✅ | ⚠️ |
 | Rich Visualization | ⚠️ | ✅ |
 | Fast Iteration | ⚠️ | ✅ |
@@ -497,12 +497,7 @@ gainAttachment = std::make_unique<WebSliderParameterAttachment>(...);
 
 ### Implementation Strategies
 
-**Single-Pass (Complexity ≤2):**
-- Implement all at once
-- One build/test cycle
-- Good for: Simple gain, basic filter
-
-**Phased (Complexity ≥3):**
+**Phased (all plugins):**
 - Phase 1: Core processing
 - Phase 2: Advanced features
 - Phase 3: Polish
