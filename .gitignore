@@ -48,4 +48,6 @@ cloudwash_crash_log.txt
 _backups/
 dist/
 
+# Build tool Jive
+tools/jive-preview/build
 CONTRIBUTING_2.md
