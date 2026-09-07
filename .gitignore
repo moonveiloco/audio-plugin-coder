@@ -49,5 +49,5 @@ _backups/
 dist/
 
 # Build tool Jive
-tools/jive-preview/build
+_tools/jive-preview/build
 CONTRIBUTING_2.md

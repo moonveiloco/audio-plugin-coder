@@ -65,17 +65,17 @@ echo "--- APC JIVE PREVIEW: $PLUGIN_NAME ---"
 echo "Layout: $LAYOUT"
 
 # --- BUILD (cached; build dir lives inside the tool, not the repo root) ---
-BUILD_DIR="$ROOT_PATH/tools/jive-preview/build"
+BUILD_DIR="$ROOT_PATH/_tools/jive-preview/build"
 NEEDS_CONFIGURE=0
 [ ! -f "$BUILD_DIR/CMakeCache.txt" ] && NEEDS_CONFIGURE=1
 if [ "$NEEDS_CONFIGURE" -eq 0 ]; then
-    NEWEST_SOURCE="$(find "$ROOT_PATH/tools/jive-preview/CMakeLists.txt" "$ROOT_PATH/tools/jive-preview/Source" -type f -newer "$BUILD_DIR/CMakeCache.txt" 2>/dev/null | head -1 || true)"
+    NEWEST_SOURCE="$(find "$ROOT_PATH/_tools/jive-preview/CMakeLists.txt" "$ROOT_PATH/_tools/jive-preview/Source" -type f -newer "$BUILD_DIR/CMakeCache.txt" 2>/dev/null | head -1 || true)"
     [ -n "$NEWEST_SOURCE" ] && NEEDS_CONFIGURE=1
 fi
 
 if [ "$NEEDS_CONFIGURE" -eq 1 ]; then
     echo "Configuring jive-preview..."
-    cmake -S "$ROOT_PATH/tools/jive-preview" -B "$BUILD_DIR" \
+    cmake -S "$ROOT_PATH/_tools/jive-preview" -B "$BUILD_DIR" \
         -DAPC_TOOLS_DIR="$ROOT_PATH" \
         -DCMAKE_BUILD_TYPE=Release
 fi

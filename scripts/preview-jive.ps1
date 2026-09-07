@@ -67,12 +67,12 @@ Write-Host "--- APC JIVE PREVIEW: $PluginName ---"
 Write-Host "Layout: $Layout"
 
 # --- BUILD (cached; build dir lives inside the tool, not the repo root) ---
-$BuildDir = Join-Path $RootPath "tools\jive-preview\build"
+$BuildDir = Join-Path $RootPath "_tools\jive-preview\build"
 $Cache = Join-Path $BuildDir "CMakeCache.txt"
 $NeedsConfigure = -not (Test-Path $Cache)
 
 if (-not $NeedsConfigure) {
-    $ScanPaths = @((Join-Path $RootPath "tools\jive-preview\CMakeLists.txt"), (Join-Path $RootPath "tools\jive-preview\Source"))
+    $ScanPaths = @((Join-Path $RootPath "_tools\jive-preview\CMakeLists.txt"), (Join-Path $RootPath "_tools\jive-preview\Source"))
     $NewestSource = Get-ChildItem -Path $ScanPaths -File -Recurse -ErrorAction SilentlyContinue |
         Where-Object { $_.LastWriteTime -gt (Get-Item $Cache).LastWriteTime } |
         Select-Object -First 1
@@ -81,7 +81,7 @@ if (-not $NeedsConfigure) {
 
 if ($NeedsConfigure) {
     Write-Host "Configuring jive-preview..."
-    cmake -S (Join-Path $RootPath "tools\jive-preview") -B $BuildDir -DAPC_TOOLS_DIR="$RootPath" -DCMAKE_BUILD_TYPE=Release
+    cmake -S (Join-Path $RootPath "_tools\jive-preview") -B $BuildDir -DAPC_TOOLS_DIR="$RootPath" -DCMAKE_BUILD_TYPE=Release
 }
 
 Write-Host "Building jive-preview..."

@@ -364,7 +364,7 @@ Preview (opt-in, no build of the plugin required):
 ```
 bash scripts/preview-jive.sh [Name]        # interactive window with live-reload
 # headless deterministic render:
-tools/jive-preview/build/jive-preview_artefacts/Release/jive-preview ${APC_PLUGINS_DIR}/[Name]/Design/v1-layout.xml --screenshot preview.png
+_tools/jive-preview/build/jive-preview_artefacts/Release/jive-preview ${APC_PLUGINS_DIR}/[Name]/Design/v1-layout.xml --screenshot preview.png
 ```
 
 Iterate by editing `v1-layout.xml` — the preview window live-reloads on save (or re-run `--screenshot`).
